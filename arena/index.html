@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0b1020">
-<meta name="description" content="PACKLAB directional sprite and gamepad 2D arena test. Build a team from your pulled Pokemon cards and battle in a playable arena.">
-<title>PACKLAB — Real-Time Arena Test</title>
+<meta name="description" content="PACKLAB TAG TEAM co-op sprite 2D arena test. Build a team from your pulled Pokemon cards and battle in a playable arena.">
+<title>PACKLAB — TAG TEAM Arena v1.0</title>
 <style>:root{color-scheme:dark;--bg:#0a1020;--ink:#f0f3ff;--faint:#9faaca;--mint:#61e6c9;--purple:#ae8cff;--edge:#3b4667;--panel:#151e34;--deep:#0e162a;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
 *{box-sizing:border-box}html{min-width:310px}body{margin:0;background:var(--bg);color:var(--ink)}button,input{font:inherit}button,a{touch-action:manipulation}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.48}a{color:inherit;text-decoration:none}button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(--mint);outline-offset:3px}[hidden]{display:none!important}
 .ambient{position:fixed;inset:-5%;background:radial-gradient(circle at 12% -7%,#4547784d,transparent 34%),radial-gradient(circle at 90% 8%,#3d2b6644,transparent 40%),radial-gradient(circle at 72% 90%,#184b5850,transparent 46%);pointer-events:none;z-index:-1}.site-shell{max-width:1260px;margin:auto;padding:0 24px}.masthead{height:82px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #ffffff1a;gap:16px}.brand{display:flex;align-items:center;gap:11px;font-size:19px;font-weight:950;letter-spacing:1px}.brand-emblem{height:42px;width:42px;display:grid;place-items:center;border-radius:13px;background:linear-gradient(140deg,#a98bf7,#664cba);box-shadow:0 0 25px #725ef266;font-size:28px;position:relative}.brand-emblem span{font-size:9px;position:absolute;right:8px;top:9px;color:#75ffe1}.brand small{display:block;color:#a8acd1;font-size:9px;font-weight:850;letter-spacing:2.2px;margin-top:3px}.head-right{display:flex;align-items:center;gap:20px}.pill{font-size:10px;font-weight:850;letter-spacing:1.2px;padding:8px 11px;border:1px solid #5f5a92;border-radius:6px;color:#ddcbff;background:#4735694d}.return{font-size:12px;color:#adb8d1;font-weight:800}.return:hover,.text-link:hover{color:#fff}
@@ -113,21 +113,24 @@ html.arena-playing,body.arena-playing{height:100%;overflow:hidden!important;over
  #battleScreen.in-match .matchup-hint{font-size:8px}
  #battleScreen.in-match .move-button{min-height:30px}
 }
+/* One TAG TEAM card deploys separate creatures but remains one battle slot. */
+.tag-team-chip{display:inline-block;margin-top:4px;padding:3px 7px;border-radius:6px;background:#67538b;color:#fff3ff;font-size:9px;font-weight:950;letter-spacing:.5px}
+.tag-demo-link{display:inline-flex;margin:0 5px 0 3px;align-items:center;gap:4px}
 </style>
 </head>
 <body>
 <div class="ambient" aria-hidden="true"></div>
 <div class="site-shell">
-<header class="masthead"><a class="brand" href="../" aria-label="Back to PACKLAB"><span class="brand-emblem">P<span>◆</span></span><span>PACKLAB<small>ARENA TEST · v0.9.1</small></span></a><div class="head-right"><span class="pill purple">REAL-TIME 2D</span><a class="return" href="../">← Back to packs</a></div></header>
+<header class="masthead"><a class="brand" href="../" aria-label="Back to PACKLAB"><span class="brand-emblem">P<span>◆</span></span><span>PACKLAB<small>ARENA TEST · v1.0</small></span></a><div class="head-right"><span class="pill purple">REAL-TIME 2D</span><a class="return" href="../">← Back to packs</a></div></header>
 <main>
-<section class="intro"><div><div class="eyebrow"><span class="signal"></span> BINDER → BATTLEFIELD</div><h1>Your cards.<br><em>Your fighters.</em></h1><p>Build a team from cards you've pulled, then control your Pokémon in a live 2D arena. On PC, move with WASD and aim precisely with your mouse — your Pokémon turns toward the cursor and attacks fire there. Phone and controller aiming keep their separate controls.</p></div><div class="rules-panel"><div class="rules-big">3 <span>vs</span> 3</div><div>REAL-TIME ARENA</div><p><strong>Card-locked roster</strong> · printed HP, attacks and card-specific weaknesses influence your fighter when card rules are available. Arena timing is simulated.</p></div></section>
+<section class="intro"><div><div class="eyebrow"><span class="signal"></span> BINDER → BATTLEFIELD</div><h1>Your cards.<br><em>Your fighters.</em></h1><p>Build a team from cards you've pulled, then control your Pokémon in a live 2D arena. On PC, move with WASD and aim precisely with your mouse — your Pokémon turns toward the cursor and attacks fire there. Phone and controller aiming keep their separate controls.</p></div><div class="rules-panel"><div class="rules-big">3 <span>vs</span> 3</div><div>REAL-TIME ARENA</div><p><strong>Card-locked roster</strong> · printed HP, attacks and card-specific weaknesses influence your fighter when card rules are available. TAG TEAM GX cards send out all named Pokémon together, sharing one card slot and HP. Arena timing is simulated.</p></div></section>
 <section id="teamScreen" aria-label="Choose battle team">
-<div id="padStatus" class="controller-line" role="status">🎮 No controller detected — connect then press a button</div><div class="section-head"><div><span class="eyebrow">01 / LINEUP</span><h2>Choose your three</h2><p>Only Pokémon copies in your PACKLAB binder are eligible. Cards currently away at the grader cannot battle.</p></div><div class="roster-badge" id="ownedCount">CHECKING BINDER</div></div>
+<div id="padStatus" class="controller-line" role="status">🎮 No controller detected — connect then press a button</div><div class="section-head"><div><span class="eyebrow">01 / LINEUP</span><h2>Choose your three</h2><p>Only Pokémon copies in your PACKLAB binder are eligible. Cards currently away at the grader cannot battle. TAG TEAM GX cards deploy both (or all three) Pokémon together in one slot.</p></div><div class="roster-badge" id="ownedCount">CHECKING BINDER</div></div>
 <div class="team-slots" id="teamSlots"></div>
 <div class="card-head"><strong>YOUR BINDER <span id="binderCount"></span></strong><label for="cardFilter" class="sr-only">Search your Pokémon</label><input id="cardFilter" type="search" placeholder="Find a Pokémon, set, or type…" autocomplete="off" maxlength="70"></div>
 <div id="binderNotice" class="notice" hidden></div><div id="cardGrid" class="card-grid"></div>
 <div class="team-actions"><button class="secondary" id="autoPick">Auto-pick owned Pokémon</button><button class="primary" id="startFight">⚔ Enter Arena <span>→</span></button></div>
-<div class="demo-note"><strong>Just want to try it?</strong> <button id="demoFight" class="text-link">Launch a separate three-Pokémon demo team</button>. Demo fights do not alter your collection or earn coins.</div>
+<div class="demo-note"><strong>Just want to try it?</strong> <button id="demoFight" class="text-link">Launch a separate three-Pokémon demo team</button> or <button id="tagTeamDemo" class="text-link tag-demo-link">⚡ Try TAG TEAM demo (duo + trio)</button>. Demo fights do not alter your collection or earn coins.</div>
 </section>
 <section id="battleScreen" hidden aria-label="Live arena battle">
 <div class="battle-meta"><div><span class="eyebrow">02 / LIVE MATCH</span><h2 id="battleTitle">Stadium Match</h2></div><div class="match-status"><span class="signal"></span><span id="matchTimer">00:00</span><span id="matchMode">3V3 · NPC</span><button class="secondary fullscreen-toggle" id="expandBattle" type="button" title="Toggle browser fullscreen">⛶ Fullscreen</button></div></div>
@@ -222,11 +225,16 @@ let gamepadLastLabel='',lastCooldownToast=0;
 
 let saved=null,eligible=[],chosen=[],scene=null,matchCount=0,frameId=0,lastFrame=0,lastHud=0,noticeTimer=null;
 let keyDown=new Set(),mouseAim=null,aimSource=null,stick={id:null,x:0,y:0},preBattleScroll=0;
-let preview=false,mode='owned';
+let preview=false,mode='owned',demoVariant='standard';
 const demoCards=[
  {id:'demo-pikachu',name:'Pikachu',setId:'sv30',number:'23',hp:110,types:['Lightning'],attacks:[{name:'Thunder Shock',damage:'40'},{name:'Thunderbolt',damage:'90'}],category:'Pokémon',image:'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png'},
  {id:'demo-charizard',name:'Charizard ex',setId:'sv3pt5',number:'6',hp:220,types:['Fire'],attacks:[{name:'Flame Tail',damage:'60'},{name:'Blazing Blast',damage:'160'}],category:'Pokémon',image:'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/6.png'},
  {id:'demo-blastoise',name:'Blastoise ex',setId:'sv3pt5',number:'9',hp:210,types:['Water'],attacks:[{name:'Shell Attack',damage:'40'},{name:'Hydro Cannon',damage:'140'}],category:'Pokémon',image:'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/9.png'}
+];
+const tagTeamDemoCards=[
+ {id:'tag-sm9-33',name:'Pikachu & Zekrom-GX',setId:'sm9',number:'33',hp:240,types:['Lightning'],subtypes:['Basic','GX','TAG TEAM'],attacks:[{name:'Full Blitz',damage:'150'},{name:'Tag Bolt-GX',damage:'200'}],category:'Pokémon',image:'https://images.pokemontcg.io/sm9/33.png'},
+ {id:'tag-sm115-44',name:'Moltres & Zapdos & Articuno-GX',setId:'sm115',number:'44',hp:300,types:['Colorless'],subtypes:['Basic','GX','TAG TEAM'],attacks:[{name:'Trinity Burn',damage:'210'},{name:'Sky Legends-GX',damage:'0'}],category:'Pokémon',image:'https://images.pokemontcg.io/sm115/44.png'},
+ structuredClone(demoCards[1])
 ];
 const enemySamples=[
  {id:'npc-gengar',name:'Gengar',setId:'sv30',number:'90',hp:150,types:['Psychic'],attacks:[{name:'Shadow Ball',damage:'75'},{name:'Haunt',damage:'60'}],category:'Pokémon',image:'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/94.png'},
@@ -236,31 +244,69 @@ const enemySamples=[
 const rockLayout=[{x:450,y:145,r:32},{x:590,y:430,r:39},{x:526,y:280,r:27}];
 function readState(){try{const obj=JSON.parse(localStorage.getItem(SAVE_KEY)||'null');return obj?.schema===1&&Array.isArray(obj.collection)?obj:null;}catch{return null}}
 function getCatalog(set){try{const data=JSON.parse(localStorage.getItem(CATALOG_PREFIX+set)||'null');return data?.catalogVersion===2&&Array.isArray(data.cards)?data.cards:null}catch{return null}}
-function cardFromRaw(raw,setId){if(!raw?.id)return null;const classic=raw.id.startsWith('me55c-');const number=raw.number||'0';const identifier=setId==='sv30'?`sv30-${raw.id}`:`${setId}-${Number(number)}`;return {id:identifier,setId,number,name:raw.name||'Unknown',hp:Number(raw.hp)||0,types:raw.types||[],category:raw.supertype||'',attacks:(raw.attacks||[]).slice(0,2),image:raw.images?.small||'',imageLarge:raw.images?.large||''};}
+function cardFromRaw(raw,setId){if(!raw?.id)return null;const classic=raw.id.startsWith('me55c-');const number=raw.number||'0';const identifier=setId==='sv30'?`sv30-${raw.id}`:`${setId}-${Number(number)}`;return {id:identifier,setId,number,name:raw.name||'Unknown',hp:Number(raw.hp)||0,types:raw.types||[],category:raw.supertype||'',subtypes:raw.subtypes||[],attacks:(raw.attacks||[]).slice(0,2),image:raw.images?.small||'',imageLarge:raw.images?.large||''};}
 async function recoverMissingCatalogs(){const missing=[...new Set((saved?.collection||[]).map(c=>c.setId))].filter(k=>!getCatalog(k));if(!missing.length)return;await Promise.all(missing.map(async setId=>{
   try{const files=setId==='sv30'?['me55.json','me55c.json']:[setId+'.json'];let rows=[];for(const f of files){let response=await fetch('https://raw.githubusercontent.com/PokemonTCG/pokemon-tcg-data/master/cards/en/'+f,{signal:AbortSignal.timeout(9500)});if(!response.ok)throw Error('Catalog unavailable');rows.push(...await response.json());}if(!rows.length)throw Error('Empty catalog');const cards=rows.map(r=>cardFromRaw(r,setId)).filter(Boolean);localStorage.setItem(CATALOG_PREFIX+setId,JSON.stringify({catalogVersion:2,cards,at:Date.now()}));}catch(e){console.warn('Arena catalog recovery failed:',setId,e)}
 }));}
 function loadOwned(){saved=readState();const catalogs=new Map();eligible=[];if(!saved)return;for(const i of saved.collection){if(i.status==='grading')continue;let catalog=catalogs.get(i.setId);if(!catalog){catalog=getCatalog(i.setId)||[];catalogs.set(i.setId,catalog)}const c=catalog.find(x=>x.id===i.cardId);if(!c||(!String(c.category).match(/Pok[eé]mon/i))||!Number(c.hp))continue;eligible.push({instance:i,card:c});}eligible.sort((a,b)=>b.card.hp-a.card.hp);const wanted=saved.battleRoster||[];chosen=wanted.filter(id=>eligible.some(x=>x.instance.instanceId===id)).slice(0,3);if(!chosen.length)chosen=eligible.slice(0,3).map(x=>x.instance.instanceId);}
 function displayTeam(){const members=chosen.map(id=>eligible.find(x=>x.instance.instanceId===id)).filter(Boolean);$('ownedCount').textContent=`${eligible.length} ELIGIBLE COPIES`;$('binderCount').textContent=`· ${eligible.length} fighters`;
- $('teamSlots').innerHTML=Array.from({length:3},(_,n)=>{const x=members[n];return `<button class="team-slot ${x?'filled':''}" type="button" data-slot="${n}" ${!x?'disabled':''}>${x?`<img src="${escapeHtml(x.card.image)}" alt="${escapeHtml(x.card.name)}"><span><span class="slot-index">FIGHTER ${n+1} · ${escapeHtml(SET_NAMES[x.card.setId]||x.card.setId)}</span><strong>${escapeHtml(x.card.name)}</strong><small>${x.card.hp} printed HP · ${escapeHtml(x.card.types?.[0]||'Colorless')}</small></span>`:`<span>＋</span><span>SLOT ${n+1}<small>Select a Pokémon below</small></span>`}</button>`}).join('');
+ $('teamSlots').innerHTML=Array.from({length:3},(_,n)=>{const x=members[n];return `<button class="team-slot ${x?'filled':''}" type="button" data-slot="${n}" ${!x?'disabled':''}>${x?`<img src="${escapeHtml(x.card.image)}" alt="${escapeHtml(x.card.name)}"><span><span class="slot-index">FIGHTER ${n+1} · ${escapeHtml(SET_NAMES[x.card.setId]||x.card.setId)}</span><strong>${escapeHtml(x.card.name)}</strong><small>${x.card.hp} printed HP · ${escapeHtml(x.card.types?.[0]||'Colorless')}${tagTeamNames(x.card).length?' · '+tagTeamNames(x.card).length+' Pokémon together':''}</small></span>`:`<span>＋</span><span>SLOT ${n+1}<small>Select a Pokémon below</small></span>`}</button>`}).join('');
  const search=$('cardFilter').value.trim().toLowerCase();const list=eligible.filter(x=>[x.card.name,x.card.types?.join(' '),SET_NAMES[x.card.setId],x.card.number].some(v=>String(v||'').toLowerCase().includes(search)));
- $('cardGrid').innerHTML=list.slice(0,150).map(x=>{const c=x.card,sel=chosen.includes(x.instance.instanceId);return `<button type="button" class="card-choice ${sel?'selected':''}" data-pick="${escapeHtml(x.instance.instanceId)}" aria-pressed="${sel}"><img src="${escapeHtml(c.image||'')}" alt="${escapeHtml(c.name)}" loading="lazy" onerror="this.style.visibility='hidden'"><strong>${escapeHtml(c.name)}</strong><small>${escapeHtml(SET_NAMES[c.setId]||c.setId)} #${escapeHtml(c.number)}<br>${c.hp} HP · ${escapeHtml(c.types?.[0]||'Colorless')}</small>${sel?'<span class="selected-tag">IN TEAM</span>':''}</button>`}).join('')||'<div class="notice">No matching owned Pokémon. Clear the search to see your collection.</div>';
+ $('cardGrid').innerHTML=list.slice(0,150).map(x=>{const c=x.card,sel=chosen.includes(x.instance.instanceId);return `<button type="button" class="card-choice ${sel?'selected':''}" data-pick="${escapeHtml(x.instance.instanceId)}" aria-pressed="${sel}"><img src="${escapeHtml(c.image||'')}" alt="${escapeHtml(c.name)}" loading="lazy" onerror="this.style.visibility='hidden'"><strong>${escapeHtml(c.name)}</strong><small>${escapeHtml(SET_NAMES[c.setId]||c.setId)} #${escapeHtml(c.number)}<br>${c.hp} HP · ${escapeHtml(c.types?.[0]||'Colorless')}</small>${tagTeamNames(c).length?`<span class="tag-team-chip">TAG TEAM · ${tagTeamNames(c).length} FIGHTERS</span>`:''}${sel?'<span class="selected-tag">IN TEAM</span>':''}</button>`}).join('')||'<div class="notice">No matching owned Pokémon. Clear the search to see your collection.</div>';
  const notice=$('binderNotice');if(!eligible.length){notice.hidden=false;notice.innerHTML=`There are no eligible Pokémon visible in this browser's PACKLAB binder. <a href="../" class="text-link">Open some packs in PACKLAB</a>, return here, or use the separate demo team below. Binder progress is browser-local.`;}else if(eligible.length<3){notice.hidden=false;notice.textContent=`You have ${eligible.length} battle-eligible Pokémon. Open more packs until you have three different card copies, or use demo mode to test the arena now.`;}else notice.hidden=true;
  $('startFight').disabled=members.length!==3;
 }
 function pokeName(name){return String(name||'').replace(/\b(?:ex|gx|vmax|vstar|v|lv\.?\s*x|delta species)\b/ig,'').replace(/\s+/g,' ').trim().replace(/\b(?:Alolan|Galarian|Hisuian|Paldean)\s+/i,'').replace(/\s*(?:\(|\[).*$/,'').trim()}
 function dexKey(name){return pokeName(name).normalize('NFD').replace(/\p{Diacritic}/gu,'').toLowerCase().replace(/[.'’]/g,'').replace(/[^a-z0-9]+/g,'').trim()}
 function pokemonSlug(name){return pokeName(name).toLowerCase().replace(/♀/g,'-f').replace(/♂/g,'-m').replace(/[^a-z0-9-]+/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'')}
+// A TAG TEAM is one actual Pokémon card with two or three *separate species*, not a new fused species.
+// Match Pokémon-GX TAG TEAM names (or a TAG TEAM subtype); don't split ordinary artwork or Trainer cards.
+function tagTeamNames(card){
+ if(!card||!/Pok[eé]mon/i.test(card.category||card.supertype||''))return [];
+ const title=String(card.name||'').trim();
+ const subtype=Array.isArray(card.subtypes)&&card.subtypes.some(v=>/TAG\s*TEAM/i.test(String(v)));
+ if(!subtype&&!/[-–]GX$/i.test(title))return [];
+ const names=title.replace(/\s*[-–]GX$/i,'').split(/\s*&\s*/).map(s=>s.trim());
+ return names.length>=2&&names.length<=3&&names.every(n=>n.length>=2&&!/[<>]/.test(n))?names:[];
+}
+function memberCards(f){
+ return f.tagNames?.length?f.tagNames.map(name=>({name})): [f.card];
+}
+// Keep the real members in a loose formation perpendicular to the player's facing.
+// Both are targetable but damage the ONE shared TAG TEAM card health pool.
+function fighterMembers(f){
+ if(!f.tagNames?.length)return [{x:f.x,y:f.y,name:f.name,card:f.card}];
+ const angle=facingAngle(f),nx=-Math.sin(angle),ny=Math.cos(angle);
+ const spacing=f.tagNames.length===3?76:94;
+ return f.tagNames.map((name,i)=>{
+  const off=(i-(f.tagNames.length-1)/2)*spacing;
+  return {x:f.x+nx*off,y:f.y+ny*off,name,card:{name}};
+ });
+}
+function nearestMemberDistance(a,b){
+ const aa=fighterMembers(a),bb=fighterMembers(b);
+ return Math.min(...aa.flatMap(v=>bb.map(w=>Math.hypot(v.x-w.x,v.y-w.y))));
+}
+// Respect forms in TAG TEAM names: Raichu and Alolan Raichu cannot share art.
+// For regional or Mega forms, prefer PokeAPI's distinct form sprite to a false
+// eight-direction *normal-form* sprite. Form-specific 8-way art can be added later.
+function formSpriteSlug(name){
+ const match=String(name||'').trim().match(/^(Alolan|Galarian|Hisuian|Paldean|Mega)\s+(.+)$/i);
+ if(!match)return null;
+ const suffix={alolan:'alola',galarian:'galar',hisuian:'hisui',paldean:'paldea',mega:'mega'}[match[1].toLowerCase()];
+ return `${pokemonSlug(match[2])}-${suffix}`;
+}
 function spriteFor(card,back=false){
- const key=dexKey(card.name)+(back?'::back':'::front');
+ const variantSlug=formSpriteSlug(card.name);
+ const key=(variantSlug||dexKey(card.name))+(back?'::back':'::front');
  if(spriteCache.has(key))return spriteCache.get(key);
  if(!pendingSprites.has(key)){
   pendingSprites.add(key);
   const load=url=>{if(!url){spriteCache.set(key,null);return;}
    const img=new Image();img.decoding='async';img.onload=()=>spriteCache.set(key,img);img.onerror=()=>spriteCache.set(key,null);img.src=url;};
   const known=POKEMON_IDS[dexKey(card.name)];
-  if(known)load(`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${back?'back/':''}${known}.png`);
-  else fetch(`https://pokeapi.co/api/v2/pokemon/${encodeURIComponent(pokemonSlug(card.name))}`,{signal:AbortSignal.timeout(7000)})
+  if(known&&!variantSlug)load(`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${back?'back/':''}${known}.png`);
+  else fetch(`https://pokeapi.co/api/v2/pokemon/${encodeURIComponent(variantSlug||pokemonSlug(card.name))}`,{signal:AbortSignal.timeout(7000)})
    .then(r=>r.ok?r.json():null).then(data=>load(data?.sprites?.[back?'back_default':'front_default']||null)).catch(()=>spriteCache.set(key,null));
  }
  return null;
@@ -289,10 +335,12 @@ function parseAnim(xml,kind){
  return width>0&&height>0?{width,height,durations}:null;
 }
 function directionalFor(card){
- const key=dexKey(card.name);
+ const variantSlug=formSpriteSlug(card.name);
+ const key=variantSlug||dexKey(card.name);
  if(directionalCache.has(key))return directionalCache.get(key);
  const entry={status:'loading',walk:null,idle:null,walkMeta:null,idleMeta:null};
  directionalCache.set(key,entry);
+ if(variantSlug){entry.status='unavailable';return entry;}
  (async()=>{
   let dex=POKEMON_IDS[key];
   if(!dex){const response=await fetch(`https://pokeapi.co/api/v2/pokemon/${encodeURIComponent(pokemonSlug(card.name))}`,{signal:AbortSignal.timeout(8000)});
@@ -329,7 +377,7 @@ function drawDirectional(f,x,y){
  if(!sheet||!meta)return false;
  const row=(f.dir??(f.side==='p'?2:6))%8;
  const column=animationColumn(meta,sheet,f.animClock||0);
- const targetH=clamp(meta.height*2.3,82,112),scale=targetH/meta.height;
+ const isTag=!!f.tagNames?.length;const targetH=isTag?clamp(meta.height*1.75,66,87):clamp(meta.height*2.3,82,112),scale=targetH/meta.height;
  const w=meta.width*scale,h=meta.height*scale;
  ctx.save();ctx.imageSmoothingEnabled=false;
  ctx.drawImage(sheet,column*meta.width,row*meta.height,meta.width,meta.height,
@@ -344,13 +392,13 @@ function drawDirectionalFallback(f,x,y){
  const img=spriteFor(f.card,back);
  if(img?.complete&&img.naturalWidth){
   ctx.save();ctx.imageSmoothingEnabled=false;
-  const size=103+(f.maxHp-70)*.06;
+  const size=f.tagNames?.length?83:103+(f.maxHp-70)*.06;
   if(f.dir===6||f.dir===7){ctx.translate(x,0);ctx.scale(-1,1);ctx.translate(-x,0);}
   ctx.drawImage(img,x-size/2,y-size/2-19,size,size);ctx.restore();return;
  }
  // Last-resort compass avatar: solid back / profile with no false forward face.
  ctx.save();
- circle(x,y-14,35,f.color);
+ circle(x,y-14,f.tagNames?.length?28:35,f.color);
  ctx.strokeStyle='#092237';ctx.lineWidth=4;
  if(back){ctx.beginPath();ctx.arc(x,y-16,17,Math.PI*.15,Math.PI*.85);ctx.stroke();}
  else if(f.dir===1||f.dir===2||f.dir===6||f.dir===7){
@@ -367,7 +415,7 @@ function getMoveSet(card){const printed=(card.attacks||[]).filter(a=>a?.name).sl
  const m2={name:p2.name,kind:abilityType(p2.name),damage:clamp(Math.round(16+parsePower(p2.damage)*.17),22,47),cooldown:2.3,radius:20,speed:375,projectiles:1};
  const typeSkills={Lightning:['Spark Field','Volt Finale'],Electric:['Spark Field','Volt Finale'],Fire:['Flame Ring','Inferno Rush'],Water:['Tidal Burst','Hydro Surge'],Grass:['Leaf Cyclone','Nature Bloom'],Psychic:['Psy Pulse','Mind Storm'],Darkness:['Shadow Spiral','Night Barrage'],Fighting:['Shockwave','Meteor Strike'],Dragon:['Dragon Pulse','Draco Storm'],Metal:['Steel Quake','Alloy Blitz'],Colorless:['Swift Burst','Starfall']};const [area,finisher]=typeSkills[type]||typeSkills.Colorless;
  return [m1,m2,{name:area,kind:'area',damage:23,cooldown:4.5,radius:125},{name:finisher,kind:'volley',damage:16,cooldown:9,radius:18,speed:480,projectiles:5}];}
-function fighterFor(card,instanceId,side){return {card,instanceId,side,name:card.name,type:card.types?.[0]||'Colorless',color:colorFor(card.types?.[0]),hp:Math.round(70+Math.max(30,card.hp)*.37),maxHp:Math.round(70+Math.max(30,card.hp)*.37),baseHp:card.hp,moves:getMoveSet(card),weaknesses:card.weaknesses||[],resistances:card.resistances||[],ruleSource:(Array.isArray(card.weaknesses)||Array.isArray(card.resistances))?'printed':'arcade',cool:[0,0,0,0],x:side==='p'?145:W-145,y:H/2,r:30,speed:side==='p'?208:170,face:side==='p'?1:-1,dir:side==='p'?2:6,moving:false,animClock:0,lastAnimState:'idle',shield:0,invuln:0,stun:0,dash:0,dashCool:0,kos:0};}
+function fighterFor(card,instanceId,side){const tagNames=tagTeamNames(card);return {card,instanceId,side,tagNames,name:card.name,type:card.types?.[0]||'Colorless',color:colorFor(card.types?.[0]),hp:Math.round(70+Math.max(30,card.hp)*.37),maxHp:Math.round(70+Math.max(30,card.hp)*.37),baseHp:card.hp,moves:getMoveSet(card),weaknesses:card.weaknesses||[],resistances:card.resistances||[],ruleSource:(Array.isArray(card.weaknesses)||Array.isArray(card.resistances))?'printed':'arcade',cool:[0,0,0,0],x:side==='p'?145:W-145,y:H/2,r:tagNames.length?36+(tagNames.length-1)*39:30,speed:side==='p'?208:170,face:side==='p'?1:-1,dir:side==='p'?2:6,moving:false,animClock:0,lastAnimState:'idle',shield:0,invuln:0,stun:0,dash:0,dashCool:0,kos:0};}
 function makeEnemyTeam(){const unique=enemySamples.map(c=>structuredClone(c));const pool=[];for(const sid of Object.keys(SET_NAMES)){for(const c of getCatalog(sid)||[]){if(/Pok[eé]mon/i.test(c.category)&&c.hp>=90&&c.attacks?.length&&!(pool.some(x=>x.name===c.name))&&!(chosen.some(id=>eligible.find(x=>x.instance.instanceId===id)?.card.name===c.name)))pool.push(c);}}
  if(pool.length>=3){const ordered=pool.sort(()=>Math.random()-.5);return ordered.slice(0,3).map((c,i)=>fighterFor(c,'cpu-'+i,'e'));}return unique.map((c,i)=>fighterFor(c,'cpu-'+i,'e'));}
 function fitArena(){
@@ -399,8 +447,8 @@ async function toggleNativeFullscreen(){
  }catch{showFieldToast('Immersive view active · full browser fullscreen unavailable here');}
  requestAnimationFrame(fitArena);
 }
-function fightStart(useDemo=false){mode=useDemo?'demo':'owned';if(!useDemo&&chosen.length!==3)return;const team=useDemo?demoCards.map((c,i)=>fighterFor(c,'demo-'+i,'p')):chosen.map(id=>{const entry=eligible.find(x=>x.instance.instanceId===id);return fighterFor(entry.card,id,'p')});const foes=makeEnemyTeam();scene={team,foes,pi:0,ei:0,player:team[0],enemy:foes[0],effects:[],shots:[],logs:[],time:0,over:false,win:false,koPlayer:0,koEnemy:0,damage:0,award:false,enemyStrafe:1,aiClock:0,hitFlash:0,weather:0};scene.player.x=145;scene.player.y=H/2;scene.enemy.x=W-145;scene.enemy.y=H/2;mouseAim=null;aimSource=null;keyDown.clear();stick.x=stick.y=0;gamepadState.buttons=[];gamepadState.mx=gamepadState.my=0;gamepadState.aiming=false;scene.nextMove=0;for(const f of [...team,...foes])directionalFor(f.card);
- $('teamScreen').hidden=true;$('resultScreen').hidden=true;$('battleScreen').hidden=false;enterImmersive();activatePrintedRules(scene);$('matchMode').textContent=mode==='demo'?'DEMO · NO REWARDS':'3V3 · OWNED CARDS';$('battleTitle').textContent=mode==='demo'?'Demo Stadium Battle':'Binder Championship';logEvent('Battle started. Move, attack, dodge, and switch!');hudUpdate(true);lastFrame=performance.now();cancelAnimationFrame(frameId);frameId=requestAnimationFrame(tick);requestAnimationFrame(fitArena);}
+function fightStart(useDemo=false,useTagDemo=false){mode=useDemo?'demo':'owned';demoVariant=useTagDemo?'tag':'standard';if(!useDemo&&chosen.length!==3)return;const team=useDemo?(useTagDemo?tagTeamDemoCards:demoCards).map((c,i)=>fighterFor(c,'demo-'+i,'p')):chosen.map(id=>{const entry=eligible.find(x=>x.instance.instanceId===id);return fighterFor(entry.card,id,'p')});const foes=makeEnemyTeam();scene={team,foes,pi:0,ei:0,player:team[0],enemy:foes[0],effects:[],shots:[],logs:[],time:0,over:false,win:false,koPlayer:0,koEnemy:0,damage:0,award:false,enemyStrafe:1,aiClock:0,hitFlash:0,weather:0};scene.player.x=145;scene.player.y=H/2;scene.enemy.x=W-145;scene.enemy.y=H/2;mouseAim=null;aimSource=null;keyDown.clear();stick.x=stick.y=0;gamepadState.buttons=[];gamepadState.mx=gamepadState.my=0;gamepadState.aiming=false;scene.nextMove=0;for(const f of [...team,...foes])for(const c of memberCards(f))directionalFor(c);
+ $('teamScreen').hidden=true;$('resultScreen').hidden=true;$('battleScreen').hidden=false;enterImmersive();activatePrintedRules(scene);$('matchMode').textContent=mode==='demo'?(useTagDemo?'TAG TEAM DEMO · NO REWARDS':'DEMO · NO REWARDS'):'3V3 · OWNED CARDS';$('battleTitle').textContent=mode==='demo'?(useTagDemo?'TAG TEAM Stadium':'Demo Stadium Battle'):'Binder Championship';logEvent(useTagDemo?'TAG TEAM ready! Every named Pokémon joins the fight.':'Battle started. Move, attack, dodge, and switch!');hudUpdate(true);lastFrame=performance.now();cancelAnimationFrame(frameId);frameId=requestAnimationFrame(tick);requestAnimationFrame(fitArena);}
 function logEvent(msg){if(!scene)return;scene.logs.push(msg);$('battleLog').textContent=msg;showFieldToast(msg)}
 function showFieldToast(s){const e=$('overlayNotice');e.textContent=s;e.classList.add('show');clearTimeout(noticeTimer);noticeTimer=setTimeout(()=>e.classList.remove('show'),1300)}
 function moveTo(f,dx,dy,dt){if(f.stun>0)return;const mag=Math.hypot(dx,dy)||1;const factor=Math.min(1,mag);const speed=f.dash>0?550:f.speed;let nx=f.x+dx/mag*speed*dt*factor,ny=f.y+dy/mag*speed*dt*factor;nx=clamp(nx,AREA.l+f.r,AREA.r-f.r);ny=clamp(ny,AREA.t+f.r,AREA.b-f.r);for(const rock of rockLayout){const difX=nx-rock.x,difY=ny-rock.y,d=Math.hypot(difX,difY)||1,minD=f.r+rock.r+4;if(d<minD){nx=rock.x+difX/d*minD;ny=rock.y+difY/d*minD;}}f.x=clamp(nx,AREA.l+f.r,AREA.r-f.r);f.y=clamp(ny,AREA.t+f.r,AREA.b-f.r);f.moving=true;setFacing(f,dx,dy);}
@@ -426,16 +474,31 @@ function attack(who,index){if(!scene||scene.over||!who||who.hp<=0)return false;c
  if(who.side==='e')setFacing(who,target.x-who.x,target.y-who.y);
  if(who.side==='p')refreshPlayerAim();
  const direction=facingAngle(who),dd=dist(who,target);
- who.cool[index]=m.cooldown;const color=who.color;if(m.kind==='close'){
-  const fx=who.x,fy=who.y;who.x=clamp(who.x+Math.cos(direction)*Math.min(70,dd*.34),AREA.l+who.r,AREA.r-who.r);who.y=clamp(who.y+Math.sin(direction)*Math.min(70,dd*.34),AREA.t+who.r,AREA.b-who.r);
-  scene.effects.push({x:who.x,y:who.y,r:65,time:.3,max:.3,color,kind:'sweep',dir:direction});if(dist(who,target)<115&&Math.cos(Math.atan2(target.y-who.y,target.x-who.x)-direction)>.15)dealDamage(who,target,m.damage,color);
+ who.cool[index]=m.cooldown;const color=who.color;
+ if(m.kind==='close'){
+  who.x=clamp(who.x+Math.cos(direction)*Math.min(70,dd*.34),AREA.l+who.r,AREA.r-who.r);
+  who.y=clamp(who.y+Math.sin(direction)*Math.min(70,dd*.34),AREA.t+who.r,AREA.b-who.r);
+  const origins=fighterMembers(who),targets=fighterMembers(target);
+  for(const origin of origins)scene.effects.push({x:origin.x,y:origin.y,r:65,time:.3,max:.3,color,kind:'sweep',dir:direction});
+  if(origins.some(v=>targets.some(w=>Math.hypot(v.x-w.x,v.y-w.y)<115&&Math.cos(Math.atan2(w.y-v.y,w.x-v.x)-direction)>.15)))dealDamage(who,target,m.damage,color);
  }else if(m.kind==='area'){
-  scene.effects.push({x:who.x,y:who.y,r:m.radius,time:.52,max:.52,color,kind:'pulse'});if(dist(who,target)<m.radius+target.r)dealDamage(who,target,m.damage,color);
+  const origins=fighterMembers(who);
+  for(const origin of origins)scene.effects.push({x:origin.x,y:origin.y,r:m.radius,time:.52,max:.52,color,kind:'pulse'});
+  if(nearestMemberDistance(who,target)<m.radius+30)dealDamage(who,target,m.damage,color);
  }else{
-  const count=m.projectiles||1;for(let j=0;j<count;j++){const spread=count===1?0:(j-(count-1)/2)*.19;const a=direction+spread;scene.shots.push({x:who.x+Math.cos(a)*32,y:who.y+Math.sin(a)*32,vx:Math.cos(a)*m.speed,vy:Math.sin(a)*m.speed,owner:who.side,life:1.42,damage:m.damage,r:m.radius||15,color,type:who.type});}
-  scene.effects.push({x:who.x,y:who.y,r:25,time:.22,max:.22,color,kind:'ring'});
+  const origins=fighterMembers(who),tag=origins.length>1;
+  // Basic duo/trio attacks launch one shot FROM EACH Pokémon. Combined output
+  // stays close to normal card damage, rather than multiplying attack power.
+  const regularCount=m.projectiles||1,count=tag&&regularCount===1?origins.length:regularCount;
+  const damage=tag&&regularCount===1?Math.max(1,Math.round(m.damage*1.12/origins.length)):m.damage;
+  for(let j=0;j<count;j++){
+   const spread=count===1?0:(j-(count-1)/2)*(tag&&regularCount===1?.06:.19);
+   const a=direction+spread,origin=origins[j%origins.length];
+   scene.shots.push({x:origin.x+Math.cos(a)*32,y:origin.y+Math.sin(a)*32,vx:Math.cos(a)*m.speed,vy:Math.sin(a)*m.speed,owner:who.side,life:1.42,damage,r:m.radius||15,color,type:who.type});
+  }
+  for(const origin of origins)scene.effects.push({x:origin.x,y:origin.y,r:25,time:.22,max:.22,color,kind:'ring'});
  }
- if(who.side==='p'){scene.logs.push(`${who.name} used ${m.name}`);$('battleLog').textContent=`${who.name} used ${m.name} · ${m.damage} base power`;}return true;}
+ if(who.side==='p'){scene.logs.push(`${who.name} used ${m.name}`);$('battleLog').textContent=`${who.name} used ${m.name} · ${m.damage} base power${who.tagNames?.length?' · partners attack together':''}`;}return true;}
 function nextReadyIndex(who){
  if(!who)return -1;
  const start=scene?.nextMove||0;
@@ -519,12 +582,12 @@ function calculateCardDamage(source,target,base){
  const modifier=typeEffect(source.type,target.type);
  return {damage:Math.max(1,Math.round(base*modifier)),label:modifier>1?'ARCADE SUPER EFFECTIVE':modifier<1?'ARCADE RESISTED':'NORMAL',source:'arcade',multiplier:modifier};
 }
-function dealDamage(source,target,base,color){
+function dealDamage(source,target,base,color,hitAt=null){
  if(!scene||scene.over||target.hp<=0||target.invuln>0)return;
  const outcome=calculateCardDamage(source,target,base),amount=outcome.damage;
  if(amount<=0){if(source.side==='p')$('battleLog').textContent='Resisted · no damage';return;}
  target.hp=Math.max(0,target.hp-amount);target.invuln=.12;scene.hitFlash=.16;
- scene.effects.push({x:target.x,y:target.y-40,r:20,time:.7,max:.7,color,kind:'hit',number:amount});
+ scene.effects.push({x:hitAt?.x??target.x,y:(hitAt?.y??target.y)-40,r:20,time:.7,max:.7,color,kind:'hit',number:amount});
  if(source.side==='p')scene.damage+=amount;
  if(source.side==='p'&&outcome.label!=='NORMAL')$('battleLog').textContent=outcome.label+' · '+amount+' damage';
  if(target.hp<=0)ko(target);
@@ -542,7 +605,9 @@ function enemyAi(dt){const e=scene.enemy,p=scene.player;if(!e||!p||e.hp<=0)retur
  if(d<490){if(e.cool[0]<=0&&Math.random()<dt*3.1)attack(e,0);else if(d<345&&e.cool[1]<=0&&Math.random()<dt*1.7)attack(e,1);else if(d<135&&e.cool[2]<=0&&Math.random()<dt*1.2)attack(e,2);else if(e.cool[3]<=0&&Math.random()<dt*.22)attack(e,3);}
  if(e.dashCool<=0&&scene.shots.some(s=>s.owner==='p'&&Math.hypot(s.x-e.x,s.y-e.y)<120)&&Math.random()<dt*.65){e.dash=.14;e.dashCool=5;e.invuln=.23;}
 }
-function collisionShots(dt){for(let i=scene.shots.length-1;i>=0;i--){const b=scene.shots[i];b.x+=b.vx*dt;b.y+=b.vy*dt;b.life-=dt;const target=b.owner==='p'?scene.enemy:scene.player;const source=b.owner==='p'?scene.player:scene.enemy;let hit=false;if(target&&target.hp>0&&Math.hypot(target.x-b.x,target.y-b.y)<target.r+b.r){dealDamage({type:b.type,side:b.owner},target,b.damage,b.color);hit=true;}
+function collisionShots(dt){for(let i=scene.shots.length-1;i>=0;i--){const b=scene.shots[i];b.x+=b.vx*dt;b.y+=b.vy*dt;b.life-=dt;const target=b.owner==='p'?scene.enemy:scene.player;let hit=false;
+ const hitMember=target?.hp>0?fighterMembers(target).find(part=>Math.hypot(part.x-b.x,part.y-b.y)<(target.tagNames?.length?27:target.r)+b.r):null;
+ if(hitMember){dealDamage({type:b.type,side:b.owner},target,b.damage,b.color,hitMember);hit=true;}
  if(!hit)for(const rock of rockLayout){if(Math.hypot(b.x-rock.x,b.y-rock.y)<rock.r+b.r*.75){hit=true;break;}}
  if(hit||b.life<=0||b.x<AREA.l||b.x>AREA.r||b.y<AREA.t||b.y>AREA.b)scene.shots.splice(i,1);
  }}
@@ -567,10 +632,10 @@ function hudUpdate(force){if(!scene)return;const p=scene.player,e=scene.enemy;fo
  if($('spriteDirection'))$('spriteDirection').textContent=`Facing ${directionLabel(p.dir)} · ${aimSource==='mouse'&&mouseAim?'MOUSE AIM':aimSource==='gamepad'&&gamepadState.aiming?'STICK AIM':'MANUAL'}`;
  if($('matchupHint')){
   const ours=calculateCardDamage({type:p.type},e,30),theirs=calculateCardDamage({type:e.type},p,30);
-  $('matchupHint').textContent=`TYPES · ${ours.source==='card'?'PRINTED CARD':'ARCADE'} · ${ours.label==='NORMAL'?'NORMAL':ours.label} / DEF ${theirs.label}`;
+  $('matchupHint').textContent=`TYPES · ${ours.source==='card'?'PRINTED CARD':'ARCADE'} · ${ours.label==='NORMAL'?'NORMAL':ours.label} / DEF ${theirs.label}${p.tagNames.length?' · '+p.tagNames.length+' Pokémon / ONE shared HP card':''}`;
  }
- const activeSprites=[directionalFor(scene.player.card),directionalFor(scene.enemy.card)];const ready=activeSprites.filter(x=>x.status==='ready').length;const failed=activeSprites.filter(x=>x.status==='unavailable').length;
- if($('spriteStatus'))$('spriteStatus').textContent=failed?`⚠ ${ready}/2 directional sprites · fallback on ${failed}`:ready===2?'✓ Both Pokémon using 8-way sprites':`Loading sprites · ${ready}/2 ready`;
+ const spriteCards=[...memberCards(scene.player),...memberCards(scene.enemy)];const activeSprites=spriteCards.map(card=>directionalFor(card));const ready=activeSprites.filter(x=>x.status==='ready').length;const failed=activeSprites.filter(x=>x.status==='unavailable').length;
+ if($('spriteStatus'))$('spriteStatus').textContent=failed?`⚠ ${ready}/${activeSprites.length} directional sprites · fallback on ${failed}`:ready===activeSprites.length?'✓ All Pokémon using 8-way sprites':`Loading sprites · ${ready}/${activeSprites.length} ready`;
  $('swapRoster').innerHTML=scene.team.map((f,i)=>`<button type="button" class="swap-slot ${scene.pi===i?'active':''} ${f.hp<=0?'fainted':''}" data-swap="${i}" ${f.hp<=0||scene.pi===i?'disabled':''} title="Switch to ${escapeHtml(f.name)}"><img src="${escapeHtml(f.card.image||'')}" alt=""><small>${escapeHtml(f.name)} · ${Math.ceil(f.hp)} HP</small></button>`).join('');}
 function roundRect(x,y,w,h,r,fill){ctx.beginPath();ctx.roundRect(x,y,w,h,r);ctx.fillStyle=fill;ctx.fill()}
 function circle(x,y,r,fill){ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fillStyle=fill;ctx.fill()}
@@ -600,18 +665,34 @@ function drawArena(){ctx.clearRect(0,0,W,H);
   ctx.moveTo(mouseAim.x,mouseAim.y-20);ctx.lineTo(mouseAim.x,mouseAim.y-7);ctx.moveTo(mouseAim.x,mouseAim.y+7);ctx.lineTo(mouseAim.x,mouseAim.y+20);ctx.stroke();ctx.restore();
  }
  if(scene.hitFlash>0){ctx.fillStyle=`rgba(255,255,255,${scene.hitFlash*.12})`;ctx.fillRect(0,0,W,H);}
- ctx.fillStyle='#e5fffba0';ctx.font='850 12px system-ui';ctx.textAlign='center';ctx.fillText('PACKLAB • CARD ARENA TEST',W/2,H-14);
+ ctx.fillStyle='#e5fffba0';ctx.font='850 12px system-ui';ctx.textAlign='center';ctx.fillText('PACKLAB • TAG TEAM 2D ARENA TEST',W/2,H-14);
 }
 function drawCreature(f){
  const jump=Math.sin(scene.time*4+(f.side==='e'?1.6:0))*2;
- const sx=f.x,sy=f.y+jump;
- ctx.save();ctx.shadowColor=f.color;ctx.shadowBlur=24;circle(sx,sy-2,44,f.color+'31');ctx.restore();
- if(!drawDirectional(f,sx,sy))drawDirectionalFallback(f,sx,sy);
- const barW=76;
- roundRect(sx-barW/2,sy-85,barW,10,5,'#071c2f');
- roundRect(sx-barW/2+1,sy-84,(barW-2)*Math.max(0,f.hp/f.maxHp),8,4,f.side==='p'?'#87f2c5':'#ffb780');
- ctx.textAlign='center';ctx.font='800 12px system-ui';ctx.fillStyle='#ffffff';ctx.shadowColor='#001720';ctx.shadowBlur=5;
- ctx.fillText(f.name.replace(/\s+ex$/i,''),sx,sy+59);ctx.shadowBlur=0;
+ const members=fighterMembers(f),isTag=members.length>1;
+ if(isTag){
+  ctx.save();ctx.lineWidth=3;ctx.strokeStyle=f.side==='p'?'#8ff8cf70':'#ffacac70';
+  ctx.beginPath();ctx.moveTo(members[0].x,members[0].y+jump);for(const m of members.slice(1))ctx.lineTo(m.x,m.y+jump);ctx.stroke();ctx.restore();
+ }
+ // Draw all sprites before labels so one creature cannot cover another's name.
+ for(const [idx,m] of members.entries()){
+  const sx=m.x,sy=m.y+jump;
+  ctx.save();ctx.shadowColor=f.color;ctx.shadowBlur=20;circle(sx,sy-2,isTag?26:31,f.color+'35');ctx.restore();
+  const avatar=isTag?{...f,card:m.card,name:m.name,animClock:f.animClock+idx*.13}:f;
+  if(!drawDirectional(avatar,sx,sy))drawDirectionalFallback(avatar,sx,sy);
+ }
+ for(const m of members){
+  const label=m.name.replace(/\s+ex$/i,'');const y=m.y+jump+(isTag?41:51);
+  ctx.font=isTag?'900 11px system-ui':'800 12px system-ui';ctx.textAlign='center';
+  const width=Math.max(40,ctx.measureText(label).width+10);
+  roundRect(m.x-width/2,y-12,width,16,5,'#0b2038d9');
+  ctx.fillStyle='#ffffff';ctx.fillText(label,m.x,y);
+ }
+ const barW=isTag?126:76;
+ const topY=isTag?f.y+jump-(members.length===3?163:133):f.y+jump-85;
+ roundRect(f.x-barW/2,topY,barW,10,5,'#071c2f');
+ roundRect(f.x-barW/2+1,topY+1,(barW-2)*Math.max(0,f.hp/f.maxHp),8,4,f.side==='p'?'#87f2c5':'#ffb780');
+ if(isTag){ctx.fillStyle='#f8ecff';ctx.font='900 10px system-ui';ctx.textAlign='center';ctx.fillText(`TAG TEAM · ${members.length} · SHARED HP`,f.x,topY-6);}
 }
 function toArenaPos(event){const r=canvas.getBoundingClientRect();return {x:(event.clientX-r.left)/r.width*W,y:(event.clientY-r.top)/r.height*H};}
 function bindControls(){document.addEventListener('keydown',e=>{if(!scene||scene.over||e.target.matches('input,textarea,select'))return;const key=e.key.toLowerCase();if([' ','arrowup','arrowdown','arrowleft','arrowright'].includes(key))e.preventDefault();keyDown.add(key);if(e.repeat)return;if(['1','2','3','4'].includes(key))attack(scene.player,Number(key)-1);else if(key==='f'||key==='enter')attackNextReady();else if(key===' ')dodge();else if(key==='q')rotateTeam(-1);else if(key==='e')rotateTeam(1);});document.addEventListener('keyup',e=>keyDown.delete(e.key.toLowerCase()));window.addEventListener('blur',()=>{keyDown.clear();stick.x=stick.y=0;mouseAim=null;if(aimSource==='mouse')aimSource=null;});
@@ -642,7 +723,7 @@ function bindControls(){document.addEventListener('keydown',e=>{if(!scene||scene
  $('swapRoster').addEventListener('click',e=>{const b=e.target.closest('[data-swap]');if(b)switchTo(Number(b.dataset.swap));});
 }
 function bindMenu(){$('cardFilter').addEventListener('input',displayTeam);$('cardGrid').addEventListener('click',e=>{const b=e.target.closest('[data-pick]');if(!b)return;const id=b.dataset.pick;if(chosen.includes(id))chosen=chosen.filter(x=>x!==id);else if(chosen.length<3)chosen.push(id);else chosen=[...chosen.slice(0,2),id];displayTeam();});$('teamSlots').addEventListener('click',e=>{const b=e.target.closest('[data-slot]');if(b&&chosen[Number(b.dataset.slot)]){chosen.splice(Number(b.dataset.slot),1);displayTeam()}});
- $('autoPick').addEventListener('click',()=>{chosen=eligible.slice(0,3).map(x=>x.instance.instanceId);displayTeam()});$('startFight').addEventListener('click',()=>fightStart(false));$('demoFight').addEventListener('click',()=>fightStart(true));$('leaveFight').addEventListener('click',abandonFight);$('rematch').addEventListener('click',()=>fightStart(mode==='demo'));$('backTeam').addEventListener('click',()=>{scene=null;$('resultScreen').hidden=true;$('battleScreen').hidden=true;leaveImmersive();$('teamScreen').hidden=false;loadOwned();displayTeam()});}
+ $('autoPick').addEventListener('click',()=>{chosen=eligible.slice(0,3).map(x=>x.instance.instanceId);displayTeam()});$('startFight').addEventListener('click',()=>fightStart(false));$('demoFight').addEventListener('click',()=>fightStart(true));$('tagTeamDemo').addEventListener('click',()=>fightStart(true,true));$('leaveFight').addEventListener('click',abandonFight);$('rematch').addEventListener('click',()=>fightStart(mode==='demo',demoVariant==='tag'));$('backTeam').addEventListener('click',()=>{scene=null;$('resultScreen').hidden=true;$('battleScreen').hidden=true;leaveImmersive();$('teamScreen').hidden=false;loadOwned();displayTeam()});}
 async function init(){bindMenu();bindControls();
  window.addEventListener('resize',()=>requestAnimationFrame(fitArena));
  window.addEventListener('orientationchange',()=>setTimeout(fitArena,120));
