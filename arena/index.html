@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0b1020">
-<meta name="description" content="PACKLAB real-time 2D arena test. Build a team from your pulled Pokemon cards and battle in a playable arena.">
+<meta name="description" content="PACKLAB directional sprite and gamepad 2D arena test. Build a team from your pulled Pokemon cards and battle in a playable arena.">
 <title>PACKLAB — Real-Time Arena Test</title>
-<link rel="icon" href="../favicon.svg" type="image/svg+xml"><style>
+<style>
 :root{color-scheme:dark;--bg:#0a1020;--ink:#f0f3ff;--faint:#9faaca;--mint:#61e6c9;--purple:#ae8cff;--edge:#3b4667;--panel:#151e34;--deep:#0e162a;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
 *{box-sizing:border-box}html{min-width:310px}body{margin:0;background:var(--bg);color:var(--ink)}button,input{font:inherit}button,a{touch-action:manipulation}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.48}a{color:inherit;text-decoration:none}button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(--mint);outline-offset:3px}[hidden]{display:none!important}
 .ambient{position:fixed;inset:-5%;background:radial-gradient(circle at 12% -7%,#4547784d,transparent 34%),radial-gradient(circle at 90% 8%,#3d2b6644,transparent 40%),radial-gradient(circle at 72% 90%,#184b5850,transparent 46%);pointer-events:none;z-index:-1}.site-shell{max-width:1260px;margin:auto;padding:0 24px}.masthead{height:82px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #ffffff1a;gap:16px}.brand{display:flex;align-items:center;gap:11px;font-size:19px;font-weight:950;letter-spacing:1px}.brand-emblem{height:42px;width:42px;display:grid;place-items:center;border-radius:13px;background:linear-gradient(140deg,#a98bf7,#664cba);box-shadow:0 0 25px #725ef266;font-size:28px;position:relative}.brand-emblem span{font-size:9px;position:absolute;right:8px;top:9px;color:#75ffe1}.brand small{display:block;color:#a8acd1;font-size:9px;font-weight:850;letter-spacing:2.2px;margin-top:3px}.head-right{display:flex;align-items:center;gap:20px}.pill{font-size:10px;font-weight:850;letter-spacing:1.2px;padding:8px 11px;border:1px solid #5f5a92;border-radius:6px;color:#ddcbff;background:#4735694d}.return{font-size:12px;color:#adb8d1;font-weight:800}.return:hover,.text-link:hover{color:#fff}
@@ -18,16 +18,32 @@ main{padding:38px 0 54px}.intro{display:grid;grid-template-columns:minmax(0,1fr)
 @media(hover:none) and (pointer:coarse) and (min-width:701px){.joystick,.touch-field-buttons{display:flex;position:absolute;bottom:17px}.joystick{width:120px;height:120px;left:18px;justify-content:center;align-items:center}.stick-ring{width:110px;height:110px;display:grid;place-items:center;border-radius:50%;background:#091d29aa;border:2px solid #ffffff80}.stick-knob{width:42px;height:42px;border-radius:50%;background:#b0f8dfaa}.touch-field-buttons{right:15px;gap:8px}.field-control{width:70px;height:70px;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:50%;background:#5c4b86aa;border:2px solid #ffffff80;color:white}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{transition-duration:0ms!important;animation-duration:0ms!important}}
 
+/* v0.8 — gamepad status, next-ready attack, directional sprite notices */
+.controller-line{color:#b8ffe7;font-size:12px;font-weight:850;border:1px solid #3a685b;background:#142e2b;padding:10px 14px;border-radius:9px;margin:0 0 17px;width:fit-content;max-width:100%}
+.controller-status{display:inline-block;margin-top:7px;color:#8af2da!important;font-weight:900}
+.quick-attack-row{display:flex;align-items:center;gap:12px;margin-top:12px;flex-wrap:wrap;background:#141e32;border:1px solid #3b5275;border-radius:12px;padding:9px 12px}
+.quick-attack{min-width:170px;min-height:49px;font-size:15px;gap:8px;border-color:#8ff5ce;background:linear-gradient(130deg,#257962,#3253a0)}
+.quick-attack span{display:block;font-size:9px;letter-spacing:.5px;font-weight:950;color:#c3fff0;max-width:150px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.quick-attack.cooling{filter:saturate(.65)}
+.quick-attack-row>span{color:#b2c2dd;font-size:11px;line-height:1.55;flex:1;min-width:180px}
+.quick-attack-row .facing-readout{background:#223c4d;border-radius:6px;padding:7px 10px;flex:0 0 auto;min-width:unset;color:#aff7de;font-weight:900}
+.arena-frame canvas{cursor:crosshair}
+footer a{color:#adffe3;text-decoration:underline}
+@media(max-width:700px){.quick-attack-row{padding:6px;gap:7px}.quick-attack{min-width:130px;min-height:46px;font-size:12px}.quick-attack-row>span{font-size:9px;min-width:135px}.quick-attack-row .facing-readout{width:100%;text-align:center;padding:4px}.controller-line{font-size:10px}.controls-help{line-height:1.75}}
+
+.sprite-readout{color:#a3b4c8;font-size:10px;font-weight:900;white-space:nowrap}
+@media(max-width:700px){.sprite-readout{width:100%;text-align:center;white-space:normal;font-size:10px}}
+
 </style>
 </head>
 <body>
 <div class="ambient" aria-hidden="true"></div>
 <div class="site-shell">
-<header class="masthead"><a class="brand" href="../" aria-label="Back to PACKLAB"><span class="brand-emblem">P<span>◆</span></span><span>PACKLAB<small>ARENA TEST · v0.7</small></span></a><div class="head-right"><span class="pill purple">REAL-TIME 2D</span><a class="return" href="../">← Back to packs</a></div></header>
+<header class="masthead"><a class="brand" href="../" aria-label="Back to PACKLAB"><span class="brand-emblem">P<span>◆</span></span><span>PACKLAB<small>ARENA TEST · v0.8</small></span></a><div class="head-right"><span class="pill purple">REAL-TIME 2D</span><a class="return" href="../">← Back to packs</a></div></header>
 <main>
-<section class="intro"><div><div class="eyebrow"><span class="signal"></span> BINDER → BATTLEFIELD</div><h1>Your cards.<br><em>Your fighters.</em></h1><p>Build a team from cards you've pulled, then control your Pokémon in a live 2D arena. Move, aim, attack, dodge and switch before your opponents do.</p></div><div class="rules-panel"><div class="rules-big">3 <span>vs</span> 3</div><div>REAL-TIME ARENA</div><p><strong>Card-locked roster</strong> · printed HP, type and attack names influence your fighter. Action timing is adapted for this demo.</p></div></section>
+<section class="intro"><div><div class="eyebrow"><span class="signal"></span> BINDER → BATTLEFIELD</div><h1>Your cards.<br><em>Your fighters.</em></h1><p>Build a team from cards you've pulled, then control your Pokémon in a live 2D arena. Turn freely in eight directions, aim at your opponent, auto-chain ready moves with a click, and play on keyboard, phone or controller.</p></div><div class="rules-panel"><div class="rules-big">3 <span>vs</span> 3</div><div>REAL-TIME ARENA</div><p><strong>Card-locked roster</strong> · printed HP, type and attack names influence your fighter. Action timing is adapted for this demo.</p></div></section>
 <section id="teamScreen" aria-label="Choose battle team">
-<div class="section-head"><div><span class="eyebrow">01 / LINEUP</span><h2>Choose your three</h2><p>Only Pokémon copies in your PACKLAB binder are eligible. Cards currently away at the grader cannot battle.</p></div><div class="roster-badge" id="ownedCount">CHECKING BINDER</div></div>
+<div id="padStatus" class="controller-line" role="status">🎮 No controller detected — connect then press a button</div><div class="section-head"><div><span class="eyebrow">01 / LINEUP</span><h2>Choose your three</h2><p>Only Pokémon copies in your PACKLAB binder are eligible. Cards currently away at the grader cannot battle.</p></div><div class="roster-badge" id="ownedCount">CHECKING BINDER</div></div>
 <div class="team-slots" id="teamSlots"></div>
 <div class="card-head"><strong>YOUR BINDER <span id="binderCount"></span></strong><label for="cardFilter" class="sr-only">Search your Pokémon</label><input id="cardFilter" type="search" placeholder="Find a Pokémon, set, or type…" autocomplete="off" maxlength="70"></div>
 <div id="binderNotice" class="notice" hidden></div><div id="cardGrid" class="card-grid"></div>
@@ -37,14 +53,14 @@ main{padding:38px 0 54px}.intro{display:grid;grid-template-columns:minmax(0,1fr)
 <section id="battleScreen" hidden aria-label="Live arena battle">
 <div class="battle-meta"><div><span class="eyebrow">02 / LIVE MATCH</span><h2 id="battleTitle">Stadium Match</h2></div><div class="match-status"><span class="signal"></span><span id="matchTimer">00:00</span><span id="matchMode">3V3 · NPC</span></div></div>
 <div class="combat-hud"><div class="hud-side"><img id="ownPortrait" alt="Your Pokémon card"><div class="fighter-meta"><div class="hud-label">YOUR POKÉMON <span id="ownType"></span></div><strong id="ownName">—</strong><div class="life-rail"><div class="life-fill green" id="ownLife"></div></div><small id="ownHp">—</small></div></div><div class="hud-vs">VS</div><div class="hud-side enemy"><div class="fighter-meta"><div class="hud-label">CHALLENGER <span id="enemyType"></span></div><strong id="enemyName">—</strong><div class="life-rail"><div class="life-fill orange" id="enemyLife"></div></div><small id="enemyHp">—</small></div><img id="enemyPortrait" alt="Opponent Pokémon card"></div></div>
-<div class="arena-frame" id="arenaFrame"><canvas id="arenaCanvas" width="1050" height="570" role="img" aria-label="Live Pokémon battle arena. Use WASD to move, number keys to attack, Space to dodge, and Q or E to switch."></canvas><div id="overlayNotice" class="field-toast" aria-live="polite"></div><div id="touchJoystick" class="joystick"><div class="stick-ring"><div class="stick-knob"></div></div></div><div class="touch-field-buttons"><button id="touchDodge" type="button" class="field-control">↝<small>DODGE</small></button><button id="touchSwap" type="button" class="field-control">⇄<small>SWAP</small></button></div></div>
-<div class="action-console"><div class="moves"><button data-move="0" class="move-button" type="button"><span class="move-num">1</span><span class="move-text">—</span><span class="cooldown"></span></button><button data-move="1" class="move-button" type="button"><span class="move-num">2</span><span class="move-text">—</span><span class="cooldown"></span></button><button data-move="2" class="move-button" type="button"><span class="move-num">3</span><span class="move-text">—</span><span class="cooldown"></span></button><button data-move="3" class="move-button special" type="button"><span class="move-num">4</span><span class="move-text">—</span><span class="cooldown"></span></button></div><div class="swap-roster" id="swapRoster" aria-label="Switch Pokémon"></div></div>
+<div class="arena-frame" id="arenaFrame"><canvas id="arenaCanvas" width="1050" height="570" role="img" aria-label="Real-time battle arena. Click or tap the arena to attack with the next ready move. Use WASD or the left gamepad stick to move, and the right stick to aim."></canvas><div id="overlayNotice" class="field-toast" aria-live="polite"></div><div id="touchJoystick" class="joystick"><div class="stick-ring"><div class="stick-knob"></div></div></div><div class="touch-field-buttons"><button id="touchDodge" type="button" class="field-control">↝<small>DODGE</small></button><button id="touchSwap" type="button" class="field-control">⇄<small>SWAP</small></button></div></div>
+<div class="quick-attack-row"><button id="quickAttack" class="primary quick-attack" type="button">⚡ ATTACK <span id="nextMoveLabel">NEXT READY MOVE</span></button><span>Click / tap arena, press <b>F</b>, or press <b>A / Cross</b> on a controller to rotate through ready moves.</span><span class="facing-readout" id="spriteDirection">Facing Right</span><span class="sprite-readout" id="spriteStatus">Loading 8-way sprites…</span></div><div class="action-console"><div class="moves"><button data-move="0" class="move-button" type="button"><span class="move-num">1</span><span class="move-text">—</span><span class="cooldown"></span></button><button data-move="1" class="move-button" type="button"><span class="move-num">2</span><span class="move-text">—</span><span class="cooldown"></span></button><button data-move="2" class="move-button" type="button"><span class="move-num">3</span><span class="move-text">—</span><span class="cooldown"></span></button><button data-move="3" class="move-button special" type="button"><span class="move-num">4</span><span class="move-text">—</span><span class="cooldown"></span></button></div><div class="swap-roster" id="swapRoster" aria-label="Switch Pokémon"></div></div>
 <div class="battle-bottom"><span id="battleLog" aria-live="polite">Choose your opening move. Follow the battle indicators.</span><button class="secondary quit" id="leaveFight" type="button">Leave match</button></div>
-<div class="controls-help"><strong>PC</strong> WASD / arrows = move · cursor = aim · 1–4 = attacks · Space = dodge · Q/E = switch <span>·</span> <strong>PHONE</strong> left joystick = move · right buttons = attacks / dodge / switch</div>
+<div class="controls-help"><strong>PC</strong> WASD / arrows = move · mouse = aim · click or F = next ready attack · 1–4 = individual moves · Space = dodge · Q/E = switch<br><strong>CONTROLLER</strong> left stick / D-pad = move · right stick = aim/turn · A / Cross or RT = next ready attack · B / Circle or LT = dodge · LB/RB or X/Y = switch<br><strong>PHONE</strong> left joystick = move/turn · tap the arena or ATTACK = next ready move · move buttons = manual attacks · Dodge / Swap<br><span id="padStatusBattle" class="controller-status">🎮 No controller detected — connect then press a button</span></div>
 </section>
 <section id="resultScreen" hidden class="result-panel" aria-label="Match result"><span class="eyebrow">MATCH COMPLETE</span><h2 id="resultTitle">Victory!</h2><p id="resultCopy"></p><div class="result-stats" id="resultStats"></div><div class="result-buttons"><button class="primary" id="rematch">↻ Rematch</button><button class="secondary" id="backTeam">Edit team</button><a class="secondary" href="../">Return to PACKLAB</a></div></section>
 </main>
-<footer><span>PACKLAB · NONCOMMERCIAL GAMEPLAY PROTOTYPE</span><span>Locally saved binder · No WebGL2 · Browser action arena</span></footer>
+<footer><span>PACKLAB · NONCOMMERCIAL GAMEPLAY PROTOTYPE</span><span>Eight-direction fan sprite artwork by contributors to <a href="https://sprites.pmdcollab.org/" target="_blank" rel="noopener noreferrer">PMD Sprite Repository</a> · <a href="https://github.com/PMDCollab/SpriteCollab" target="_blank" rel="noopener noreferrer">Artist credits</a></span><span>Locally saved binder · Canvas 2D · Browser + gamepad</span></footer>
 </div><script>
 /* PACKLAB Arena v0.7 — independently authored real-time 2D prototype.
    Reads the existing binder from same-origin localStorage. No WebGL2, no PvP/network server.
@@ -65,6 +81,14 @@ if(!ctx)throw Error('2D Canvas is required for the battle arena.');
 const W=canvas.width,H=canvas.height,AREA={l:45,r:W-45,t:45,b:H-45};
 const TYPES={Fire:'#ff795b',Water:'#61aaff',Grass:'#69e199',Lightning:'#ffd46a',Electric:'#ffd46a',Psychic:'#db8cff',Darkness:'#ab9bca',Dark:'#ab9bca',Fighting:'#ff9d6e',Metal:'#c9d7e4',Colorless:'#d3d8e1',Fairy:'#ff98d9',Dragon:'#b5a2ff'};
 const spriteCache=new Map(),pendingSprites=new Set();
+// The PMD Sprite Repository provides eight genuine facings per Pokemon.
+// Each sheet has animation frames across columns and rows ordered:
+// down, down-right, right, up-right, up, up-left, left, down-left.
+const DIRECTIONAL_BASE='https://raw.githubusercontent.com/PMDCollab/SpriteCollab/master/sprite/';
+const directionalCache=new Map();
+const gamepadState={connected:false,id:'',buttons:[],mx:0,my:0,aimX:0,aimY:0,aiming:false};
+let gamepadLastLabel='',lastCooldownToast=0;
+
 let saved=null,eligible=[],chosen=[],scene=null,matchCount=0,frameId=0,lastFrame=0,lastHud=0,noticeTimer=null;
 let keyDown=new Set(),mouseAim=null,stick={id:null,x:0,y:0};
 let preview=false,mode='owned';
@@ -96,11 +120,110 @@ function displayTeam(){const members=chosen.map(id=>eligible.find(x=>x.instance.
 function pokeName(name){return String(name||'').replace(/\b(?:ex|gx|vmax|vstar|v|lv\.?\s*x|delta species)\b/ig,'').replace(/\s+/g,' ').trim().replace(/\b(?:Alolan|Galarian|Hisuian|Paldean)\s+/i,'').replace(/\s*(?:\(|\[).*$/,'').trim()}
 function dexKey(name){return pokeName(name).normalize('NFD').replace(/\p{Diacritic}/gu,'').toLowerCase().replace(/[.'’]/g,'').replace(/[^a-z0-9]+/g,'').trim()}
 function pokemonSlug(name){return pokeName(name).toLowerCase().replace(/♀/g,'-f').replace(/♂/g,'-m').replace(/[^a-z0-9-]+/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'')}
-function spriteFor(card){const key=dexKey(card.name);if(spriteCache.has(key))return spriteCache.get(key);if(!pendingSprites.has(key)){
- pendingSprites.add(key);const direct=POKEMON_IDS[key];const load=url=>{const pic=new Image();pic.decoding='async';pic.onload=()=>spriteCache.set(key,pic);pic.onerror=()=>{spriteCache.set(key,null)};pic.src=url;};
- if(direct)load(`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${direct}.png`);
- else fetch(`https://pokeapi.co/api/v2/pokemon/${encodeURIComponent(pokemonSlug(card.name))}`,{signal:AbortSignal.timeout(7000)}).then(r=>r.ok?r.json():null).then(body=>{if(body?.sprites?.front_default)load(body.sprites.front_default);else spriteCache.set(key,null)}).catch(()=>spriteCache.set(key,null));
- }return null;}
+function spriteFor(card,back=false){
+ const key=dexKey(card.name)+(back?'::back':'::front');
+ if(spriteCache.has(key))return spriteCache.get(key);
+ if(!pendingSprites.has(key)){
+  pendingSprites.add(key);
+  const load=url=>{if(!url){spriteCache.set(key,null);return;}
+   const img=new Image();img.decoding='async';img.onload=()=>spriteCache.set(key,img);img.onerror=()=>spriteCache.set(key,null);img.src=url;};
+  const known=POKEMON_IDS[dexKey(card.name)];
+  if(known)load(`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${back?'back/':''}${known}.png`);
+  else fetch(`https://pokeapi.co/api/v2/pokemon/${encodeURIComponent(pokemonSlug(card.name))}`,{signal:AbortSignal.timeout(7000)})
+   .then(r=>r.ok?r.json():null).then(data=>load(data?.sprites?.[back?'back_default':'front_default']||null)).catch(()=>spriteCache.set(key,null));
+ }
+ return null;
+}
+function setFacing(f,x,y){
+ if(!f||Math.hypot(x,y)<.11)return;
+ // PMD SpriteCollab row numbering, clockwise from the south-facing/front sprite.
+ f.dir=(Math.round(Math.atan2(x,y)/(Math.PI/4))+8)%8;
+ f.face=x>=0?1:-1;
+}
+function directionLabel(dir){return ['Front','Front-right','Right','Back-right','Back','Back-left','Left','Front-left'][dir]||'Front';}
+function loadImage(url){return new Promise((resolve,reject)=>{
+ const img=new Image();img.decoding='async';img.onload=()=>img.naturalWidth?resolve(img):reject(Error('Empty image'));
+ img.onerror=()=>reject(Error('Image not available'));img.src=url;
+});}
+function parseAnim(xml,kind){
+ const parsed=new DOMParser().parseFromString(xml,'text/xml');
+ const anim=[...parsed.getElementsByTagName('Anim')].find(a=>a.getElementsByTagName('Name')[0]?.textContent?.trim()===kind);
+ if(!anim)return null;
+ const text=name=>anim.getElementsByTagName(name)[0]?.textContent?.trim()||'';
+ const width=Number(text('FrameWidth')),height=Number(text('FrameHeight'));
+ const durations=[...anim.getElementsByTagName('Duration')].map(v=>Number(v.textContent)).filter(n=>n>0);
+ return width>0&&height>0?{width,height,durations}:null;
+}
+function directionalFor(card){
+ const key=dexKey(card.name);
+ if(directionalCache.has(key))return directionalCache.get(key);
+ const entry={status:'loading',walk:null,idle:null,walkMeta:null,idleMeta:null};
+ directionalCache.set(key,entry);
+ (async()=>{
+  let dex=POKEMON_IDS[key];
+  if(!dex){const response=await fetch(`https://pokeapi.co/api/v2/pokemon/${encodeURIComponent(pokemonSlug(card.name))}`,{signal:AbortSignal.timeout(8000)});
+   if(!response.ok)throw Error('Unknown Pokemon');dex=(await response.json())?.id;}
+  if(!(dex>0))throw Error('Missing species number');
+  const base=DIRECTIONAL_BASE+String(dex).padStart(4,'0')+'/';
+  const metaRequest=fetch(base+'AnimData.xml',{signal:AbortSignal.timeout(10000)}).then(async r=>{if(!r.ok)throw Error('No animation metadata');return r.text();});
+  const walkRequest=loadImage(base+'Walk-Anim.png');
+  const idleRequest=loadImage(base+'Idle-Anim.png').catch(()=>null);
+  const [metadata,walk,idle]=await Promise.all([metaRequest,walkRequest,idleRequest]);
+  const walkMeta=parseAnim(metadata,'Walk');
+  const idleMeta=parseAnim(metadata,'Idle');
+  if(!walkMeta||walk.naturalHeight<walkMeta.height*8||walk.naturalWidth<walkMeta.width)throw Error('Invalid directional sheet');
+  entry.walk=walk;entry.walkMeta=walkMeta;
+  if(idle&&idleMeta&&idle.naturalHeight>=idleMeta.height*8){entry.idle=idle;entry.idleMeta=idleMeta;}
+  entry.status='ready';
+ })().catch(err=>{entry.status='unavailable';console.debug('Directional sprite fallback:',card.name,err.message);});
+ return entry;
+}
+function animationColumn(meta,img,t){
+ const cols=Math.max(1,Math.floor(img.naturalWidth/meta.width));
+ const durations=(meta.durations.length===cols?meta.durations:Array(cols).fill(8));
+ const total=durations.reduce((a,b)=>a+b,0)||cols*8;
+ let frame=(t*60)%total;
+ for(let i=0;i<cols;i++){frame-=durations[i];if(frame<0)return i;}
+ return 0;
+}
+function drawDirectional(f,x,y){
+ const asset=directionalFor(f.card);
+ if(asset.status!=='ready')return false;
+ const motion=f.moving&&asset.walk;
+ const sheet=(motion?asset.walk:asset.idle)||asset.walk;
+ const meta=(motion?asset.walkMeta:asset.idleMeta)||asset.walkMeta;
+ if(!sheet||!meta)return false;
+ const row=(f.dir??(f.side==='p'?2:6))%8;
+ const column=animationColumn(meta,sheet,f.animClock||0);
+ const targetH=clamp(meta.height*2.3,82,112),scale=targetH/meta.height;
+ const w=meta.width*scale,h=meta.height*scale;
+ ctx.save();ctx.imageSmoothingEnabled=false;
+ ctx.drawImage(sheet,column*meta.width,row*meta.height,meta.width,meta.height,
+   Math.round(x-w/2),Math.round(y-h/2-16),Math.round(w),Math.round(h));
+ ctx.restore();
+ return true;
+}
+function drawDirectionalFallback(f,x,y){
+ // Use the authentic rear battle sprite when the Pokemon is facing north;
+ // never draw a camera-facing face as though it were a rear view.
+ const back=[3,4,5].includes(f.dir);
+ const img=spriteFor(f.card,back);
+ if(img?.complete&&img.naturalWidth){
+  ctx.save();ctx.imageSmoothingEnabled=false;
+  const size=103+(f.maxHp-70)*.06;
+  if(f.dir===6||f.dir===7){ctx.translate(x,0);ctx.scale(-1,1);ctx.translate(-x,0);}
+  ctx.drawImage(img,x-size/2,y-size/2-19,size,size);ctx.restore();return;
+ }
+ // Last-resort compass avatar: solid back / profile with no false forward face.
+ ctx.save();
+ circle(x,y-14,35,f.color);
+ ctx.strokeStyle='#092237';ctx.lineWidth=4;
+ if(back){ctx.beginPath();ctx.arc(x,y-16,17,Math.PI*.15,Math.PI*.85);ctx.stroke();}
+ else if(f.dir===1||f.dir===2||f.dir===6||f.dir===7){
+  ctx.fillStyle='#fff5df';circle(x+(f.face*14),y-22,5,'#fff9ee');circle(x+(f.face*16),y-22,2,'#18213b');
+ }else{circle(x-11,y-22,4,'#fff9ee');circle(x+11,y-22,4,'#fff9ee');}
+ ctx.restore();
+}
 function colorFor(type){return TYPES[type]||'#bbcce2'}
 function parsePower(raw){let n=Number(String(raw??'').match(/\d+/)?.[0]||0);return clamp(n||30,10,270)}
 function abilityType(name){return /(claw|punch|kick|tackle|slam|bite|headbutt|body|crunch|scratch|jab|ram|impact|blade|wing|rush|strike)/i.test(name)?'close':'projectile'}
@@ -110,20 +233,21 @@ function getMoveSet(card){const printed=(card.attacks||[]).filter(a=>a?.name).sl
  const m2={name:p2.name,kind:abilityType(p2.name),damage:clamp(Math.round(16+parsePower(p2.damage)*.17),22,47),cooldown:2.3,radius:20,speed:375,projectiles:1};
  const typeSkills={Lightning:['Spark Field','Volt Finale'],Electric:['Spark Field','Volt Finale'],Fire:['Flame Ring','Inferno Rush'],Water:['Tidal Burst','Hydro Surge'],Grass:['Leaf Cyclone','Nature Bloom'],Psychic:['Psy Pulse','Mind Storm'],Darkness:['Shadow Spiral','Night Barrage'],Fighting:['Shockwave','Meteor Strike'],Dragon:['Dragon Pulse','Draco Storm'],Metal:['Steel Quake','Alloy Blitz'],Colorless:['Swift Burst','Starfall']};const [area,finisher]=typeSkills[type]||typeSkills.Colorless;
  return [m1,m2,{name:area,kind:'area',damage:23,cooldown:4.5,radius:125},{name:finisher,kind:'volley',damage:16,cooldown:9,radius:18,speed:480,projectiles:5}];}
-function fighterFor(card,instanceId,side){return {card,instanceId,side,name:card.name,type:card.types?.[0]||'Colorless',color:colorFor(card.types?.[0]),hp:Math.round(70+Math.max(30,card.hp)*.37),maxHp:Math.round(70+Math.max(30,card.hp)*.37),baseHp:card.hp,moves:getMoveSet(card),cool:[0,0,0,0],x:side==='p'?145:W-145,y:H/2,r:30,speed:side==='p'?208:170,face:side==='p'?1:-1,shield:0,invuln:0,stun:0,dash:0,dashCool:0,kos:0};}
+function fighterFor(card,instanceId,side){return {card,instanceId,side,name:card.name,type:card.types?.[0]||'Colorless',color:colorFor(card.types?.[0]),hp:Math.round(70+Math.max(30,card.hp)*.37),maxHp:Math.round(70+Math.max(30,card.hp)*.37),baseHp:card.hp,moves:getMoveSet(card),cool:[0,0,0,0],x:side==='p'?145:W-145,y:H/2,r:30,speed:side==='p'?208:170,face:side==='p'?1:-1,dir:side==='p'?2:6,moving:false,animClock:0,lastAnimState:'idle',shield:0,invuln:0,stun:0,dash:0,dashCool:0,kos:0};}
 function makeEnemyTeam(){const unique=enemySamples.map(c=>structuredClone(c));const pool=[];for(const sid of Object.keys(SET_NAMES)){for(const c of getCatalog(sid)||[]){if(/Pok[eé]mon/i.test(c.category)&&c.hp>=90&&c.attacks?.length&&!(pool.some(x=>x.name===c.name))&&!(chosen.some(id=>eligible.find(x=>x.instance.instanceId===id)?.card.name===c.name)))pool.push(c);}}
  if(pool.length>=3){const ordered=pool.sort(()=>Math.random()-.5);return ordered.slice(0,3).map((c,i)=>fighterFor(c,'cpu-'+i,'e'));}return unique.map((c,i)=>fighterFor(c,'cpu-'+i,'e'));}
-function fightStart(useDemo=false){mode=useDemo?'demo':'owned';if(!useDemo&&chosen.length!==3)return;const team=useDemo?demoCards.map((c,i)=>fighterFor(c,'demo-'+i,'p')):chosen.map(id=>{const entry=eligible.find(x=>x.instance.instanceId===id);return fighterFor(entry.card,id,'p')});const foes=makeEnemyTeam();scene={team,foes,pi:0,ei:0,player:team[0],enemy:foes[0],effects:[],shots:[],logs:[],time:0,over:false,win:false,koPlayer:0,koEnemy:0,damage:0,award:false,enemyStrafe:1,aiClock:0,hitFlash:0,weather:0};scene.player.x=145;scene.player.y=H/2;scene.enemy.x=W-145;scene.enemy.y=H/2;mouseAim=null;keyDown.clear();stick.x=stick.y=0;
+function fightStart(useDemo=false){mode=useDemo?'demo':'owned';if(!useDemo&&chosen.length!==3)return;const team=useDemo?demoCards.map((c,i)=>fighterFor(c,'demo-'+i,'p')):chosen.map(id=>{const entry=eligible.find(x=>x.instance.instanceId===id);return fighterFor(entry.card,id,'p')});const foes=makeEnemyTeam();scene={team,foes,pi:0,ei:0,player:team[0],enemy:foes[0],effects:[],shots:[],logs:[],time:0,over:false,win:false,koPlayer:0,koEnemy:0,damage:0,award:false,enemyStrafe:1,aiClock:0,hitFlash:0,weather:0};scene.player.x=145;scene.player.y=H/2;scene.enemy.x=W-145;scene.enemy.y=H/2;mouseAim=null;keyDown.clear();stick.x=stick.y=0;gamepadState.buttons=[];gamepadState.mx=gamepadState.my=0;gamepadState.aiming=false;scene.nextMove=0;for(const f of [...team,...foes])directionalFor(f.card);
  $('teamScreen').hidden=true;$('resultScreen').hidden=true;$('battleScreen').hidden=false;$('matchMode').textContent=mode==='demo'?'DEMO · NO REWARDS':'3V3 · OWNED CARDS';$('battleTitle').textContent=mode==='demo'?'Demo Stadium Battle':'Binder Championship';logEvent('Battle started. Move, attack, dodge, and switch!');hudUpdate(true);lastFrame=performance.now();cancelAnimationFrame(frameId);frameId=requestAnimationFrame(tick);window.scrollTo({top:0,behavior:'instant'});}
 function logEvent(msg){if(!scene)return;scene.logs.push(msg);$('battleLog').textContent=msg;showFieldToast(msg)}
 function showFieldToast(s){const e=$('overlayNotice');e.textContent=s;e.classList.add('show');clearTimeout(noticeTimer);noticeTimer=setTimeout(()=>e.classList.remove('show'),1300)}
-function moveTo(f,dx,dy,dt){if(f.stun>0)return;const mag=Math.hypot(dx,dy)||1;const factor=Math.min(1,mag);const speed=f.dash>0?550:f.speed;let nx=f.x+dx/mag*speed*dt*factor,ny=f.y+dy/mag*speed*dt*factor;nx=clamp(nx,AREA.l+f.r,AREA.r-f.r);ny=clamp(ny,AREA.t+f.r,AREA.b-f.r);for(const rock of rockLayout){const difX=nx-rock.x,difY=ny-rock.y,d=Math.hypot(difX,difY)||1,minD=f.r+rock.r+4;if(d<minD){nx=rock.x+difX/d*minD;ny=rock.y+difY/d*minD;}}f.x=clamp(nx,AREA.l+f.r,AREA.r-f.r);f.y=clamp(ny,AREA.t+f.r,AREA.b-f.r);if(dx)f.face=dx>0?1:-1;}
+function moveTo(f,dx,dy,dt){if(f.stun>0)return;const mag=Math.hypot(dx,dy)||1;const factor=Math.min(1,mag);const speed=f.dash>0?550:f.speed;let nx=f.x+dx/mag*speed*dt*factor,ny=f.y+dy/mag*speed*dt*factor;nx=clamp(nx,AREA.l+f.r,AREA.r-f.r);ny=clamp(ny,AREA.t+f.r,AREA.b-f.r);for(const rock of rockLayout){const difX=nx-rock.x,difY=ny-rock.y,d=Math.hypot(difX,difY)||1,minD=f.r+rock.r+4;if(d<minD){nx=rock.x+difX/d*minD;ny=rock.y+difY/d*minD;}}f.x=clamp(nx,AREA.l+f.r,AREA.r-f.r);f.y=clamp(ny,AREA.t+f.r,AREA.b-f.r);f.moving=true;setFacing(f,dx,dy);}
 function dodge(){if(!scene||scene.over)return;const p=scene.player;if(p.dashCool>0||p.hp<=0)return;p.dash=.19;p.dashCool=3.15;p.invuln=.31;scene.effects.push({x:p.x,y:p.y,r:12,time:.28,max:.28,color:'#d9fff8',kind:'ring'});logEvent(`${p.name} dodged!`)}
-function switchTo(index){if(!scene||scene.over||index===scene.pi||index<0||index>=scene.team.length)return;const next=scene.team[index];if(next.hp<=0)return;const old=scene.player;next.x=old.x;next.y=old.y;next.face=old.face;next.invuln=.7;scene.pi=index;scene.player=next;scene.shots=scene.shots.filter(s=>s.owner!=='p');scene.effects.push({x:next.x,y:next.y,r:60,time:.42,max:.42,color:'#b6a7ff',kind:'ring'});logEvent(`${next.name}, you're up!`);hudUpdate(true)}
+function switchTo(index){if(!scene||scene.over||index===scene.pi||index<0||index>=scene.team.length)return;const next=scene.team[index];if(next.hp<=0)return;const old=scene.player;next.x=old.x;next.y=old.y;next.face=old.face;next.dir=old.dir;next.invuln=.7;scene.nextMove=0;scene.pi=index;scene.player=next;scene.shots=scene.shots.filter(s=>s.owner!=='p');scene.effects.push({x:next.x,y:next.y,r:60,time:.42,max:.42,color:'#b6a7ff',kind:'ring'});logEvent(`${next.name}, you're up!`);hudUpdate(true)}
 function rotateTeam(delta){if(!scene)return;for(let n=1;n<=scene.team.length;n++){const i=(scene.pi+delta*n+scene.team.length*10)%scene.team.length;if(scene.team[i].hp>0&&i!==scene.pi){switchTo(i);return}}}
 function typeEffect(attackerType,targetType){const wins={Fire:['Grass','Metal'],Water:['Fire'],Grass:['Water'],Lightning:['Water'],Electric:['Water'],Fighting:['Colorless','Darkness'],Psychic:['Fighting'],Darkness:['Psychic'],Metal:['Fairy'],Dragon:['Dragon']};const resist={Fire:['Water'],Water:['Grass','Lightning'],Grass:['Fire'],Psychic:['Darkness']};if((wins[attackerType]||[]).includes(targetType))return 1.3;if((resist[attackerType]||[]).includes(targetType))return .82;return 1;}
 function attack(who,index){if(!scene||scene.over||!who||who.hp<=0)return false;const m=who.moves[index];if(!m||who.cool[index]>0||who.stun>0)return false;const target=who.side==='p'?scene.enemy:scene.player;if(!target||target.hp<=0)return false;
- const direction=who.side==='p'&&mouseAim?Math.atan2(mouseAim.y-who.y,mouseAim.x-who.x):Math.atan2(target.y-who.y,target.x-who.x),dd=dist(who,target);who.face=Math.cos(direction)>=0?1:-1;
+ const direction=who.side==='p'&&gamepadState.aiming?Math.atan2(gamepadState.aimY,gamepadState.aimX):who.side==='p'&&mouseAim?Math.atan2(mouseAim.y-who.y,mouseAim.x-who.x):Math.atan2(target.y-who.y,target.x-who.x),dd=dist(who,target);
+ setFacing(who,Math.cos(direction),Math.sin(direction));
  who.cool[index]=m.cooldown;const color=who.color;if(m.kind==='close'){
   const fx=who.x,fy=who.y;who.x=clamp(who.x+Math.cos(direction)*Math.min(70,dd*.34),AREA.l+who.r,AREA.r-who.r);who.y=clamp(who.y+Math.sin(direction)*Math.min(70,dd*.34),AREA.t+who.r,AREA.b-who.r);
   scene.effects.push({x:who.x,y:who.y,r:65,time:.3,max:.3,color,kind:'sweep',dir:direction});if(dist(who,target)<115)dealDamage(who,target,m.damage,color);
@@ -134,11 +258,73 @@ function attack(who,index){if(!scene||scene.over||!who||who.hp<=0)return false;c
   scene.effects.push({x:who.x,y:who.y,r:25,time:.22,max:.22,color,kind:'ring'});
  }
  if(who.side==='p'){scene.logs.push(`${who.name} used ${m.name}`);$('battleLog').textContent=`${who.name} used ${m.name} · ${m.damage} base power`;}return true;}
+function nextReadyIndex(who){
+ if(!who)return -1;
+ const start=scene?.nextMove||0;
+ for(let offset=0;offset<4;offset++){
+  const n=(start+offset)%4;
+  if(who.moves[n]&&who.cool[n]<=.001&&who.stun<=0)return n;
+ }
+ return -1;
+}
+function attackNextReady(){
+ if(!scene||scene.over)return false;
+ const index=nextReadyIndex(scene.player);
+ if(index<0){
+  if(performance.now()-lastCooldownToast>1050){showFieldToast('All moves cooling down');lastCooldownToast=performance.now();}
+  return false;
+ }
+ if(attack(scene.player,index)){
+  scene.nextMove=(index+1)%4;
+  hudUpdate(false);
+  return true;
+ }
+ return false;
+}
+function gamepadDeadzone(value,zone=.2){
+ if(!Number.isFinite(value)||Math.abs(value)<zone)return 0;
+ return (value-Math.sign(value)*zone)/(1-zone);
+}
+function setGamepadStatus(pad){
+ const label=pad?`🎮 ${pad.id.split('(')[0].trim().slice(0,45)} connected`:'🎮 No controller detected — connect then press a button';
+ if(label===gamepadLastLabel)return;
+ gamepadLastLabel=label;
+ for(const id of ['padStatus','padStatusBattle'])if($(id))$(id).textContent=label;
+}
+function updateGamepad(){
+ if(typeof navigator.getGamepads!=='function')return;
+ let pads=[];
+ try{pads=Array.from(navigator.getGamepads()||[]).filter(x=>x&&x.connected);}catch{pads=[];}
+ const pad=pads[0];setGamepadStatus(pad);
+ if(!pad){gamepadState.connected=false;gamepadState.buttons=[];gamepadState.mx=0;gamepadState.my=0;gamepadState.aiming=false;return;}
+ const changed=!gamepadState.connected||gamepadState.id!==pad.id;
+ if(changed)gamepadState.buttons=[];
+ gamepadState.connected=true;gamepadState.id=pad.id;
+ const pressed=Array.from(pad.buttons||[],b=>!!(b?.pressed||b?.value>.55));
+ const just=n=>!!pressed[n]&&!gamepadState.buttons[n];
+ const ax=pad.axes||[];
+ let mx=gamepadDeadzone(ax[0]||0),my=gamepadDeadzone(ax[1]||0);
+ if(pressed[14])mx-=1;if(pressed[15])mx+=1;
+ if(pressed[12])my-=1;if(pressed[13])my+=1;
+ const magnitude=Math.hypot(mx,my);
+ gamepadState.mx=magnitude>1?mx/magnitude:mx;
+ gamepadState.my=magnitude>1?my/magnitude:my;
+ gamepadState.aimX=gamepadDeadzone(ax[2]||0,.24);
+ gamepadState.aimY=gamepadDeadzone(ax[3]||0,.24);
+ gamepadState.aiming=Math.hypot(gamepadState.aimX,gamepadState.aimY)>.15;
+ if(scene&&!scene.over){
+  if(just(0)||just(7))attackNextReady();        // A / Cross or RT/R2
+  if(just(1)||just(6))dodge();               // B / Circle or LT/L2
+  if(just(2)||just(4))rotateTeam(-1);        // X / Square or LB/L1
+  if(just(3)||just(5))rotateTeam(1);         // Y / Triangle or RB/R1
+ }
+ gamepadState.buttons=pressed;
+}
 function dealDamage(source,target,base,color){if(!scene||scene.over||target.hp<=0||target.invuln>0)return;const modifier=typeEffect(source.type,target.type);const amount=Math.max(1,Math.round(base*modifier));target.hp=Math.max(0,target.hp-amount);target.invuln=.12;scene.hitFlash=.16;scene.effects.push({x:target.x,y:target.y-40,r:20,time:.7,max:.7,color,kind:'hit',number:amount});if(source.side==='p')scene.damage+=amount;if(modifier>1.01&&source.side==='p')$('battleLog').textContent='Super effective!';if(target.hp<=0)ko(target);}
 function ko(f){scene.effects.push({x:f.x,y:f.y,r:125,time:.6,max:.6,color:f.color,kind:'pulse'});if(f.side==='e'){
  scene.koEnemy++;const next=scene.foes.findIndex(x=>x.hp>0);if(next<0){finishFight(true);return;}scene.ei=next;scene.enemy=scene.foes[next];scene.enemy.x=W-145;scene.enemy.y=H/2;scene.enemy.invuln=.75;logEvent(`${f.name} fainted! Opponent sends out ${scene.enemy.name}.`);
  }else{
- scene.koPlayer++;const next=scene.team.findIndex(x=>x.hp>0);if(next<0){finishFight(false);return;}const previous=scene.player;scene.pi=next;scene.player=scene.team[next];scene.player.x=previous.x;scene.player.y=previous.y;scene.player.invuln=1;logEvent(`${f.name} fainted! ${scene.player.name} takes the field.`);
+ scene.koPlayer++;const next=scene.team.findIndex(x=>x.hp>0);if(next<0){finishFight(false);return;}const previous=scene.player;scene.pi=next;scene.player=scene.team[next];scene.player.x=previous.x;scene.player.y=previous.y;scene.player.invuln=1;scene.nextMove=0;logEvent(`${f.name} fainted! ${scene.player.name} takes the field.`);
  }hudUpdate(true);}
 function awardVictory(win){if(mode!=='owned')return null;try{const curr=readState();if(!curr)return null;const required=new Set(chosen);const owned=new Set(curr.collection.filter(x=>x.status!=='grading').map(x=>x.instanceId));if([...required].some(id=>!owned.has(id)))return null;curr.coins=(Number(curr.coins)||0)+(win?190:25);curr.xp=(Number(curr.xp)||0)+(win?65:15);curr.stats=curr.stats||{opened:0,won:0,graded:0};const d=new Date(),today=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;if(!curr.daily||curr.daily.date!==today)curr.daily={date:today,opened:0,newCards:0,won:0,graded:0};if(win){curr.stats.won=(Number(curr.stats.won)||0)+1;curr.daily.won=(Number(curr.daily.won)||0)+1;}curr.lastUpdated=Date.now();localStorage.setItem(SAVE_KEY,JSON.stringify(curr));return {coins:win?190:25,xp:win?65:15};}catch(e){console.warn('Unable to add rewards',e);return null;}}
 function finishFight(win){if(!scene||scene.over)return;scene.over=true;scene.win=win;scene.award=awardVictory(win);cancelAnimationFrame(frameId);scene.shots.length=0;keyDown.clear();$('battleScreen').hidden=true;$('resultScreen').hidden=false;$('resultTitle').textContent=win?'VICTORY!':'BATTLE OVER';$('resultCopy').textContent=win?(mode==='owned'?'Your binder team defeated the challenger. Your virtual coins and XP are saved.':'Demo win! Open packs to unlock these fights with your own cards.'):(mode==='owned'?'Your Pokémon fought hard. Try a different lineup or improve your dodging.':'Demo loss. Try switching more often and dodge incoming shots.');$('resultStats').innerHTML=`<div><small>OPPONENT KOs</small>${scene.koEnemy} / 3</div><div><small>DAMAGE DEALT</small>${scene.damage}</div><div><small>REWARDS</small>${scene.award?`◈ ${scene.award.coins} + ${scene.award.xp} XP`:'DEMO — NONE'}</div>`;window.scrollTo({top:0,behavior:'instant'});}
@@ -153,10 +339,22 @@ function collisionShots(dt){for(let i=scene.shots.length-1;i>=0;i--){const b=sce
  if(hit||b.life<=0||b.x<AREA.l||b.x>AREA.r||b.y<AREA.t||b.y>AREA.b)scene.shots.splice(i,1);
  }}
 function tick(now){if(!scene||scene.over)return;const dt=clamp((now-lastFrame)/1000,0,.035);lastFrame=now;if(document.visibilityState==='hidden'){frameId=requestAnimationFrame(tick);return;}scene.time+=dt;scene.hitFlash=Math.max(0,scene.hitFlash-dt);for(const f of [...scene.team,...scene.foes]){f.cool=f.cool.map(c=>Math.max(0,c-dt));f.dash=Math.max(0,f.dash-dt);f.dashCool=Math.max(0,f.dashCool-dt);f.invuln=Math.max(0,f.invuln-dt);f.stun=Math.max(0,f.stun-dt);}
- let dx=0,dy=0;if(keyDown.has('w')||keyDown.has('arrowup'))dy--;if(keyDown.has('s')||keyDown.has('arrowdown'))dy++;if(keyDown.has('a')||keyDown.has('arrowleft'))dx--;if(keyDown.has('d')||keyDown.has('arrowright'))dx++;dx+=stick.x;dy+=stick.y;const len=Math.hypot(dx,dy);if(len>1){dx/=len;dy/=len;}if(dx||dy)moveTo(scene.player,dx,dy,dt);enemyAi(dt);collisionShots(dt);for(let i=scene.effects.length-1;i>=0;i--){scene.effects[i].time-=dt;if(scene.effects[i].time<=0)scene.effects.splice(i,1);}drawArena();if(now-lastHud>110){lastHud=now;hudUpdate(false);}frameId=requestAnimationFrame(tick);}
+ updateGamepad();
+ for(const f of [...scene.team,...scene.foes])f.moving=false;
+ let dx=0,dy=0;if(keyDown.has('w')||keyDown.has('arrowup'))dy--;if(keyDown.has('s')||keyDown.has('arrowdown'))dy++;if(keyDown.has('a')||keyDown.has('arrowleft'))dx--;if(keyDown.has('d')||keyDown.has('arrowright'))dx++;
+ dx+=stick.x+gamepadState.mx;dy+=stick.y+gamepadState.my;const len=Math.hypot(dx,dy);if(len>1){dx/=len;dy/=len;}
+ if(dx||dy)moveTo(scene.player,dx,dy,dt);
+ if(gamepadState.aiming)setFacing(scene.player,gamepadState.aimX,gamepadState.aimY);
+ enemyAi(dt);collisionShots(dt);
+ for(const f of [...scene.team,...scene.foes]){const animState=f.moving?'walk':'idle';if(animState!==f.lastAnimState){f.animClock=0;f.lastAnimState=animState;}f.animClock+=dt;}for(let i=scene.effects.length-1;i>=0;i--){scene.effects[i].time-=dt;if(scene.effects[i].time<=0)scene.effects.splice(i,1);}drawArena();if(now-lastHud>110){lastHud=now;hudUpdate(false);}frameId=requestAnimationFrame(tick);}
 function hudUpdate(force){if(!scene)return;const p=scene.player,e=scene.enemy;for(const [f,side] of [[p,'own'],[e,'enemy']]){$(side+'Name').textContent=f.name;$(side+'Type').textContent=f.type;$(side+'Hp').textContent=`${Math.ceil(f.hp)} / ${f.maxHp} HP`;$(side+'Life').style.width=(f.hp/f.maxHp*100)+'%';const img=$(side==='own'?'ownPortrait':'enemyPortrait');if(img.dataset.cardId!==f.card.id){img.dataset.cardId=f.card.id;img.src=f.card.image||'';}}
  $('matchTimer').textContent=`${String(Math.floor(scene.time/60)).padStart(2,'0')}:${String(Math.floor(scene.time%60)).padStart(2,'0')}`;
  const buttons=[...document.querySelectorAll('[data-move]')];for(let n=0;n<4;n++){const b=buttons[n],m=p.moves[n],left=p.cool[n];if(force){b.querySelector('.move-text').textContent=m.name;b.title=`${m.name} · base ${m.damage} damage · ${m.cooldown}s cooldown`;}b.classList.toggle('cooling',left>0);b.dataset.cool=left>0?left.toFixed(1)+'s':'';b.querySelector('.cooldown').style.width=(left/m.cooldown*100)+'%';b.setAttribute('aria-disabled',left>0?'true':'false');}
+ const quick=$('quickAttack');const next=nextReadyIndex(p);if(quick){quick.classList.toggle('cooling',next<0);quick.setAttribute('aria-label',next>=0?`Attack using ${p.moves[next].name}`:'All moves are cooling down');}
+ if($('nextMoveLabel'))$('nextMoveLabel').textContent=next>=0?`NEXT · ${p.moves[next].name}`:'ALL MOVES COOLING DOWN';
+ if($('spriteDirection'))$('spriteDirection').textContent=`Facing ${directionLabel(p.dir)}`;
+ const activeSprites=[directionalFor(scene.player.card),directionalFor(scene.enemy.card)];const ready=activeSprites.filter(x=>x.status==='ready').length;const failed=activeSprites.filter(x=>x.status==='unavailable').length;
+ if($('spriteStatus'))$('spriteStatus').textContent=failed?`⚠ ${ready}/2 directional sprites · fallback on ${failed}`:ready===2?'✓ Both Pokémon using 8-way sprites':`Loading sprites · ${ready}/2 ready`;
  $('swapRoster').innerHTML=scene.team.map((f,i)=>`<button type="button" class="swap-slot ${scene.pi===i?'active':''} ${f.hp<=0?'fainted':''}" data-swap="${i}" ${f.hp<=0||scene.pi===i?'disabled':''} title="Switch to ${escapeHtml(f.name)}"><img src="${escapeHtml(f.card.image||'')}" alt=""><small>${escapeHtml(f.name)} · ${Math.ceil(f.hp)} HP</small></button>`).join('');}
 function roundRect(x,y,w,h,r,fill){ctx.beginPath();ctx.roundRect(x,y,w,h,r);ctx.fillStyle=fill;ctx.fill()}
 function circle(x,y,r,fill){ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fillStyle=fill;ctx.fill()}
@@ -179,13 +377,22 @@ function drawArena(){ctx.clearRect(0,0,W,H);
  if(scene.hitFlash>0){ctx.fillStyle=`rgba(255,255,255,${scene.hitFlash*.12})`;ctx.fillRect(0,0,W,H);}
  ctx.fillStyle='#e5fffba0';ctx.font='850 12px system-ui';ctx.textAlign='center';ctx.fillText('PACKLAB • CARD ARENA TEST',W/2,H-14);
 }
-function drawCreature(f){const img=spriteFor(f.card);const jump=Math.sin(scene.time*4+(f.side==='e'?1.6:0))*3;const sx=f.x,sy=f.y+jump;ctx.save();ctx.shadowColor=f.color;ctx.shadowBlur=24;circle(sx,sy-2,44,f.color+'31');ctx.restore();
- if(img?.complete&&img.naturalWidth){ctx.save();ctx.imageSmoothingEnabled=false;const size=110+(f.maxHp-70)*.07;ctx.drawImage(img,sx-size/2,sy-size/2-19,size,size);ctx.restore();}else{
-  circle(sx,sy-12,39,f.color);circle(sx+f.face*10,sy-20,17,'#ffffff47');ctx.fillStyle='#142137';ctx.font='950 24px system-ui';ctx.textAlign='center';ctx.fillText(f.name.charAt(0),sx,sy-5);
- }
- const barW=76;roundRect(sx-barW/2,sy-79,barW,10,5,'#071c2f');roundRect(sx-barW/2+1,sy-78,(barW-2)*Math.max(0,f.hp/f.maxHp),8,4,f.side==='p'?'#87f2c5':'#ffb780');ctx.textAlign='center';ctx.font='800 12px system-ui';ctx.fillStyle='#ffffff';ctx.shadowColor='#001720';ctx.shadowBlur=5;ctx.fillText(f.name.replace(/\s+ex$/i,''),sx,sy+58);ctx.shadowBlur=0;}
+function drawCreature(f){
+ const jump=Math.sin(scene.time*4+(f.side==='e'?1.6:0))*2;
+ const sx=f.x,sy=f.y+jump;
+ ctx.save();ctx.shadowColor=f.color;ctx.shadowBlur=24;circle(sx,sy-2,44,f.color+'31');ctx.restore();
+ if(!drawDirectional(f,sx,sy))drawDirectionalFallback(f,sx,sy);
+ const barW=76;
+ roundRect(sx-barW/2,sy-85,barW,10,5,'#071c2f');
+ roundRect(sx-barW/2+1,sy-84,(barW-2)*Math.max(0,f.hp/f.maxHp),8,4,f.side==='p'?'#87f2c5':'#ffb780');
+ ctx.textAlign='center';ctx.font='800 12px system-ui';ctx.fillStyle='#ffffff';ctx.shadowColor='#001720';ctx.shadowBlur=5;
+ ctx.fillText(f.name.replace(/\s+ex$/i,''),sx,sy+59);ctx.shadowBlur=0;
+}
 function toArenaPos(event){const r=canvas.getBoundingClientRect();return {x:(event.clientX-r.left)/r.width*W,y:(event.clientY-r.top)/r.height*H};}
-function bindControls(){document.addEventListener('keydown',e=>{if(!scene||scene.over||e.target.matches('input,textarea,select'))return;const key=e.key.toLowerCase();if([' ','arrowup','arrowdown','arrowleft','arrowright'].includes(key))e.preventDefault();keyDown.add(key);if(e.repeat)return;if(['1','2','3','4'].includes(key))attack(scene.player,Number(key)-1);else if(key===' ')dodge();else if(key==='q')rotateTeam(-1);else if(key==='e')rotateTeam(1);});document.addEventListener('keyup',e=>keyDown.delete(e.key.toLowerCase()));window.addEventListener('blur',()=>{keyDown.clear();stick.x=stick.y=0;});canvas.addEventListener('pointermove',e=>{if(!scene?.over)mouseAim=toArenaPos(e)});canvas.addEventListener('pointerleave',()=>mouseAim=null);
+function bindControls(){document.addEventListener('keydown',e=>{if(!scene||scene.over||e.target.matches('input,textarea,select'))return;const key=e.key.toLowerCase();if([' ','arrowup','arrowdown','arrowleft','arrowright'].includes(key))e.preventDefault();keyDown.add(key);if(e.repeat)return;if(['1','2','3','4'].includes(key))attack(scene.player,Number(key)-1);else if(key==='f'||key==='enter')attackNextReady();else if(key===' ')dodge();else if(key==='q')rotateTeam(-1);else if(key==='e')rotateTeam(1);});document.addEventListener('keyup',e=>keyDown.delete(e.key.toLowerCase()));window.addEventListener('blur',()=>{keyDown.clear();stick.x=stick.y=0;});canvas.addEventListener('pointermove',e=>{if(!scene?.over)mouseAim=toArenaPos(e)});canvas.addEventListener('pointerleave',()=>{if(!gamepadState.aiming)mouseAim=null;});
+ canvas.addEventListener('pointerdown',e=>{if(!scene||scene.over||e.pointerType==='mouse'&&e.button!==0)return;e.preventDefault();mouseAim=toArenaPos(e);attackNextReady();});
+ $('quickAttack').addEventListener('pointerdown',e=>{e.preventDefault();attackNextReady();});
+ $('quickAttack').addEventListener('click',e=>e.preventDefault());
  document.querySelectorAll('[data-move]').forEach(b=>{b.addEventListener('pointerdown',e=>{e.preventDefault();if(scene&&!scene.over)attack(scene.player,Number(b.dataset.move));});b.addEventListener('click',e=>e.preventDefault());});$('touchDodge').addEventListener('pointerdown',e=>{e.preventDefault();dodge()});$('touchSwap').addEventListener('pointerdown',e=>{e.preventDefault();rotateTeam(1)});
  const pad=$('touchJoystick');function stickMove(e){if(stick.id!==e.pointerId)return;const r=pad.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;const dx=e.clientX-cx,dy=e.clientY-cy,d=Math.hypot(dx,dy)||1,max=r.width*.36;stick.x=clamp(dx/max,-1,1);stick.y=clamp(dy/max,-1,1);const len=Math.hypot(stick.x,stick.y);if(len>1){stick.x/=len;stick.y/=len;}pad.querySelector('.stick-knob').style.transform=`translate(${stick.x*max}px,${stick.y*max}px)`;}
  pad.addEventListener('pointerdown',e=>{e.preventDefault();stick.id=e.pointerId;pad.setPointerCapture(e.pointerId);stickMove(e);});pad.addEventListener('pointermove',stickMove);function stickEnd(e){if(stick.id!==e.pointerId)return;stick.id=null;stick.x=stick.y=0;pad.querySelector('.stick-knob').style.transform='';}pad.addEventListener('pointerup',stickEnd);pad.addEventListener('pointercancel',stickEnd);
@@ -193,7 +400,7 @@ function bindControls(){document.addEventListener('keydown',e=>{if(!scene||scene
 }
 function bindMenu(){$('cardFilter').addEventListener('input',displayTeam);$('cardGrid').addEventListener('click',e=>{const b=e.target.closest('[data-pick]');if(!b)return;const id=b.dataset.pick;if(chosen.includes(id))chosen=chosen.filter(x=>x!==id);else if(chosen.length<3)chosen.push(id);else chosen=[...chosen.slice(0,2),id];displayTeam();});$('teamSlots').addEventListener('click',e=>{const b=e.target.closest('[data-slot]');if(b&&chosen[Number(b.dataset.slot)]){chosen.splice(Number(b.dataset.slot),1);displayTeam()}});
  $('autoPick').addEventListener('click',()=>{chosen=eligible.slice(0,3).map(x=>x.instance.instanceId);displayTeam()});$('startFight').addEventListener('click',()=>fightStart(false));$('demoFight').addEventListener('click',()=>fightStart(true));$('leaveFight').addEventListener('click',abandonFight);$('rematch').addEventListener('click',()=>fightStart(mode==='demo'));$('backTeam').addEventListener('click',()=>{scene=null;$('resultScreen').hidden=true;$('battleScreen').hidden=true;$('teamScreen').hidden=false;loadOwned();displayTeam()});}
-async function init(){bindMenu();bindControls();loadOwned();displayTeam();if(saved?.collection?.length&&!eligible.length){$('binderNotice').hidden=false;$('binderNotice').textContent='Looking up the original set catalogs for your saved Pokémon…';await recoverMissingCatalogs();loadOwned();displayTeam();}}
+async function init(){bindMenu();bindControls();window.addEventListener('gamepadconnected',e=>setGamepadStatus(e.gamepad));window.addEventListener('gamepaddisconnected',()=>{gamepadLastLabel='';setGamepadStatus(null);});updateGamepad();loadOwned();displayTeam();if(saved?.collection?.length&&!eligible.length){$('binderNotice').hidden=false;$('binderNotice').textContent='Looking up the original set catalogs for your saved Pokémon…';await recoverMissingCatalogs();loadOwned();displayTeam();}}
 init().catch(e=>{console.error(e);$('binderNotice').hidden=false;$('binderNotice').textContent='Binder data could not load. Try opening PACKLAB first or launch the separate demo.';});
 
 </script>
