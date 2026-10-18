@@ -118,9 +118,9 @@ html.arena-playing,body.arena-playing{height:100%;overflow:hidden!important;over
 <body>
 <div class="ambient" aria-hidden="true"></div>
 <div class="site-shell">
-<header class="masthead"><a class="brand" href="../" aria-label="Back to PACKLAB"><span class="brand-emblem">P<span>◆</span></span><span>PACKLAB<small>ARENA TEST · v0.9</small></span></a><div class="head-right"><span class="pill purple">REAL-TIME 2D</span><a class="return" href="../">← Back to packs</a></div></header>
+<header class="masthead"><a class="brand" href="../" aria-label="Back to PACKLAB"><span class="brand-emblem">P<span>◆</span></span><span>PACKLAB<small>ARENA TEST · v0.9.1</small></span></a><div class="head-right"><span class="pill purple">REAL-TIME 2D</span><a class="return" href="../">← Back to packs</a></div></header>
 <main>
-<section class="intro"><div><div class="eyebrow"><span class="signal"></span> BINDER → BATTLEFIELD</div><h1>Your cards.<br><em>Your fighters.</em></h1><p>Build a team from cards you've pulled, then control your Pokémon in a live 2D arena. Your Pokémon keeps its facing until you move or aim. Tap or click to use the next ready move in that direction. Fight on phone, PC, or controller.</p></div><div class="rules-panel"><div class="rules-big">3 <span>vs</span> 3</div><div>REAL-TIME ARENA</div><p><strong>Card-locked roster</strong> · printed HP, attacks and card-specific weaknesses influence your fighter when card rules are available. Arena timing is simulated.</p></div></section>
+<section class="intro"><div><div class="eyebrow"><span class="signal"></span> BINDER → BATTLEFIELD</div><h1>Your cards.<br><em>Your fighters.</em></h1><p>Build a team from cards you've pulled, then control your Pokémon in a live 2D arena. On PC, move with WASD and aim precisely with your mouse — your Pokémon turns toward the cursor and attacks fire there. Phone and controller aiming keep their separate controls.</p></div><div class="rules-panel"><div class="rules-big">3 <span>vs</span> 3</div><div>REAL-TIME ARENA</div><p><strong>Card-locked roster</strong> · printed HP, attacks and card-specific weaknesses influence your fighter when card rules are available. Arena timing is simulated.</p></div></section>
 <section id="teamScreen" aria-label="Choose battle team">
 <div id="padStatus" class="controller-line" role="status">🎮 No controller detected — connect then press a button</div><div class="section-head"><div><span class="eyebrow">01 / LINEUP</span><h2>Choose your three</h2><p>Only Pokémon copies in your PACKLAB binder are eligible. Cards currently away at the grader cannot battle.</p></div><div class="roster-badge" id="ownedCount">CHECKING BINDER</div></div>
 <div class="team-slots" id="teamSlots"></div>
@@ -132,10 +132,10 @@ html.arena-playing,body.arena-playing{height:100%;overflow:hidden!important;over
 <section id="battleScreen" hidden aria-label="Live arena battle">
 <div class="battle-meta"><div><span class="eyebrow">02 / LIVE MATCH</span><h2 id="battleTitle">Stadium Match</h2></div><div class="match-status"><span class="signal"></span><span id="matchTimer">00:00</span><span id="matchMode">3V3 · NPC</span><button class="secondary fullscreen-toggle" id="expandBattle" type="button" title="Toggle browser fullscreen">⛶ Fullscreen</button></div></div>
 <div class="combat-hud"><div class="hud-side"><img id="ownPortrait" alt="Your Pokémon card"><div class="fighter-meta"><div class="hud-label">YOUR POKÉMON <span id="ownType"></span></div><strong id="ownName">—</strong><div class="life-rail"><div class="life-fill green" id="ownLife"></div></div><small id="ownHp">—</small></div></div><div class="hud-vs">VS</div><div class="hud-side enemy"><div class="fighter-meta"><div class="hud-label">CHALLENGER <span id="enemyType"></span></div><strong id="enemyName">—</strong><div class="life-rail"><div class="life-fill orange" id="enemyLife"></div></div><small id="enemyHp">—</small></div><img id="enemyPortrait" alt="Opponent Pokémon card"></div></div>
-<div id="matchupHint" class="matchup-hint" aria-live="polite">TYPES · LOADING CARD RULES</div><div class="arena-frame" id="arenaFrame"><canvas id="arenaCanvas" width="1050" height="570" role="img" aria-label="Real-time battle arena. Click or tap to attack in the direction you are facing. Move to turn, or use right stick / right-click to aim. No automatic target tracking."></canvas><div id="overlayNotice" class="field-toast" aria-live="polite"></div><div id="touchJoystick" class="joystick"><div class="stick-ring"><div class="stick-knob"></div></div></div><div class="touch-field-buttons"><button id="touchDodge" type="button" class="field-control">↝<small>DODGE</small></button><button id="touchSwap" type="button" class="field-control">⇄<small>SWAP</small></button></div></div>
-<div class="quick-attack-row"><button id="quickAttack" class="primary quick-attack" type="button">⚡ ATTACK <span id="nextMoveLabel">NEXT READY MOVE</span></button><span>Click or tap attacks <b>where you face</b>. Move or aim to turn; releasing the controls keeps that direction.</span><span class="facing-readout" id="spriteDirection">Facing Right</span><span class="sprite-readout" id="spriteStatus">Loading 8-way sprites…</span></div><div class="action-console"><div class="moves"><button data-move="0" class="move-button" type="button"><span class="move-num">1</span><span class="move-text">—</span><span class="cooldown"></span></button><button data-move="1" class="move-button" type="button"><span class="move-num">2</span><span class="move-text">—</span><span class="cooldown"></span></button><button data-move="2" class="move-button" type="button"><span class="move-num">3</span><span class="move-text">—</span><span class="cooldown"></span></button><button data-move="3" class="move-button special" type="button"><span class="move-num">4</span><span class="move-text">—</span><span class="cooldown"></span></button></div><div class="swap-roster" id="swapRoster" aria-label="Switch Pokémon"></div></div>
+<div id="matchupHint" class="matchup-hint" aria-live="polite">TYPES · LOADING CARD RULES</div><div class="arena-frame" id="arenaFrame"><canvas id="arenaCanvas" width="1050" height="570" role="img" aria-label="Real-time battle arena. On PC, point the mouse to aim and left click to attack exactly toward the cursor. Touch taps attack in your facing direction. Controller uses the right stick to aim."></canvas><div id="overlayNotice" class="field-toast" aria-live="polite"></div><div id="touchJoystick" class="joystick"><div class="stick-ring"><div class="stick-knob"></div></div></div><div class="touch-field-buttons"><button id="touchDodge" type="button" class="field-control">↝<small>DODGE</small></button><button id="touchSwap" type="button" class="field-control">⇄<small>SWAP</small></button></div></div>
+<div class="quick-attack-row"><button id="quickAttack" class="primary quick-attack" type="button">⚡ ATTACK <span id="nextMoveLabel">NEXT READY MOVE</span></button><span><b>Mouse:</b> point to aim precisely, left click to fire. <b>Touch:</b> tap to fire forward. Controller: right stick aims.</span><span class="facing-readout" id="spriteDirection">Facing Right</span><span class="sprite-readout" id="spriteStatus">Loading 8-way sprites…</span></div><div class="action-console"><div class="moves"><button data-move="0" class="move-button" type="button"><span class="move-num">1</span><span class="move-text">—</span><span class="cooldown"></span></button><button data-move="1" class="move-button" type="button"><span class="move-num">2</span><span class="move-text">—</span><span class="cooldown"></span></button><button data-move="2" class="move-button" type="button"><span class="move-num">3</span><span class="move-text">—</span><span class="cooldown"></span></button><button data-move="3" class="move-button special" type="button"><span class="move-num">4</span><span class="move-text">—</span><span class="cooldown"></span></button></div><div class="swap-roster" id="swapRoster" aria-label="Switch Pokémon"></div></div>
 <div class="battle-bottom"><span id="battleLog" aria-live="polite">Choose your opening move. Follow the battle indicators.</span><button class="secondary quit" id="leaveFight" type="button">Leave match</button></div>
-<div class="controls-help"><strong>PC</strong> WASD / arrows = move + turn · hold right mouse to aim · click or F = attack forward · 1–4 = individual moves · Space = dodge · Q/E = switch<br><strong>CONTROLLER</strong> left stick / D-pad = move · right stick = manual aim/turn · A / Cross or RT = next ready attack · B / Circle or LT = dodge · LB/RB or X/Y = switch<br><strong>PHONE</strong> left joystick = move/turn · tap arena or ATTACK fires facing direction · move buttons = manual attacks · Dodge / Swap<br><span id="padStatusBattle" class="controller-status">🎮 No controller detected — connect then press a button</span></div>
+<div class="controls-help"><strong>PC</strong> WASD / arrows = move · mouse position = face and aim (even while moving) · left click or F = next ready attack toward cursor · 1–4 = individual moves · Space = dodge · Q/E = switch<br><strong>CONTROLLER</strong> left stick / D-pad = move · right stick = manual aim/turn · A / Cross or RT = next ready attack · B / Circle or LT = dodge · LB/RB or X/Y = switch<br><strong>PHONE</strong> left joystick = move/turn · tap arena or ATTACK fires facing direction · move buttons = manual attacks · Dodge / Swap<br><span id="padStatusBattle" class="controller-status">🎮 No controller detected — connect then press a button</span></div>
 </section>
 <section id="resultScreen" hidden class="result-panel" aria-label="Match result"><span class="eyebrow">MATCH COMPLETE</span><h2 id="resultTitle">Victory!</h2><p id="resultCopy"></p><div class="result-stats" id="resultStats"></div><div class="result-buttons"><button class="primary" id="rematch">↻ Rematch</button><button class="secondary" id="backTeam">Edit team</button><a class="secondary" href="../">Return to PACKLAB</a></div></section>
 </main>
@@ -221,7 +221,7 @@ function activatePrintedRules(match){
 let gamepadLastLabel='',lastCooldownToast=0;
 
 let saved=null,eligible=[],chosen=[],scene=null,matchCount=0,frameId=0,lastFrame=0,lastHud=0,noticeTimer=null;
-let keyDown=new Set(),mouseAim=null,mouseAimHeld=false,stick={id:null,x:0,y:0},preBattleScroll=0;
+let keyDown=new Set(),mouseAim=null,aimSource=null,stick={id:null,x:0,y:0},preBattleScroll=0;
 let preview=false,mode='owned';
 const demoCards=[
  {id:'demo-pikachu',name:'Pikachu',setId:'sv30',number:'23',hp:110,types:['Lightning'],attacks:[{name:'Thunder Shock',damage:'40'},{name:'Thunderbolt',damage:'90'}],category:'Pokémon',image:'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png'},
@@ -268,10 +268,11 @@ function spriteFor(card,back=false){
 function setFacing(f,x,y){
  if(!f||Math.hypot(x,y)<.11)return;
  // PMD SpriteCollab row numbering, clockwise from the south-facing/front sprite.
+ f.aimAngle=Math.atan2(y,x); // Continuous angle for projectile accuracy; sprites still use eight facings.
  f.dir=(Math.round(Math.atan2(x,y)/(Math.PI/4))+8)%8;
  f.face=x>=0?1:-1;
 }
-function facingAngle(f){return Math.PI/2-(f.dir??2)*Math.PI/4;}
+function facingAngle(f){return Number.isFinite(f.aimAngle)?f.aimAngle:Math.PI/2-(f.dir??2)*Math.PI/4;}
 function pointingDirection(f){return {x:Math.cos(facingAngle(f)),y:Math.sin(facingAngle(f))};}
 function directionLabel(dir){return ['Front','Front-right','Right','Back-right','Back','Back-left','Left','Front-left'][dir]||'Front';}
 function loadImage(url){return new Promise((resolve,reject)=>{
@@ -398,7 +399,7 @@ async function toggleNativeFullscreen(){
  }catch{showFieldToast('Immersive view active · full browser fullscreen unavailable here');}
  requestAnimationFrame(fitArena);
 }
-function fightStart(useDemo=false){mode=useDemo?'demo':'owned';if(!useDemo&&chosen.length!==3)return;const team=useDemo?demoCards.map((c,i)=>fighterFor(c,'demo-'+i,'p')):chosen.map(id=>{const entry=eligible.find(x=>x.instance.instanceId===id);return fighterFor(entry.card,id,'p')});const foes=makeEnemyTeam();scene={team,foes,pi:0,ei:0,player:team[0],enemy:foes[0],effects:[],shots:[],logs:[],time:0,over:false,win:false,koPlayer:0,koEnemy:0,damage:0,award:false,enemyStrafe:1,aiClock:0,hitFlash:0,weather:0};scene.player.x=145;scene.player.y=H/2;scene.enemy.x=W-145;scene.enemy.y=H/2;mouseAim=null;keyDown.clear();stick.x=stick.y=0;gamepadState.buttons=[];gamepadState.mx=gamepadState.my=0;gamepadState.aiming=false;scene.nextMove=0;mouseAimHeld=false;for(const f of [...team,...foes])directionalFor(f.card);
+function fightStart(useDemo=false){mode=useDemo?'demo':'owned';if(!useDemo&&chosen.length!==3)return;const team=useDemo?demoCards.map((c,i)=>fighterFor(c,'demo-'+i,'p')):chosen.map(id=>{const entry=eligible.find(x=>x.instance.instanceId===id);return fighterFor(entry.card,id,'p')});const foes=makeEnemyTeam();scene={team,foes,pi:0,ei:0,player:team[0],enemy:foes[0],effects:[],shots:[],logs:[],time:0,over:false,win:false,koPlayer:0,koEnemy:0,damage:0,award:false,enemyStrafe:1,aiClock:0,hitFlash:0,weather:0};scene.player.x=145;scene.player.y=H/2;scene.enemy.x=W-145;scene.enemy.y=H/2;mouseAim=null;aimSource=null;keyDown.clear();stick.x=stick.y=0;gamepadState.buttons=[];gamepadState.mx=gamepadState.my=0;gamepadState.aiming=false;scene.nextMove=0;for(const f of [...team,...foes])directionalFor(f.card);
  $('teamScreen').hidden=true;$('resultScreen').hidden=true;$('battleScreen').hidden=false;enterImmersive();activatePrintedRules(scene);$('matchMode').textContent=mode==='demo'?'DEMO · NO REWARDS':'3V3 · OWNED CARDS';$('battleTitle').textContent=mode==='demo'?'Demo Stadium Battle':'Binder Championship';logEvent('Battle started. Move, attack, dodge, and switch!');hudUpdate(true);lastFrame=performance.now();cancelAnimationFrame(frameId);frameId=requestAnimationFrame(tick);requestAnimationFrame(fitArena);}
 function logEvent(msg){if(!scene)return;scene.logs.push(msg);$('battleLog').textContent=msg;showFieldToast(msg)}
 function showFieldToast(s){const e=$('overlayNotice');e.textContent=s;e.classList.add('show');clearTimeout(noticeTimer);noticeTimer=setTimeout(()=>e.classList.remove('show'),1300)}
@@ -407,10 +408,23 @@ function dodge(){if(!scene||scene.over)return;const p=scene.player;if(p.dashCool
 function switchTo(index){if(!scene||scene.over||index===scene.pi||index<0||index>=scene.team.length)return;const next=scene.team[index];if(next.hp<=0)return;const old=scene.player;next.x=old.x;next.y=old.y;next.face=old.face;next.dir=old.dir;next.invuln=.7;scene.nextMove=0;scene.pi=index;scene.player=next;scene.shots=scene.shots.filter(s=>s.owner!=='p');scene.effects.push({x:next.x,y:next.y,r:60,time:.42,max:.42,color:'#b6a7ff',kind:'ring'});logEvent(`${next.name}, you're up!`);hudUpdate(true)}
 function rotateTeam(delta){if(!scene)return;for(let n=1;n<=scene.team.length;n++){const i=(scene.pi+delta*n+scene.team.length*10)%scene.team.length;if(scene.team[i].hp>0&&i!==scene.pi){switchTo(i);return}}}
 function typeEffect(attackerType,targetType){const wins={Fire:['Grass','Metal'],Water:['Fire'],Grass:['Water'],Lightning:['Water'],Electric:['Water'],Fighting:['Colorless','Darkness'],Psychic:['Fighting'],Darkness:['Psychic'],Metal:['Fairy'],Dragon:['Dragon']};const resist={Fire:['Water'],Water:['Grass','Lightning'],Grass:['Fire'],Psychic:['Darkness']};if((wins[attackerType]||[]).includes(targetType))return 1.3;if((resist[attackerType]||[]).includes(targetType))return .82;return 1;}
+// The mouse is a world-space aiming point, not just a snapped 8-way animation direction.
+// Recompute every frame because WASD changes the player's position underneath a stationary cursor.
+function refreshPlayerAim(){
+ if(!scene||scene.over||!scene.player)return;
+ if(aimSource==='mouse'&&mouseAim)setFacing(scene.player,mouseAim.x-scene.player.x,mouseAim.y-scene.player.y);
+ else if(aimSource==='gamepad'&&gamepadState.aiming)setFacing(scene.player,gamepadState.aimX,gamepadState.aimY);
+}
+function setMouseAim(e){
+ if(!scene||scene.over||!['mouse','pen'].includes(e.pointerType))return;
+ mouseAim=toArenaPos(e);
+ aimSource='mouse';
+ refreshPlayerAim();
+}
 function attack(who,index){if(!scene||scene.over||!who||who.hp<=0)return false;const m=who.moves[index];if(!m||who.cool[index]>0||who.stun>0)return false;const target=who.side==='p'?scene.enemy:scene.player;if(!target||target.hp<=0)return false;
  // The NPC may deliberately aim an attack. Players are NEVER auto-rotated toward the target.
  if(who.side==='e')setFacing(who,target.x-who.x,target.y-who.y);
- if(who.side==='p'&&gamepadState.aiming)setFacing(who,gamepadState.aimX,gamepadState.aimY);
+ if(who.side==='p')refreshPlayerAim();
  const direction=facingAngle(who),dd=dist(who,target);
  who.cool[index]=m.cooldown;const color=who.color;if(m.kind==='close'){
   const fx=who.x,fy=who.y;who.x=clamp(who.x+Math.cos(direction)*Math.min(70,dd*.34),AREA.l+who.r,AREA.r-who.r);who.y=clamp(who.y+Math.sin(direction)*Math.min(70,dd*.34),AREA.t+who.r,AREA.b-who.r);
@@ -477,8 +491,8 @@ function updateGamepad(){
  gamepadState.aimY=gamepadDeadzone(ax[3]||0,.24);
  gamepadState.aiming=Math.hypot(gamepadState.aimX,gamepadState.aimY)>.15;
  if(scene&&!scene.over){
-  if(gamepadState.aiming)setFacing(scene.player,gamepadState.aimX,gamepadState.aimY);
-  if(just(0)||just(7))attackNextReady();        // A / Cross or RT/R2
+  if(gamepadState.aiming){aimSource='gamepad';setFacing(scene.player,gamepadState.aimX,gamepadState.aimY);}
+   if(just(0)||just(7))attackNextReady();        // A / Cross or RT/R2
   if(just(1)||just(6))dodge();               // B / Circle or LT/L2
   if(just(2)||just(4))rotateTeam(-1);        // X / Square or LB/L1
   if(just(3)||just(5))rotateTeam(1);         // Y / Triangle or RB/R1
@@ -541,8 +555,8 @@ function tick(now){if(!scene||scene.over)return;const dt=clamp((now-lastFrame)/1
  let ax=0,ay=0;
  if(keyDown.has('i'))ay--;if(keyDown.has('k'))ay++;
  if(keyDown.has('j'))ax--;if(keyDown.has('l'))ax++;
- if(ax||ay)setFacing(scene.player,ax,ay);
- if(gamepadState.aiming)setFacing(scene.player,gamepadState.aimX,gamepadState.aimY);
+ if(ax||ay){aimSource='keyboard';setFacing(scene.player,ax,ay);}
+ refreshPlayerAim();
  enemyAi(dt);collisionShots(dt);
  for(const f of [...scene.team,...scene.foes]){const animState=f.moving?'walk':'idle';if(animState!==f.lastAnimState){f.animClock=0;f.lastAnimState=animState;}f.animClock+=dt;}for(let i=scene.effects.length-1;i>=0;i--){scene.effects[i].time-=dt;if(scene.effects[i].time<=0)scene.effects.splice(i,1);}drawArena();if(now-lastHud>110){lastHud=now;hudUpdate(false);}frameId=requestAnimationFrame(tick);}
 function hudUpdate(force){if(!scene)return;const p=scene.player,e=scene.enemy;for(const [f,side] of [[p,'own'],[e,'enemy']]){$(side+'Name').textContent=f.name;$(side+'Type').textContent=f.type;$(side+'Hp').textContent=`${Math.ceil(f.hp)} / ${f.maxHp} HP`;$(side+'Life').style.width=(f.hp/f.maxHp*100)+'%';const img=$(side==='own'?'ownPortrait':'enemyPortrait');if(img.dataset.cardId!==f.card.id){img.dataset.cardId=f.card.id;img.src=f.card.image||'';}}
@@ -550,7 +564,7 @@ function hudUpdate(force){if(!scene)return;const p=scene.player,e=scene.enemy;fo
  const buttons=[...document.querySelectorAll('[data-move]')];for(let n=0;n<4;n++){const b=buttons[n],m=p.moves[n],left=p.cool[n];if(force){b.querySelector('.move-text').textContent=m.name;b.title=`${m.name} · base ${m.damage} damage · ${m.cooldown}s cooldown`;}b.classList.toggle('cooling',left>0);b.dataset.cool=left>0?left.toFixed(1)+'s':'';b.querySelector('.cooldown').style.width=(left/m.cooldown*100)+'%';b.setAttribute('aria-disabled',left>0?'true':'false');}
  const quick=$('quickAttack');const next=nextReadyIndex(p);if(quick){quick.classList.toggle('cooling',next<0);quick.setAttribute('aria-label',next>=0?`Attack using ${p.moves[next].name}`:'All moves are cooling down');}
  if($('nextMoveLabel'))$('nextMoveLabel').textContent=next>=0?`NEXT · ${p.moves[next].name}`:'ALL MOVES COOLING DOWN';
- if($('spriteDirection'))$('spriteDirection').textContent=`Facing ${directionLabel(p.dir)} · LOCKED`;
+ if($('spriteDirection'))$('spriteDirection').textContent=`Facing ${directionLabel(p.dir)} · ${aimSource==='mouse'&&mouseAim?'MOUSE AIM':aimSource==='gamepad'&&gamepadState.aiming?'STICK AIM':'MANUAL'}`;
  if($('matchupHint')){
   const ours=calculateCardDamage({type:p.type},e,30),theirs=calculateCardDamage({type:e.type},p,30);
   $('matchupHint').textContent=`TYPES · ${ours.source==='card'?'PRINTED CARD':'ARCADE'} · ${ours.label==='NORMAL'?'NORMAL':ours.label} / DEF ${theirs.label}`;
@@ -576,6 +590,15 @@ function drawArena(){ctx.clearRect(0,0,W,H);
  for(const b of scene.shots){ctx.save();const angle=Math.atan2(b.vy,b.vx);ctx.strokeStyle=b.color+'99';ctx.lineCap='round';ctx.lineWidth=b.r*.8;ctx.beginPath();ctx.moveTo(b.x-Math.cos(angle)*28,b.y-Math.sin(angle)*28);ctx.lineTo(b.x,b.y);ctx.stroke();ctx.shadowColor=b.color;ctx.shadowBlur=17;circle(b.x,b.y,b.r,b.color);ctx.restore();}
  for(const fx of scene.effects){const fade=clamp(fx.time/fx.max,0,1);ctx.save();ctx.globalAlpha=fade;ctx.strokeStyle=fx.color;ctx.lineWidth=fx.kind==='pulse'?8:4;ctx.shadowColor=fx.color;ctx.shadowBlur=14;
  if(fx.kind==='hit'){ctx.font='950 27px system-ui';ctx.textAlign='center';ctx.fillStyle='#fff6c7';ctx.fillText('-'+fx.number,fx.x,fx.y-(1-fade)*50);}else if(fx.kind==='sweep'){ctx.beginPath();ctx.arc(fx.x,fx.y,fx.r,fx.dir-.85,fx.dir+.85);ctx.stroke();}else{ctx.beginPath();ctx.arc(fx.x,fx.y,fx.kind==='pulse'?fx.r*(1.3-fade*.3):fx.r*(1.5-fade*.5),0,Math.PI*2);ctx.stroke();}ctx.restore();}
+ // Show the exact mouse target separately from the eight-way sprite direction.
+ if(mouseAim&&aimSource==='mouse'){
+  const p=scene.player;
+  ctx.save();ctx.lineWidth=2;ctx.strokeStyle='#bffef1';ctx.globalAlpha=.38;ctx.setLineDash([8,10]);
+  ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(mouseAim.x,mouseAim.y);ctx.stroke();
+  ctx.setLineDash([]);ctx.globalAlpha=.9;ctx.beginPath();ctx.arc(mouseAim.x,mouseAim.y,12,0,Math.PI*2);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(mouseAim.x-20,mouseAim.y);ctx.lineTo(mouseAim.x-7,mouseAim.y);ctx.moveTo(mouseAim.x+7,mouseAim.y);ctx.lineTo(mouseAim.x+20,mouseAim.y);
+  ctx.moveTo(mouseAim.x,mouseAim.y-20);ctx.lineTo(mouseAim.x,mouseAim.y-7);ctx.moveTo(mouseAim.x,mouseAim.y+7);ctx.lineTo(mouseAim.x,mouseAim.y+20);ctx.stroke();ctx.restore();
+ }
  if(scene.hitFlash>0){ctx.fillStyle=`rgba(255,255,255,${scene.hitFlash*.12})`;ctx.fillRect(0,0,W,H);}
  ctx.fillStyle='#e5fffba0';ctx.font='850 12px system-ui';ctx.textAlign='center';ctx.fillText('PACKLAB • CARD ARENA TEST',W/2,H-14);
 }
@@ -591,16 +614,26 @@ function drawCreature(f){
  ctx.fillText(f.name.replace(/\s+ex$/i,''),sx,sy+59);ctx.shadowBlur=0;
 }
 function toArenaPos(event){const r=canvas.getBoundingClientRect();return {x:(event.clientX-r.left)/r.width*W,y:(event.clientY-r.top)/r.height*H};}
-function bindControls(){document.addEventListener('keydown',e=>{if(!scene||scene.over||e.target.matches('input,textarea,select'))return;const key=e.key.toLowerCase();if([' ','arrowup','arrowdown','arrowleft','arrowright'].includes(key))e.preventDefault();keyDown.add(key);if(e.repeat)return;if(['1','2','3','4'].includes(key))attack(scene.player,Number(key)-1);else if(key==='f'||key==='enter')attackNextReady();else if(key===' ')dodge();else if(key==='q')rotateTeam(-1);else if(key==='e')rotateTeam(1);});document.addEventListener('keyup',e=>keyDown.delete(e.key.toLowerCase()));window.addEventListener('blur',()=>{keyDown.clear();stick.x=stick.y=0;mouseAimHeld=false;});canvas.addEventListener('pointermove',e=>{if(!scene||scene.over||!mouseAimHeld)return;mouseAim=toArenaPos(e);setFacing(scene.player,mouseAim.x-scene.player.x,mouseAim.y-scene.player.y);});
- canvas.addEventListener('pointerleave',()=>{mouseAimHeld=false;mouseAim=null;});
+function bindControls(){document.addEventListener('keydown',e=>{if(!scene||scene.over||e.target.matches('input,textarea,select'))return;const key=e.key.toLowerCase();if([' ','arrowup','arrowdown','arrowleft','arrowright'].includes(key))e.preventDefault();keyDown.add(key);if(e.repeat)return;if(['1','2','3','4'].includes(key))attack(scene.player,Number(key)-1);else if(key==='f'||key==='enter')attackNextReady();else if(key===' ')dodge();else if(key==='q')rotateTeam(-1);else if(key==='e')rotateTeam(1);});document.addEventListener('keyup',e=>keyDown.delete(e.key.toLowerCase()));window.addEventListener('blur',()=>{keyDown.clear();stick.x=stick.y=0;mouseAim=null;if(aimSource==='mouse')aimSource=null;});
+ // Hover-to-aim: mouse position continuously controls sprite facing and precise attack angle.
+ canvas.addEventListener('pointerenter',setMouseAim);
+ canvas.addEventListener('pointermove',setMouseAim);
+ canvas.addEventListener('pointerleave',()=>{mouseAim=null;if(aimSource==='mouse')aimSource=null;});
  canvas.addEventListener('contextmenu',e=>{if(scene&&!scene.over)e.preventDefault();});
  canvas.addEventListener('pointerdown',e=>{
   if(!scene||scene.over)return;
-  if(e.pointerType==='mouse'&&e.button===2){e.preventDefault();mouseAimHeld=true;mouseAim=toArenaPos(e);setFacing(scene.player,mouseAim.x-scene.player.x,mouseAim.y-scene.player.y);return;}
-  if(e.pointerType==='mouse'&&e.button!==0)return;
-  e.preventDefault();attackNextReady();
+  if(['mouse','pen'].includes(e.pointerType)){
+   if(e.button!==0&&e.button!==2)return;
+   e.preventDefault();setMouseAim(e);
+   if(e.button===0)attackNextReady();
+   return;
+  }
+  // Touch still fires along the player's current facing; tapping is not automatic targeting.
+  if(e.pointerType==='touch'){
+   mouseAim=null;if(aimSource==='mouse')aimSource=null;
+   e.preventDefault();attackNextReady();
+  }
  });
- canvas.addEventListener('pointerup',e=>{if(e.button===2){mouseAimHeld=false;mouseAim=null;}});
  $('quickAttack').addEventListener('pointerdown',e=>{e.preventDefault();attackNextReady();});
  $('quickAttack').addEventListener('click',e=>e.preventDefault());
  document.querySelectorAll('[data-move]').forEach(b=>{b.addEventListener('pointerdown',e=>{e.preventDefault();if(scene&&!scene.over)attack(scene.player,Number(b.dataset.move));});b.addEventListener('click',e=>e.preventDefault());});$('touchDodge').addEventListener('pointerdown',e=>{e.preventDefault();dodge()});$('touchSwap').addEventListener('pointerdown',e=>{e.preventDefault();rotateTeam(1)});
