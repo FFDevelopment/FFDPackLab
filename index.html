@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#090e1c" />
   <meta name="description" content="PackLab: a mobile-friendly collector simulator prototype. Rip real-art 30th Celebration, Prismatic Evolutions, 151 and Surging Sparks boosters. Earn packs, grade pulls and battle." />
-  <title>PACKLAB — Collector v0.8.2 • Live Auto-Scan</title>
+  <title>PACKLAB — Collector v0.8.3 • Real Card Tools Restored</title>
   
   <link rel="preload" as="image" href="https://upload.wikimedia.org/wikipedia/en/3/36/Pokemon_Trading_Card_Game_cardback.png" />
   <style>
@@ -373,6 +373,37 @@ body.camera-open{overflow:hidden}
  .camera-dialog .camera-secondary{margin:6px 0}
 }
 
+
+/* PACKLAB v0.8.3 — Visible physical-card tools, independent of Game Grading. */
+.tool-tabs-visible{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin:0 0 18px}
+.tool-tabs-visible .tool-tab{padding:12px 7px;min-height:47px;white-space:normal;line-height:1.25;border-radius:12px;text-align:center}
+.tool-tabs-visible .tool-tab.active{box-shadow:inset 0 -3px 0 #70ecd5}
+.market-links{display:flex;flex-wrap:wrap;gap:9px;margin:12px 0 16px}
+.market-links a{display:inline-flex;align-items:center;justify-content:center;border:1px solid #457e79;border-radius:10px;color:#c3fff0;background:#1c3b42;padding:10px 13px;font-size:12px;font-weight:850;text-decoration:none}
+.market-links a:hover{background:#2a555c}
+.market-hint,.price-unavailable{padding:12px 14px;background:#1c2840;border:1px solid #344566;border-radius:11px;font-size:12px;line-height:1.55;color:#c5d0e8}
+.price-search-field{grid-column:span 1}
+.price-pick-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:9px}
+.price-pick-card{background:#1b2741;color:#e8eeff;border:1px solid #3c496c;border-radius:10px;min-width:0;padding:7px;display:grid;gap:5px;text-align:left}
+.price-pick-card:hover,.price-pick-card.selected{border-color:#8debdc;background:#263551}
+.price-pick-image{display:block;aspect-ratio:245/342;border-radius:6px;overflow:hidden;background:#293656}
+.price-pick-image img{width:100%;height:100%;object-fit:contain}
+.price-pick-card strong{font-size:12px;line-height:1.24;overflow:hidden;max-height:2.5em}
+.price-pick-card small{font-size:10px;color:#a9bad7}
+.selected-price-card{border:1px solid #557879;border-radius:14px;background:linear-gradient(145deg,#1b3841,#192338);padding:15px;margin:19px 0}
+.selected-card-heading{display:grid;grid-template-columns:116px minmax(0,1fr);gap:17px;align-items:start}
+.selected-card-image{border:1px solid #71858a;border-radius:8px;overflow:hidden;aspect-ratio:245/342;background:#232d45;position:relative}
+.selected-card-image img{width:100%;height:100%;object-fit:contain}
+.selected-card-heading h3{font-size:21px;margin:9px 0 3px}
+.selected-card-heading p{font-size:12px}
+.real-card-stats{display:flex;gap:8px;flex-wrap:wrap;margin:11px 0}
+.real-card-stats span{padding:5px 8px;background:#223950;border:1px solid #42546c;border-radius:7px;font-size:11px}
+.price-moves{display:grid;gap:4px;font-size:11px;color:#b9cde0;margin:8px 0 12px}
+.price-moves strong{font-size:12px;color:#ebefff}
+.price-table .price-market{color:#8bffde;font-weight:900}
+.lookup-price-button{border:1px solid #53847d;background:#1e4346;color:#b4f7e8;border-radius:7px;padding:8px 5px;font-weight:800;font-size:11px;margin-top:auto;width:100%}
+@media(max-width:1000px){.tool-tabs-visible{grid-template-columns:repeat(3,minmax(0,1fr))}.price-pick-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:650px){.tool-tabs-visible{gap:5px;margin-bottom:12px}.tool-tabs-visible .tool-tab{font-size:11px;padding:9px 3px;min-height:42px}.price-pick-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.price-pick-card{padding:5px}.price-pick-card strong{font-size:11px}.selected-card-heading{grid-template-columns:90px minmax(0,1fr);gap:11px}.selected-card-heading h3{font-size:17px}.selected-price-card{padding:10px}.market-links a{flex:1;font-size:11px;padding:9px 8px}}
 </style>
 </head>
 <body>
@@ -383,7 +414,7 @@ body.camera-open{overflow:hidden}
           <span class="brand-mark">P<span class="brand-diamond">◆</span></span>
           <span class="brand-copy"><strong>PACKLAB</strong><small>COLLECTOR SIMULATOR</small></span>
         </button>
-        <div class="version-tag"><span class="live-indicator"></span> COLLECTOR v0.8.2</div>
+        <div class="version-tag"><span class="live-indicator"></span> COLLECTOR v0.8.3</div>
         <div class="top-stats">
           <div class="stat-chip coins"><span class="chip-icon">◈</span><span id="coinCount">—</span><small>COINS</small></div>
           <div class="stat-chip level"><span class="chip-icon">✦</span><span id="levelCount">1</span><small>LEVEL</small></div>
@@ -720,7 +751,7 @@ const catalogMemory=new Map();
 const catalogLoading=new Map();
 const catalogErrors=new Map();
 const ui={page:'open',binderSet:'sv30',binderMode:'owned',binderRarity:'all',binderSort:'rarity-desc',binderSearch:'',binderPage:1,bulkQty:5,bulkDisplay:'all',bulkViewCount:45,bulkSellOpen:false,bulkSellScope:'all',bulkSaleUndo:null,inspection:null,tearStart:null,revealStart:null,
- toolTab:'centering',ratesSet:'sv8pt5',rateRarity:'Special Illustration Rare',ratePacks:36,guideScores:{centering:9,corners:9,edges:9,surface:9},profit:{raw:50,graded:110,fee:25,shipping:7,selling:0,service:'PSA 10'},
+ toolTab:'centering',priceSet:'sv8pt5',priceQuery:'',priceCardId:'',priceBusy:false,priceError:'',ratesSet:'sv8pt5',rateRarity:'Special Illustration Rare',ratePacks:36,guideScores:{centering:9,corners:9,edges:9,surface:9},profit:{raw:50,graded:110,fee:25,shipping:7,selling:0,service:'PSA 10'},
  centering:{left:8,right:8,top:7,bottom:7},centerImage:'',centerDrag:null,centerMeasured:false,centerMethod:'',centerHint:'',scanSide:'front',scanAdvanced:false,scanScans:{front:null,back:null},scanDesign:'unknown',scanHolder:false,scanCornerSelected:0,scanEditOutline:false,scanOuterDrag:null,visibleCondition:{corners:'unknown',edges:'unknown',surface:'unknown'},lookupImage:'',lookupSet:'sv8pt5',lookupSearch:'',ocrBusy:false,ocrText:''};
 let toastTimers=[];
 let state=loadSave();
@@ -996,7 +1027,7 @@ function renderOpen(){
  }
  const selection=`<select aria-label="Choose expansion" class="set-select" id="selectedSet" ${state.activePack?'disabled title="Finish the current pack before switching expansions"':''}>${setOpts}</select>`;
  const recent=state.recentPulls.length?state.recentPulls.slice(0,4).map(row=>{const card=catalogMemory.get(row.setId)?.find(c=>c.id===row.cardId);return `<div class="recent-row">${card?`<span class="recent-thumb">${imgTag(card)}</span>`:`<span class="recent-icon">✦</span>`}<div class="recent-meta"><strong>${esc(card?.name||row.cardId)}</strong><small>${esc(SETS[row.setId]?.name)} · ${esc(row.rarity||'')}</small></div><span class="pill ${chipRarity(row.rarity)}">PULL</span></div>`;}).join(''):'<div class="empty-note small">Open a pack to start your pull history.</div>';
- return `<div class="open-lead"><div><div class="eyebrow">YOUR OWN PACK RIPPING DESK</div><h1>Rip packs. Chase hits<span class="accent">.</span></h1></div>${selection}</div><div class="set-tabs">${orderedSets().map(x=>`<button type="button" data-action="select-set" data-set="${x.id}" class="set-tab ${id===x.id?'selected':''}" ${state.activePack?'disabled':''}><span>${esc(x.name)}</span><small>${fmt(state.packs[x.id]||0)} PACKS</small></button>`).join('')}</div>${renderBulkPanel(id,catalog)}${stats}<div class="grid-two"><div class="panel"><div class="open-stage ${id==='sv30'?'celebration-stage':''}"><span class="stage-topnote">THE RIP DESK · ART EDITION</span><span class="stage-badge">${esc(s.name.toUpperCase())}</span>${stageContent}</div><div class="stage-bottom"><span>✦ &nbsp; ${stageHint}</span><strong>SET-LOCKED ✓</strong></div></div><div class="opening-side"><div class="panel selected-set-panel"><div class="mini-set-title"><h3>${esc(s.fullName)}</h3><span class="pill mint">ENGLISH</span></div><p class="set-desc">${esc(s.blurb)}</p><div class="set-progress"><div class="progress-top"><span>SET CHECKLIST</span><strong>${completion} / ${s.total}</strong></div><div class="progress-rail"><div style="width:${pct(completion,s.total)}%"></div></div></div><p class="micro">${fmt(state.packs[id]||0)} sealed booster packs owned</p><p class="micro">Odds are modeled from observed openings, not official factory guarantees. <button class="text-link" type="button" data-nav="tools">View pull rates →</button></p><div class="open-tools" style="justify-content:flex-start"><button class="secondary-action small-button" data-nav="store">Pack shop ↗</button><button class="secondary-action small-button" data-nav="binder">Set checklist</button></div></div><div class="panel panel-pad"><div class="section-heading">Your latest cards <small>REAL CARD IMAGES</small></div><div class="recent-hits">${recent}</div></div><div class="panel quick-help"><h3>Earn the next pack</h3><p>Complete daily challenges, battle trainers, or sell duplicates for virtual coins. Your binder, cards and grading results all save locally.</p><button class="tertiary-action small-button" data-nav="quests" style="margin-top:12px">Earn rewards →</button></div></div></div>`;
+ return `<div class="open-lead"><div><div class="eyebrow">YOUR OWN PACK RIPPING DESK</div><h1>Rip packs. Chase hits<span class="accent">.</span></h1></div>${selection}</div><div class="set-tabs">${orderedSets().map(x=>`<button type="button" data-action="select-set" data-set="${x.id}" class="set-tab ${id===x.id?'selected':''}" ${state.activePack?'disabled':''}><span>${esc(x.name)}</span><small>${fmt(state.packs[x.id]||0)} PACKS</small></button>`).join('')}</div>${renderBulkPanel(id,catalog)}${stats}<div class="grid-two"><div class="panel"><div class="open-stage ${id==='sv30'?'celebration-stage':''}"><span class="stage-topnote">THE RIP DESK · ART EDITION</span><span class="stage-badge">${esc(s.name.toUpperCase())}</span>${stageContent}</div><div class="stage-bottom"><span>✦ &nbsp; ${stageHint}</span><strong>SET-LOCKED ✓</strong></div></div><div class="opening-side"><div class="panel selected-set-panel"><div class="mini-set-title"><h3>${esc(s.fullName)}</h3><span class="pill mint">ENGLISH</span></div><p class="set-desc">${esc(s.blurb)}</p><div class="set-progress"><div class="progress-top"><span>SET CHECKLIST</span><strong>${completion} / ${s.total}</strong></div><div class="progress-rail"><div style="width:${pct(completion,s.total)}%"></div></div></div><p class="micro">${fmt(state.packs[id]||0)} sealed booster packs owned</p><p class="micro">Odds are modeled from observed openings, not official factory guarantees. <button class="text-link" type="button" data-action="open-rates">View pull rates →</button></p><div class="open-tools" style="justify-content:flex-start"><button class="secondary-action small-button" data-nav="store">Pack shop ↗</button><button class="secondary-action small-button" data-nav="binder">Set checklist</button></div></div><div class="panel panel-pad"><div class="section-heading">Your latest cards <small>REAL CARD IMAGES</small></div><div class="recent-hits">${recent}</div></div><div class="panel quick-help"><h3>Earn the next pack</h3><p>Complete daily challenges, battle trainers, or sell duplicates for virtual coins. Your binder, cards and grading results all save locally.</p><button class="tertiary-action small-button" data-nav="quests" style="margin-top:12px">Earn rewards →</button></div></div></div>`;
 }
 function renderStore(){return `${pageHeading('THE VIRTUAL CARD SHOP','Stock your collection.','Spend coins earned in-game on verified English booster packs. All sealed packs use their own real set checklist.',`<span class="pill mint">◈ ${fmt(state.coins)} COINS AVAILABLE</span>`)}
  <div class="store-grid">${orderedSets().map(s=>`<article class="panel product-card"><div class="product-banner ${s.id==='sv8'?'surge':s.id==='sv30'?'celebration-banner':''}"><div class="product-pack second">${compactPack(s.id)}</div><div class="product-pack first">${compactPack(s.id)}</div></div><div class="product-info"><div class="top"><h2>${esc(s.name)}</h2><span class="pill">${s.total} CARDS</span></div><p>${esc(s.blurb)}</p><div class="progress-top" style="margin-top:12px"><span>SEALED IN INVENTORY</span><strong>×${fmt(state.packs[s.id]||0)}</strong></div><div class="product-buy"><button class="primary-action" data-action="buy-pack" data-set="${s.id}" data-count="1" ${state.coins<s.price?'disabled':''}>◈ ${s.price} · 1 PACK</button><button class="secondary-action" data-action="buy-pack" data-set="${s.id}" data-count="6" ${state.coins<s.boxPrice?'disabled':''}>◈ ${s.boxPrice} · 6 PACKS</button></div><button class="tertiary-action full" style="margin-top:10px" data-action="store-open" data-set="${s.id}">Open this expansion →</button></div></article>`).join('')}</div>
@@ -1079,7 +1110,9 @@ function claimQuest(key){const quest=getQuests().find(q=>q.key===key);if(!quest|
 function renderQuests(){const quests=getQuests();const eligible=quests.filter(q=>q.current()>=q.target&&!state.claimed[q.key]).length;
  return pageHeading('DAILY PROGRESSION','Earn what you open.','Pick up a free anniversary booster each day, or finish challenges to fund more packs and grading.',`<span class="pill mint">${eligible} REWARDS READY</span>`)+`<div class="quest-stats"><span>◷ Resets each day (local device date)</span><span>◈ All rewards are virtual</span><span>✦ +30 XP per claimed mission</span></div><div class="quests-grid">${quests.map(q=>{const progress=Math.min(q.target,q.current()),claimed=!!state.claimed[q.key],ready=progress>=q.target;return `<article class="panel quest"><div class="quest-top"><div class="quest-ico">${q.icon}</div><div class="quest-content"><h3>${esc(q.title)}</h3><p>${esc(q.desc)}</p></div></div><div class="set-progress"><div class="progress-top"><span>PROGRESS</span><strong>${progress} / ${q.target}</strong></div><div class="progress-rail"><div style="width:${pct(progress,q.target)}%"></div></div></div><div class="quest-foot"><strong>REWARD: ${esc(q.reward)}</strong><button type="button" class="${ready&&!claimed?'primary-action':'secondary-action'} small-button" data-action="claim-quest" data-quest="${esc(q.key)}" ${!ready||claimed?'disabled':''}>${claimed?'✓ Claimed':ready?'Claim reward':'Not ready'}</button></div></article>`;}).join('')}</div><div class="panel panel-pad" style="margin-top:20px"><div class="section-heading">Your lifetime achievements</div><div class="grid-stats" style="margin-bottom:0"><div class="metric"><small>BOOSTERS OPENED</small><strong>${fmt(state.stats.opened)}</strong></div><div class="metric"><small>BATTLES WON</small><strong>${fmt(state.stats.won)}</strong></div><div class="metric"><small>GRADES SUBMITTED</small><strong>${fmt(state.stats.graded)}</strong></div></div></div>`;}
 // PACKLAB Collector Tools — local-first calculators and photo-assisted lookup.
-const TOOL_TABS=[['rates','Pull rates'],['profit','Grading profit'],['centering','Centering'],['scanner','Card finder'],['guide','Grading guide']];
+const TOOL_TABS=[['centering','📷 Scanner'],['scanner','🔍 Card Finder'],['prices','💲 Price Check'],['rates','🎲 Pull Rates'],['profit','📊 Grading Profit'],['guide','📖 Grading Guide']];
+const priceCache = new Map(); // Public price feed only. Never touches the player's collection or game coins.
+
 let photoPreviewUrls={};
 const cash=n=>`${Number(n)<0?'−':''}$${Math.abs(Number(n)||0).toFixed(2)}`;
 function setPreviewImage(field,file){
@@ -1093,13 +1126,11 @@ function setPreviewImage(field,file){
  render();
 }
 function renderTools(){
- const choices=TOOL_TABS.map(([key,title])=>`<button type="button" data-action="tool-tab" data-tab="${key}" class="tool-tab ${ui.toolTab===key?'active':''}">${title}</button>`).join('');
- const contents=({rates:renderToolRates,profit:renderToolProfit,centering:renderToolCentering,scanner:renderToolLookup,guide:renderToolGuide}[ui.toolTab]||renderToolCentering)();
- if(ui.toolTab==='centering')return `${contents}<details class="scan-more-tools"><summary>Other tools · Card finder, pull rates, grading profit, guide</summary><div class="tool-tabs">${choices}</div></details>`;
- return pageHeading('REAL CARD TOOLS','Physical card workshop.','Real-card references and calculators, separate from virtual game grading.')+
- `<div class="tool-tabs" role="tablist">${choices}</div>${contents}`;
+ const choices=TOOL_TABS.map(([key,title])=>`<button type="button" role="tab" aria-selected="${ui.toolTab===key}" data-action="tool-tab" data-tab="${key}" class="tool-tab ${ui.toolTab===key?'active':''}">${title}</button>`).join('');
+ const contents=({rates:renderToolRates,profit:renderToolProfit,centering:renderToolCentering,scanner:renderToolLookup,prices:renderToolPrices,guide:renderToolGuide}[ui.toolTab]||renderToolCentering)();
+ return pageHeading('REAL CARD TOOLS','Scan. Identify. Price-check.','Real physical-card references and calculators. Your virtual collection and Game Grading are separate.')+
+ `<div class="tool-tabs tool-tabs-visible" role="tablist" aria-label="Real Card Tools">${choices}</div>${contents}`;
 }
-
 function rarityRateRows(id){
  if(id==='sv30')return [['Pikachu Rare',1],...ANNIVERSARY_WEIGHTS.map(([rarity,weight])=>[rarity,weight/100000])];
  const r=OBSERVED_RATES[id];if(!r)return [];
@@ -1469,13 +1500,110 @@ function captureCenterPhoto(sourceMode='manual'){
  }catch(err){cameraCaptureBusy=false;console.warn('Capture failed',err);cameraStatus(err.message||'Unable to capture the card.','error');}
 }
 
+
+// External, public search links for real-card valuations. A link does not imply an exact match or a quoted price.
+function cardMarketQuery(card=null,term='',setId=ui.priceSet){
+ const set=SETS[card?.setId||setId];
+ const name=card?.name||String(term||'').trim();
+ const number=card?.number?` ${card.number}`:'';
+ return [name,number.trim(),set?.name||'', 'Pokemon'].filter(Boolean).join(' ').replace(/\s+/g,' ').trim();
+}
+function marketSiteLinks(card=null,term='',setId=ui.priceSet){
+ const q=cardMarketQuery(card,term,setId);
+ const safe=encodeURIComponent(q || 'Pokemon cards');
+ const a=`https://www.tcgplayer.com/search/pokemon/product?q=${safe}&productLineName=pokemon`;
+ const b=`https://www.pricecharting.com/search-products?q=${safe}&type=prices`;
+ return `<div class="market-links"><a href="${esc(a)}" target="_blank" rel="noopener noreferrer">Check TCGplayer ↗</a><a href="${esc(b)}" target="_blank" rel="noopener noreferrer">Check PriceCharting ↗</a></div>`;
+}
+function priceCandidates(){
+ const pool=catalogMemory.get(ui.priceSet)||[];
+ const q=String(ui.priceQuery||'').trim().toLowerCase();
+ if(!q)return pool.filter(c=>['Special Illustration Rare','Futuristic Rare','RGB Rare','Hyper Rare'].includes(c.rarity)).slice(0,12);
+ const n=q.replace(/^#/,'').replace(/\s*\/\s*\d+\s*$/,'');
+ return pool.filter(c=>c.name.toLowerCase().includes(q)||String(c.number).toLowerCase()===n||String(c.number).toLowerCase().includes(q)).slice(0,30);
+}
+function selectedPriceCard(){
+ return (catalogMemory.get(ui.priceSet)||[]).find(c=>c.id===ui.priceCardId)||null;
+}
+function tcgdexCardKey(card){
+ const set=SETS[card?.setId];
+ if(!set?.tcgdex)return null; // 30th includes a separate classic subset; marketplace search is safer than a wrong card-ID mapping.
+ const n=String(card.number||'').match(/^\d+$/)?Number(card.number):null;
+ return n!==null ? `${set.tcgdex}-${String(n).padStart(3,'0')}` : null;
+}
+function priceTime(t){
+ if(!t)return 'Update time not provided';
+ const d=Number.isFinite(t)?new Date(t<1e11?t*1000:t):new Date(t);
+ return Number.isNaN(d.getTime())?'Update time not provided':`Updated ${d.toLocaleDateString()} ${d.toLocaleTimeString([], {hour:'numeric',minute:'2-digit'})}`;
+}
+function quoteRows(tcg){
+ if(!tcg||typeof tcg!=='object')return [];
+ return Object.entries(tcg).filter(([k,v])=>!['updated','unit','prices'].includes(k)&&v&&typeof v==='object'&&!Array.isArray(v))
+   .map(([key,v])=>({key,market:Number(v.marketPrice??v.market),low:Number(v.lowPrice??v.low),mid:Number(v.midPrice??v.mid),high:Number(v.highPrice??v.high)}))
+   .filter(v=>[v.market,v.low,v.mid,v.high].some(x=>Number.isFinite(x)&&x>0));
+}
+function realPriceTable(payload){
+ const tcg=payload?.pricing?.tcgplayer||payload?.prices?.tcgplayer||null;
+ const rows=quoteRows(tcg);
+ if(!rows.length)return '<div class="price-unavailable">No USD TCGplayer market quote was supplied for this print. Use the marketplace searches below to compare active listings and sold prices.</div>';
+ const val=x=>Number.isFinite(x)&&x>0?cash(x):'—';
+ return `<div class="table-scroll"><table class="rate-table price-table"><thead><tr><th>Finish</th><th>Market</th><th>Low</th><th>Mid</th><th>High</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${esc(r.key.replace(/[-_]/g,' '))}</td><td class="price-market">${val(r.market)}</td><td>${val(r.low)}</td><td>${val(r.mid)}</td><td>${val(r.high)}</td></tr>`).join('')}</tbody></table></div><p class="tool-disclaimer">TCGplayer market data provided via TCGdex (not a direct connection to the TCGplayer API). ${esc(priceTime(tcg.updated))}. Verify card finish, condition and recent listings before treating this as a sale price.</p>`;
+}
+function priceSelectedPanel(){
+ const c=selectedPriceCard();if(!c)return '';
+ const key=c.id,cache=priceCache.get(key),payload=cache?.data,attacks=payload?.attacks||c.attacks||[];
+ const detail=payload?`<div class="real-card-stats"><span>Illustrator: ${esc(payload.illustrator||'Not supplied')}</span><span>Stage: ${esc(payload.stage||c.stage||'Not supplied')}</span><span>Weakness: ${esc((payload.weaknesses||[]).map(x=>`${x.type||''} ${x.value||''}`).join(', ')||'Not supplied')}</span><span>HP: ${esc(payload.hp||c.hp||'—')}</span></div>${attacks.length?`<div class="price-moves"><strong>Printed attacks</strong>${attacks.slice(0,3).map(a=>`<span>${esc(a.name||'Attack')} · ${esc(a.damage||a.effect||'—')}</span>`).join('')}</div>`:''}`:`<div class="real-card-stats"><span>HP: ${esc(c.hp||'—')}</span><span>Type: ${esc((c.types||[]).join(', ')||'—')}</span><span>Category: ${esc(c.category||'—')}</span></div>`;
+ const body=ui.priceBusy?'<div class="price-unavailable">Checking public market-price data…</div>':ui.priceError?`<div class="price-unavailable">${esc(ui.priceError)}</div>`:payload?realPriceTable(payload):'<div class="price-unavailable">Select a card to request its available market prices.</div>';
+ return `<section class="selected-price-card" aria-label="Selected real card and market values"><div class="selected-card-heading"><div class="selected-card-image">${imgTag(c,true)}</div><div><span class="pill gold">${esc(c.rarity)}</span><h3>${esc(c.name)}</h3><p>${esc(SETS[c.setId]?.fullName||'')} · #${esc(c.number)}${c.setId==='sv30'?' · verify Classic Collection print if applicable':''}</p>${detail}<button class="secondary-action small-button" type="button" data-action="price-refresh" ${ui.priceBusy?'disabled':''}>↻ Refresh price</button></div></div>${body}${marketSiteLinks(c)}</section>`;
+}
+function priceLookupList(){
+ const items=priceCandidates();const loading=!catalogMemory.has(ui.priceSet);
+ if(loading)return statusCatalog(ui.priceSet);
+ if(!items.length)return `<div class="empty-note">No matching card in ${esc(SETS[ui.priceSet]?.name)}. Try the name or collector number, or search the marketplaces for a different expansion.</div>`;
+ return `<div class="price-pick-grid">${items.map(c=>`<button type="button" class="price-pick-card ${ui.priceCardId===c.id?'selected':''}" data-action="price-select" data-card="${esc(c.id)}"><span class="price-pick-image">${imgTag(c)}</span><strong>${esc(c.name)}</strong><small>#${esc(c.number)} · ${esc(c.rarity)}</small></button>`).join('')}</div>`;
+}
+function updatePriceList(){const x=document.getElementById('priceLookupResults');if(x)x.innerHTML=priceLookupList();}
+function renderToolPrices(){
+ const opts=orderedSets().map(x=>`<option value="${x.id}" ${ui.priceSet===x.id?'selected':''}>${esc(x.name)}</option>`).join('');requireCatalog(ui.priceSet);
+ return `<section class="tool-surface price-check-surface"><div class="tool-intro"><div><span class="eyebrow">REAL CARD MARKET REFERENCE</span><h2>Find your card and check its price.</h2><p>Search by name or collector number, inspect its real card information and see any available TCGplayer USD market prices. Open PriceCharting for historical and graded comparisons.</p></div><span class="pill mint">REAL MONEY · NOT GAME COINS</span></div>
+ <div class="tool-fields"><label class="field-block">Card set<select id="priceSet">${opts}</select></label><label class="field-block price-search-field">Card name or number<input id="priceSearch" type="search" value="${esc(ui.priceQuery)}" placeholder="Umbreon ex, Charizard, 161…" autocomplete="off"></label></div>
+ <div class="market-hint"><strong>Looking for a different Pokémon set?</strong> Use the TCGplayer and PriceCharting links below to search beyond the four current PACKLAB checklists. Market prices vary by language, printing, finish and condition.</div>${marketSiteLinks(null,ui.priceQuery,ui.priceSet)}
+ ${priceSelectedPanel()}<div class="section-heading" style="margin-top:18px">Choose the exact card <small>ACTUAL CARD ART / NUMBER</small></div><div id="priceLookupResults">${priceLookupList()}</div>
+ <p class="tool-disclaimer">No pricing data is fabricated. Automatic USD quotes depend on third-party data availability; PriceCharting values are opened on its own website, not scraped into PACKLAB. The game inventory, coin values and simulated grades are unaffected.</p></section>`;
+}
+async function loadPriceForSelectedCard(force=false){
+ const c=selectedPriceCard();if(!c)return;
+ const id=c.id,apiId=tcgdexCardKey(c),cache=priceCache.get(id);
+ if(!force&&cache&&(Date.now()-cache.time)<10*60*1000){ui.priceBusy=false;ui.priceError='';if(ui.page==='tools'&&ui.toolTab==='prices')render();return;}
+ if(!apiId){ui.priceBusy=false;ui.priceError='This expansion or print has no verified card-ID mapping in the automated price feed. Use the marketplace searches to find the exact version.';if(ui.page==='tools'&&ui.toolTab==='prices')render();return;}
+ ui.priceBusy=true;ui.priceError='';if(ui.page==='tools'&&ui.toolTab==='prices')render();
+ const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),11000);
+ try{
+  const response=await fetch(`https://api.tcgdex.net/v2/en/cards/${encodeURIComponent(apiId)}`,{signal:controller.signal});
+  if(!response.ok)throw Error(`Price feed HTTP ${response.status}`);
+  const data=await response.json();
+  // Guard against a plausible ID mapping to the wrong printed card.
+  const clean=x=>String(x||'').toLowerCase().replace(/[^a-z0-9]/g,'');
+  const target=clean(c.name),actual=clean(data.name);
+  if(data.id!==apiId||!target||!actual||!(target===actual||target.includes(actual)||actual.includes(target)))throw Error('Feed card identity does not match the selected print');
+  priceCache.set(id,{time:Date.now(),data});
+  if(ui.priceCardId===id)ui.priceError='';
+ }catch(err){if(ui.priceCardId===id)ui.priceError='Automatic pricing is currently unavailable for this print. Compare it directly on TCGplayer and PriceCharting.';console.warn('Real card price feed unavailable',apiId,err);}finally{clearTimeout(timer);if(ui.priceCardId===id){ui.priceBusy=false;if(ui.page==='tools'&&ui.toolTab==='prices')render();}}
+}
+function selectPriceCard(id){
+ const set=Object.keys(SETS).find(x=>id.startsWith(x+'-'));
+ const c=set&&(catalogMemory.get(set)||[]).find(x=>x.id===id);
+ if(!c){toast('Load this set checklist before checking prices.','error');return;}
+ ui.priceSet=set;ui.priceQuery=c.name;ui.priceCardId=c.id;ui.priceError='';ui.priceBusy=false;ui.toolTab='prices';navigate('tools');void loadPriceForSelectedCard();
+}
+
 function cardLookupResults(){const c=catalogMemory.get(ui.lookupSet),q=(ui.lookupSearch||'').trim().toLowerCase();if(!c)return [];if(!q)return c.filter(x=>['Special Illustration Rare','Futuristic Rare','RGB Rare'].includes(x.rarity)).slice(0,16);const qNumber=q.replace(/\s*\/\s*\d+\s*$/,'').replace(/^#/,'');return c.filter(x=>x.name.toLowerCase().includes(q)||x.number.toLowerCase()===qNumber||String(x.number).toLowerCase().includes(q)).slice(0,35);}
-function lookupList(){const results=cardLookupResults();if(!catalogMemory.has(ui.lookupSet))return statusCatalog(ui.lookupSet);return results.length?`<div class="lookup-grid">${results.map(c=>`<article class="lookup-card" aria-label="Physical card reference: ${esc(c.name)}"><div class="lookup-picture">${imgTag(c)}</div><strong>${esc(c.name)}</strong><small>#${esc(c.number)} · ${esc(c.rarity)}</small></article>`).join('')}</div>`:`<div class="empty-note">No matching card in ${esc(SETS[ui.lookupSet].name)}. Check its name and number or choose the correct set.</div>`;}
+function lookupList(){const results=cardLookupResults();if(!catalogMemory.has(ui.lookupSet))return statusCatalog(ui.lookupSet);return results.length?`<div class="lookup-grid">${results.map(c=>`<article class="lookup-card" aria-label="Physical card reference: ${esc(c.name)}"><div class="lookup-picture">${imgTag(c)}</div><strong>${esc(c.name)}</strong><small>#${esc(c.number)} · ${esc(c.rarity)}</small><button type="button" class="lookup-price-button" data-action="lookup-to-price" data-card="${esc(c.id)}">Price + info ↗</button></article>`).join('')}</div>`:`<div class="empty-note">No matching card in ${esc(SETS[ui.lookupSet].name)}. Check its name and number or choose the correct set.</div>`;}
 function renderToolLookup(){requireCatalog(ui.lookupSet);return `<section class="tool-surface"><div class="tool-intro"><div><span class="eyebrow">PHOTO + CHECKLIST LOOKUP</span><h2>Identify a card.</h2><p>Upload a card photo, optionally read printed text on-device, and match its name and collector number against known set checklists. These are real-card REFERENCE results, not cards added to your game binder.</p></div><span class="pill gold">SCAN BETA</span></div>
  <div class="photo-upload-row"><label class="secondary-action photo-button" for="lookupPhoto">↑ Add photo</label><input type="file" hidden id="lookupPhoto" accept="image/*"><button type="button" class="primary-action small-button" data-action="lookup-ocr" ${!ui.lookupImage||ui.ocrBusy?'disabled':''}>${ui.ocrBusy?'Reading photo…':'Scan text in browser'}</button></div>
  ${ui.lookupImage?`<div class="scan-preview"><img src="${esc(ui.lookupImage)}" alt="Your uploaded photo"><span>${ui.ocrText?esc(ui.ocrText):'Ready for name/number search'}</span></div>`:''}
  <div class="tool-fields"><label class="field-block">Card expansion<select id="lookupSet">${orderedSets().map(x=>`<option value="${x.id}" ${x.id===ui.lookupSet?'selected':''}>${esc(x.name)}</option>`).join('')}</select></label><label class="field-block">Name or collector number<input id="lookupSearch" type="search" placeholder="Umbreon ex, Pikachu, 161/131…" value="${esc(ui.lookupSearch)}" autocomplete="off"></label></div>
- <div id="lookupResults">${lookupList()}</div><p class="tool-disclaimer">Photo scanning uses an optional browser-loaded OCR library and can misread small numbers; edit the search field when needed. It does not identify cards visually without readable text and does not fetch real-time prices. Search works even without a photo once the set checklist loads.</p></section>`;}
+ <div id="lookupResults">${lookupList()}</div><p class="tool-disclaimer">Choose <strong>Price + info</strong> on a matched card for market information and PriceCharting links. Photo OCR is optional and can misread small numbers—always confirm the set and artwork. Search works without a photo once the set checklist loads.</p></section>`;}
 function updateLookupResults(){const dest=document.getElementById('lookupResults');if(dest)dest.innerHTML=lookupList();}
 async function runBrowserOCR(){if(!ui.lookupImage||ui.ocrBusy){if(!ui.lookupImage)toast('Add a photo first.');return;}ui.ocrBusy=true;render();let resultText='';try{
  if(!window.Tesseract){await new Promise((resolve,reject)=>{const script=document.createElement('script');script.src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';script.onload=resolve;script.onerror=()=>reject(Error('OCR library could not load.'));document.head.appendChild(script);});}
@@ -1511,7 +1639,11 @@ function resetSave(){if(!confirm('Delete all PackLab coins, packs, grades, cards
 function navigate(page){if(!['open','store','binder','grading','battle','quests','tools','info'].includes(page))return;ui.page=page;document.activeElement?.blur?.();window.scrollTo({top:0,behavior:'instant'});render();}
 function processAction(el){const action=el.dataset.action;if(!action)return;switch(action){
  case 'how-to':navigate('info');break;
- case 'tool-tab':ui.toolTab=el.dataset.tab||'rates';navigate('tools');break;
+ case 'tool-tab':ui.toolTab=el.dataset.tab||'centering';navigate('tools');break;
+ case 'lookup-to-price':selectPriceCard(el.dataset.card);break;
+ case 'price-select':selectPriceCard(el.dataset.card);break;
+ case 'price-refresh':void loadPriceForSelectedCard(true);break;
+ case 'open-rates':ui.toolTab='rates';navigate('tools');break;
  case 'tool-rate-set':ui.ratesSet=el.dataset.set||'sv8pt5';render();break;
  case 'tool-profit-reset':ui.profit={raw:50,graded:110,fee:25,shipping:7,selling:0,service:'PSA 10'};render();break;
  case 'lookup-ocr':runBrowserOCR();break;
@@ -1577,6 +1709,7 @@ document.addEventListener('click',event=>{
 });
 document.addEventListener('toggle',event=>{if(event.target?.id==='scanDetails')ui.scanAdvanced=event.target.open;},true);
  document.addEventListener('change',event=>{const e=event.target;
+ if(e.id==='priceSet'){ui.priceSet=SETS[e.value]?e.value:'sv8pt5';ui.priceCardId='';ui.priceQuery='';ui.priceBusy=false;ui.priceError='';requireCatalog(ui.priceSet);render();return;}
  if(e.id==='cameraHolderLive'){ui.scanHolder=!!e.checked;cameraStableFrames=0;cameraLockedQuad=null;cameraStatus(ui.scanHolder?'Holder mode: manual capture only · outline may detect the plastic':'Detecting card…','searching');return;}
  if(e.id==='scanDesign'){
   ui.scanDesign=['standard','thin','borderless','unknown'].includes(e.value)?e.value:'unknown';
@@ -1605,6 +1738,7 @@ document.addEventListener('toggle',event=>{if(event.target?.id==='scanDetails')u
 });
 document.addEventListener('input',event=>{
  const target=event.target;
+ if(target.id==='priceSearch'){const pos=target.selectionStart;ui.priceQuery=target.value;ui.priceCardId='';ui.priceError='';ui.priceBusy=false;render();const fresh=document.getElementById('priceSearch');if(fresh){fresh.focus();try{fresh.setSelectionRange(pos,pos);}catch(_){}}return;}
  if(target.id==='ratePacks'){ui.ratePacks=target.value;updateRatesProbability();return;}
  if(target.dataset.guideScore){ui.guideScores[target.dataset.guideScore]=Number(target.value)||1;updateGuideEstimate();return;}
  if(target.dataset.profit){ui.profit[target.dataset.profit]=Number(target.value)||0;updateProfitView();return;}
