@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#090e1c" />
   <meta name="description" content="PackLab: a mobile-friendly collector simulator prototype. Rip real-art 30th Celebration, Prismatic Evolutions, 151 and Surging Sparks boosters. Earn packs, grade pulls and battle." />
-  <title>PACKLAB — Collector v0.8.1 • Physical Scanner Validation</title>
+  <title>PACKLAB — Collector v0.8.2 • Live Auto-Scan</title>
   
   <link rel="preload" as="image" href="https://upload.wikimedia.org/wikipedia/en/3/36/Pokemon_Trading_Card_Game_cardback.png" />
   <style>
@@ -286,7 +286,7 @@ body.camera-open{overflow:hidden}
 @media(max-width:870px){.scan-measure-layout{grid-template-columns:1fr}.scan-measure-layout .centering-canvas{max-width:370px;margin:0 auto}.full-photo-panel{padding:10px}}
 @media(max-width:530px){.real-scanner .center-guide.vertical{width:26px}.real-scanner .center-guide.horizontal{height:26px}.full-photo-panel .outer-handle{height:34px;width:34px}.scan-confirm-row>button{width:100%}}
 
-/* v0.8.1 — Physical scanner: explicit design recognition, holder caution, magnified manual corners. */
+/* v0.8.2 — Physical scanner: explicit design recognition, holder caution, magnified manual corners. */
 .real-scanner .scan-type-row{display:grid;grid-template-columns:minmax(180px,1fr) minmax(180px,1fr);gap:12px;margin:12px 0 16px}
 .scan-type-row label{color:#d7e6f1;font-weight:780;font-size:12px;display:flex;flex-direction:column;gap:6px}
 .scan-type-row select{background:#182b40;color:#fff;border:1px solid #527286;border-radius:10px;min-height:43px;padding:8px;min-width:0}
@@ -308,6 +308,71 @@ body.camera-open{overflow:hidden}
 .real-scanner .tool-metrics strong.pending{font-size:18px;color:#d7b57b}
 @media(max-width:650px){.real-scanner .scan-type-row{grid-template-columns:1fr}.outer-loupe{width:111px;height:111px}.outer-corner-selector button{flex:1}.outer-nudger button{font-size:13px}}
 
+
+/* PACKLAB v0.8.2 — camera-first real-card scanning. All tuning is optional. */
+.scan-simple{max-width:1050px;margin-inline:auto}
+.scan-simple-head{display:flex;align-items:flex-start;justify-content:space-between;gap:15px;flex-wrap:wrap}
+.scan-simple-head h2{font-size:clamp(24px,4vw,32px)}
+.scan-simple-head p{max-width:570px;font-size:13px;color:var(--muted);line-height:1.55}
+.scan-simple-actions{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin:16px 0}
+.scan-simple-actions .primary-action{min-height:53px;padding:12px 22px;font-size:15px}
+.scan-intro-placeholder{min-height:150px!important;padding:16px!important}
+.scan-simple .scan-side-toggle{display:flex;gap:8px;margin:13px 0}
+.scan-simple .scan-side-toggle button{min-width:105px}
+.scan-simple .scan-intro-placeholder{border:1px dashed #4c6281;background:radial-gradient(ellipse at top,#1b3447,#141d31 65%);min-height:235px;display:grid;place-content:center;text-align:center;border-radius:18px;padding:22px;color:#b2c8dd}
+.scan-intro-placeholder .scan-icon{font-size:50px;line-height:1.5;color:#8cf2d7}
+.scan-review-layout{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:20px;align-items:start}
+.scan-photo-review{border:1px solid #344961;background:#101b2e;border-radius:15px;padding:15px;text-align:center}
+.scan-photo-review img{width:auto;max-width:100%;max-height:370px;aspect-ratio:63/88;object-fit:contain;margin:auto;border-radius:9px;box-shadow:0 10px 35px #0008}
+.scan-photo-review small{display:block;margin:10px 0 0;color:var(--muted)}
+.scan-result-review{background:#121f31;border:1px solid #385469;border-radius:15px;padding:17px;display:grid;gap:12px}
+.scan-result-review h3{font-size:20px}
+.scan-reading{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.scan-reading>div{border-radius:12px;background:#1d2e45;padding:12px;min-width:0}
+.scan-reading small{color:#a6baca;display:block;font-size:10px;letter-spacing:.4px;margin-bottom:3px}
+.scan-reading strong{font-size:clamp(19px,3vw,26px)}
+.scan-soft-text{font-size:12px;color:#aebed0;line-height:1.55}
+.scan-review-status{font-size:12px;color:#c0dbed}
+.scan-review-status.good{color:#80efc8}
+.scan-review-status.warn{color:#ffd19b}
+.scan-result-review .primary-action,.scan-result-review .secondary-action{width:100%}
+.scan-adjustments{border:1px solid #384b65;border-radius:14px;padding:0 14px;margin-top:15px;background:#121d31}
+.scan-adjustments>summary{cursor:pointer;padding:15px 4px;font-size:13px;font-weight:850;color:#c9dcf4}
+.scan-adjustments[open]>summary{border-bottom:1px solid #36445e;margin-bottom:17px}
+.scan-adjustments .full-photo-panel{margin-top:10px}
+.scan-adjustments .scan-measure-layout{margin-top:15px}
+.scan-adjustments .tool-slider-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.scan-more-tools{margin:16px 0}
+.scan-more-tools>summary{cursor:pointer;color:#a9c4df;font-size:12px}
+.scan-more-tools .tool-tabs{margin-top:14px}
+.camera-card-frame{display:none!important}
+.camera-stage .camera-darken{background:linear-gradient(#0005,transparent 15%,transparent 85%,#0006)}
+.camera-detected-overlay{z-index:4!important}
+.camera-detected-overlay polygon{stroke:#ffc678;fill:#ffc6780b;stroke-width:2.5;vector-effect:non-scaling-stroke;transition:stroke .14s,fill .14s;filter:drop-shadow(0 0 7px #1e1e24)}
+.camera-detected-overlay[data-locked="true"] polygon{stroke:#64ffb1;fill:#65efaa12;stroke-width:3;filter:drop-shadow(0 0 5px #48ffb8)}
+.camera-status[data-kind=locked]{color:#92f5c7;font-weight:850}
+.camera-scan-mode{display:flex;gap:6px;align-items:center}
+.camera-scan-mode button{min-height:38px;padding:7px 13px;border:1px solid #4c617b;color:#cfe5f7;background:#263752;border-radius:9px;font-weight:750}
+.camera-scan-mode button[aria-pressed="true"]{background:#315c55;color:#a9ffe1;border-color:#62c69d}
+.camera-plain-toggle{display:flex;align-items:center;gap:7px;font-size:11px;color:#a8bed3;justify-content:center;margin-top:9px}
+.camera-simple-controls{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.camera-simple-controls button{flex:1}
+.camera-shutter{flex:2!important;min-width:150px}
+@media(max-width:690px){
+ .scan-review-layout{grid-template-columns:1fr}
+ .scan-photo-review img{max-height:310px}
+ .scan-simple-actions .primary-action{width:100%}
+ .camera-layer{padding:0!important;align-items:stretch!important}
+ .camera-dialog{height:100dvh!important;max-height:none!important;width:100%;border:0;border-radius:0!important;overflow:hidden!important;display:flex;flex-direction:column;padding:12px!important}
+ .camera-top h2{font-size:21px;margin:0}
+ .camera-stage{flex:1;min-height:170px;max-height:none;height:auto;width:100%}
+ .camera-instructions{font-size:11px;margin:7px 0}
+ .camera-privacy{display:none}
+ .camera-controls{margin-top:6px}
+ .camera-simple-controls button{font-size:12px;padding:9px}
+ .camera-dialog .camera-secondary{margin:6px 0}
+}
+
 </style>
 </head>
 <body>
@@ -318,7 +383,7 @@ body.camera-open{overflow:hidden}
           <span class="brand-mark">P<span class="brand-diamond">◆</span></span>
           <span class="brand-copy"><strong>PACKLAB</strong><small>COLLECTOR SIMULATOR</small></span>
         </button>
-        <div class="version-tag"><span class="live-indicator"></span> COLLECTOR v0.8.1</div>
+        <div class="version-tag"><span class="live-indicator"></span> COLLECTOR v0.8.2</div>
         <div class="top-stats">
           <div class="stat-chip coins"><span class="chip-icon">◈</span><span id="coinCount">—</span><small>COINS</small></div>
           <div class="stat-chip level"><span class="chip-icon">✦</span><span id="levelCount">1</span><small>LEVEL</small></div>
@@ -655,8 +720,8 @@ const catalogMemory=new Map();
 const catalogLoading=new Map();
 const catalogErrors=new Map();
 const ui={page:'open',binderSet:'sv30',binderMode:'owned',binderRarity:'all',binderSort:'rarity-desc',binderSearch:'',binderPage:1,bulkQty:5,bulkDisplay:'all',bulkViewCount:45,bulkSellOpen:false,bulkSellScope:'all',bulkSaleUndo:null,inspection:null,tearStart:null,revealStart:null,
- toolTab:'rates',ratesSet:'sv8pt5',rateRarity:'Special Illustration Rare',ratePacks:36,guideScores:{centering:9,corners:9,edges:9,surface:9},profit:{raw:50,graded:110,fee:25,shipping:7,selling:0,service:'PSA 10'},
- centering:{left:8,right:8,top:7,bottom:7},centerImage:'',centerDrag:null,centerMeasured:false,centerMethod:'',centerHint:'',scanSide:'front',scanScans:{front:null,back:null},scanDesign:'unknown',scanHolder:false,scanCornerSelected:0,scanEditOutline:false,scanOuterDrag:null,visibleCondition:{corners:'unknown',edges:'unknown',surface:'unknown'},lookupImage:'',lookupSet:'sv8pt5',lookupSearch:'',ocrBusy:false,ocrText:''};
+ toolTab:'centering',ratesSet:'sv8pt5',rateRarity:'Special Illustration Rare',ratePacks:36,guideScores:{centering:9,corners:9,edges:9,surface:9},profit:{raw:50,graded:110,fee:25,shipping:7,selling:0,service:'PSA 10'},
+ centering:{left:8,right:8,top:7,bottom:7},centerImage:'',centerDrag:null,centerMeasured:false,centerMethod:'',centerHint:'',scanSide:'front',scanAdvanced:false,scanScans:{front:null,back:null},scanDesign:'unknown',scanHolder:false,scanCornerSelected:0,scanEditOutline:false,scanOuterDrag:null,visibleCondition:{corners:'unknown',edges:'unknown',surface:'unknown'},lookupImage:'',lookupSet:'sv8pt5',lookupSearch:'',ocrBusy:false,ocrText:''};
 let toastTimers=[];
 let state=loadSave();
 
@@ -1029,10 +1094,12 @@ function setPreviewImage(field,file){
 }
 function renderTools(){
  const choices=TOOL_TABS.map(([key,title])=>`<button type="button" data-action="tool-tab" data-tab="${key}" class="tool-tab ${ui.toolTab===key?'active':''}">${title}</button>`).join('');
- const contents=({rates:renderToolRates,profit:renderToolProfit,centering:renderToolCentering,scanner:renderToolLookup,guide:renderToolGuide}[ui.toolTab]||renderToolRates)();
- return pageHeading('REAL CARD WORKSHOP','Real Card Tools.','Tools for physical cards: camera centering, card identification, sample pull-rate references and grading-profit math. These never alter the game collection, coins, or simulated grades.')+
- `<div class="tool-tabs" role="tablist">${choices}</div>${contents}<div class="tool-note">The pack simulator, card finder and gameplay are fan-built. Card artwork is loaded from third parties. Probability figures are estimates, not official published factory odds; calculations do not predict individual results.</div>`;
+ const contents=({rates:renderToolRates,profit:renderToolProfit,centering:renderToolCentering,scanner:renderToolLookup,guide:renderToolGuide}[ui.toolTab]||renderToolCentering)();
+ if(ui.toolTab==='centering')return `${contents}<details class="scan-more-tools"><summary>Other tools · Card finder, pull rates, grading profit, guide</summary><div class="tool-tabs">${choices}</div></details>`;
+ return pageHeading('REAL CARD TOOLS','Physical card workshop.','Real-card references and calculators, separate from virtual game grading.')+
+ `<div class="tool-tabs" role="tablist">${choices}</div>${contents}`;
 }
+
 function rarityRateRows(id){
  if(id==='sv30')return [['Pikachu Rare',1],...ANNIVERSARY_WEIGHTS.map(([rarity,weight])=>[rarity,weight/100000])];
  const r=OBSERVED_RATES[id];if(!r)return [];
@@ -1174,23 +1241,34 @@ function realMarginReadout(c=ui.centering){
  const digits=x=>(Math.round(Math.max(0,x)*100)/100).toFixed(2);
  return ui.centerMeasured&&activeScan()?.outerConfirmed?`L ${digits(c.left*.63)} / R ${digits(c.right*.63)} mm* · T ${digits(c.top*.88)} / B ${digits(c.bottom*.88)} mm*`:'Awaiting confirmed cardboard and print-border measurements';
 }
-function renderToolCentering(){const c=ui.centering,r=centeringSummary(),scan=activeScan();
- const style=realScanStyle(),borderless=isBorderlessFront(),ready=isMeasurableStyle();
- const slide=side=>`<label class="field-block"><span class="center-field-header">${side[0].toUpperCase()+side.slice(1)} inner print edge <strong id="centerVal_${side}">${c[side].toFixed(1)}%</strong></span><input type="range" min="0.5" max="35" step="0.1" data-center="${side}" value="${c[side]}"></label>`;
- const styleGuide=borderless?'This design has no continuous printed inner frame, so a numerical front centering ratio is unavailable. Scan the back; do not invent a grade.':style==='thin'?'Illustration/full-art cards have narrow irregular foil rims. A detector often locks on the artwork or glare instead. Only place guides on four truly visible print boundaries; if they are not clear, do not confirm a ratio.':style==='standard'?'Use the physical cardboard edge and the continuous inner print boundary. Review all eight edges visually.':'Choose your front-card design before confirming guides.';
- return `<section class="tool-surface real-scanner"><div class="tool-intro"><div><span class="eyebrow">REAL PHYSICAL CARDS · ON DEVICE</span><h2>Measure the cardboard, not plastic or camera framing.</h2><p>The outside outline must follow the ACTUAL card, not a hard case. Full-art cards often need manual inspection. Unconfirmed guide suggestions are never displayed as measured ratios.</p></div><span class="pill mint">REAL CARD TOOL · NO GAME GRADES</span></div>
- <div class="scan-side-toggle" aria-label="Select side to scan"><button type="button" data-action="scan-side" data-side="front" class="${ui.scanSide==='front'?'active':''}">① Front ${ui.scanScans.front?.measured?'✓':''}</button><button type="button" data-action="scan-side" data-side="back" class="${ui.scanSide==='back'?'active':''}">② Back ${ui.scanScans.back?.measured?'✓':''}</button></div>
- <div class="scan-type-row"><label>Card design ${ui.scanSide==='back'?'(front type saved; back uses printed border)':''}<select id="scanDesign" ${ui.scanSide==='back'?'disabled':''}><option value="unknown" ${ui.scanDesign==='unknown'?'selected':''}>Choose front design…</option><option value="standard" ${ui.scanDesign==='standard'?'selected':''}>Regular card · clear rectangular print frame</option><option value="thin" ${ui.scanDesign==='thin'?'selected':''}>Illustration/full art · narrow foil rim</option><option value="borderless" ${ui.scanDesign==='borderless'?'selected':''}>Borderless · no measurable inner frame</option></select></label><label class="holder-toggle"><input type="checkbox" id="scanHolder" ${ui.scanHolder?'checked':''}><span>Card is inside a plastic sleeve / toploader</span></label></div>
- <div class="scan-type-notice ${!ui.scanHolder&&ready?'good':''}" id="scanTypeNotice">${ui.scanHolder?'⚠ A plastic holder creates extra strong rectangular edges and glare. The scanner cannot reliably distinguish them from cardboard automatically. For real measurements, photograph the card outside the holder on a contrasting matte surface.':esc(styleGuide)}</div>
- <div class="camera-entry"><div class="camera-entry-icon">⌗</div><div class="camera-entry-copy"><strong>Live ${ui.scanSide} camera</strong><span>Use even diffuse light, photograph the actual card edges and leave background visible.</span></div><button type="button" class="primary-action" data-action="camera-open">▣ Scan ${ui.scanSide}</button></div>
- <div class="photo-upload-row"><button type="button" class="secondary-action small-button" data-action="scan-new">↻ Another real card</button><label class="secondary-action photo-button" for="centerTakePhoto">📷 Phone camera</label><input type="file" hidden id="centerTakePhoto" accept="image/*" capture="environment"><label class="secondary-action photo-button" for="centerPhoto">↑ Existing photo</label><input type="file" hidden id="centerPhoto" accept="image/*"><button type="button" class="secondary-action small-button" data-action="center-auto" ${scan?.rawUrl?'':'disabled'}>⌗ Suggest outer edges again</button></div>
- ${scan?.rawPreview?renderOuterEditor():`<div class="scan-place-holder">1 · Photograph the card. The original photo stays visible while you adjust the four OUTER cardboard corners.</div>`}
- <div class="scan-measure-layout"><div><div class="scan-step"><span class="scan-number">2</span><div><strong>${borderless?'Borderless front: no inner frame':style==='thin'?'Visible thin illustration rim (manual)':ui.scanSide==='back'?'Card-back printed frame':'Printed INNER frame on the corrected CARD'}</strong><p>${esc(styleGuide)}</p></div></div><div class="centering-canvas" id="centeringCanvas">${ui.centerImage?`<img src="${esc(ui.centerImage)}" alt="Cardboard-only perspective corrected image" draggable="false">`:`<div class="center-placeholder"><strong>${ui.scanSide.toUpperCase()} SCAN</strong><span>Confirm the outer cardboard corners first.</span></div>`}
- ${!borderless?`<span class="center-guide vertical" data-guide="left" id="centerGuide_left" style="left:${c.left}%"></span><span class="center-guide vertical" data-guide="right" id="centerGuide_right" style="right:${c.right}%"></span><span class="center-guide horizontal" data-guide="top" id="centerGuide_top" style="top:${c.top}%"></span><span class="center-guide horizontal" data-guide="bottom" id="centerGuide_bottom" style="bottom:${c.bottom}%"></span>`:''}</div>
- <p class="tool-disclaimer" id="centerHint">${esc(ui.centerHint||styleGuide)}</p></div>
- <div class="scan-results-col"><div class="scan-step"><span class="scan-number">3</span><div><strong>Review and confirm ACTUAL spacing</strong><p>Numbers appear only after confirmed cardboard corners and printed guides. Plastic-holder edges cannot be used.</p></div></div><div class="tool-metrics"><div><small>Left / Right centering</small><strong id="centerRatioHorizontal" class="${ui.centerMeasured?'':'pending'}">${r.horizontal}</strong></div><div><small>Top / Bottom centering</small><strong id="centerRatioVertical" class="${ui.centerMeasured?'':'pending'}">${r.vertical}</strong></div></div><div class="scan-margin-box"><strong id="realGapLabel">${realMarginReadout(c)}</strong><small>Approximate mm assume a standard 63 × 88 mm cardboard edge, after perspective correction. Not a certified measurement.</small></div>
- ${borderless?'<div class="scan-no-border">This front has no continuous printed border. There is nothing consistent to position all four inner guides against. Scan the back instead; a real front grade cannot be inferred from this photo.</div>':`<div class="tool-slider-grid">${['left','right','top','bottom'].map(slide).join('')}</div><div class="scan-confirm-row"><button type="button" class="primary-action" data-action="center-confirm" ${scan?.image&&scan?.outerConfirmed&&ready?'':'disabled'}>✓ Confirm REAL printed edges</button><button type="button" class="secondary-action" data-action="centering-reset" ${scan?.image?'':'disabled'}>Reset inner guides</button></div>`}
- <div class="result-card"><small>CENTERING · ${ui.scanSide.toUpperCase()}</small><strong id="centerStatus">${r.status}</strong><span>Draft suggestions are not measurements. In sleeves / toploaders, a grade is not reliable.</span></div><div id="scanGradePanel">${renderScanGrade()}</div><p class="tool-disclaimer">Photographs cannot prove a PSA grade. Glare, texture, borderless artwork, holder edges and tiny dents cannot be reliably measured from one photo. No physical scanner result affects your virtual game grading.</p></div></div></section>`;
+function renderToolCentering(){
+ const scan=activeScan(),c=ui.centering,r=centeringSummary(),borderless=isBorderlessFront(),hasImage=!!scan?.rawPreview;
+ const side=ui.scanSide;
+ const sideToggle=`<div class="scan-side-toggle" aria-label="Choose real card side"><button type="button" data-action="scan-side" data-side="front" class="${side==='front'?'active':''}">Front ${ui.scanScans.front?.measured?'✓':''}</button><button type="button" data-action="scan-side" data-side="back" class="${side==='back'?'active':''}">Back ${ui.scanScans.back?.measured?'✓':''}</button></div>`;
+ const controls=`<div class="scan-simple-actions"><button type="button" class="primary-action" data-action="camera-open">▣ ${hasImage?'Rescan':'Open Camera'}</button><label class="secondary-action photo-button" for="centerPhoto">↑ Use Photo</label><input id="centerPhoto" hidden type="file" accept="image/*"><input id="centerTakePhoto" hidden type="file" accept="image/*" capture="environment">${hasImage?`<button type="button" class="secondary-action small-button" data-action="scan-new">↻ New Card</button>`:''}</div>`;
+ const measured=hasImage&&ui.centerMeasured&&scan?.outerConfirmed;
+ const possible=hasImage&&!borderless&&ui.scanDesign!=='thin'&&!!scan?.suggested&&scan?.outerConfidence!=='none'&&!scan?.hasHolder&&(!scan?.quality?.blurry&&!scan?.quality?.glareRisk);
+ const previewReading=possible&&!measured?centerRatios(scan.centering):null;
+ const shownH=measured?r.horizontal:previewReading?`${previewReading.left.toFixed(1)} / ${previewReading.right.toFixed(1)}`:'—';
+ const shownV=measured?r.vertical:previewReading?`${previewReading.top.toFixed(1)} / ${previewReading.bottom.toFixed(1)}`:'—';
+ const designMessage=side==='front'&&ui.scanDesign==='borderless'?'Borderless full-art: a reliable front centering ratio is unavailable. Try the back.':scan?.hasHolder?'A plastic sleeve or holder may look like the card edge. Remove it before trusting results.':scan?.outerConfidence==='none'?'Could not confidently find the real cardboard edge. Retake, or adjust the corners.':!scan?.suggested?'Card outline found, but no reliable printed border. Try the back or adjust if the card has a visible frame.':measured?'Preliminary photo measurement. Make sure the outline follows cardboard, not plastic.':'Automatic printed-border suggestion. Check the preview and tap Use detected borders.';
+ const outerImage=scan?.image||scan?.rawPreview||'';
+ const slide=k=>`<label class="field-block"><span class="center-field-header">${k[0].toUpperCase()+k.slice(1)} print edge <strong id="centerVal_${k}">${c[k].toFixed(1)}%</strong></span><input type="range" min="0.5" max="35" step="0.1" data-center="${k}" value="${c[k]}"></label>`;
+ const styleSelect=`<div class="scan-type-row"><label>Front border type<select id="scanDesign" ${side==='back'?'disabled':''}><option value="unknown" ${ui.scanDesign==='unknown'?'selected':''}>Automatic / not sure</option><option value="standard" ${ui.scanDesign==='standard'?'selected':''}>Visible standard printed border</option><option value="thin" ${ui.scanDesign==='thin'?'selected':''}>Illustration / narrow foil rim</option><option value="borderless" ${ui.scanDesign==='borderless'?'selected':''}>Borderless full art</option></select></label><label class="holder-toggle"><input type="checkbox" id="scanHolder" ${ui.scanHolder?'checked':''}>Sleeved or in a toploader</label></div>`;
+ const advanced=hasImage?`<details class="scan-adjustments" id="scanDetails" ${ui.scanAdvanced?'open':''}><summary>✎ Adjust borders or card type (only if needed)</summary>
+ ${styleSelect}<p class="scan-soft-text">Move the outer dots onto the cardboard edges, not a sleeve. The four inner lines follow the PRINTED border. Full-art cards without a continuous printed border cannot get a reliable front ratio.</p>
+ ${renderOuterEditor()}
+ <div class="scan-measure-layout"><div><h3>Inner printed border</h3><div class="centering-canvas" id="centeringCanvas">${ui.centerImage?`<img src="${esc(ui.centerImage)}" alt="Straightened real-card image" draggable="false">`:'<p class="center-placeholder">First correct the outer card outline.</p>'}
+ ${!borderless?`<span class="center-guide vertical" data-guide="left" id="centerGuide_left" style="left:${c.left}%"></span><span class="center-guide vertical" data-guide="right" id="centerGuide_right" style="right:${c.right}%"></span><span class="center-guide horizontal" data-guide="top" id="centerGuide_top" style="top:${c.top}%"></span><span class="center-guide horizontal" data-guide="bottom" id="centerGuide_bottom" style="bottom:${c.bottom}%"></span>`:''}</div></div>
+ <div><h3>Fine adjustments</h3><p class="scan-soft-text" id="centerHint">${esc(ui.centerHint||'Confirm outer cardboard and printed edges before relying on this reading.')}</p>${!borderless?`<div class="tool-slider-grid">${['left','right','top','bottom'].map(slide).join('')}</div><div class="scan-confirm-row"><button type="button" class="primary-action" data-action="center-confirm" ${scan?.outerConfirmed?'':'disabled'}>✓ Use adjusted print edges</button><button type="button" class="secondary-action" data-action="centering-reset">Reset inner guides</button></div>`:'No uniform printed border to measure on this front.'}</div></div>
+ </details>`:'';
+ const result=hasImage?`<div class="scan-review-layout"><div class="scan-photo-review"><img src="${esc(outerImage)}" alt="Straightened preview of scanned physical card"><small>${scan?.outerConfirmed?'Card outline reviewed':'Automatic outline preview · not yet reviewed'}</small></div><div class="scan-result-review"><h3>${measured?'Centering estimate':scan?.outerConfidence==='none'?'Card edge not found':'Card detected'}</h3><div class="scan-reading"><div><small>LEFT / RIGHT</small><strong id="centerRatioHorizontal">${shownH}</strong></div><div><small>TOP / BOTTOM</small><strong id="centerRatioVertical">${shownV}</strong></div></div><p class="scan-review-status ${measured?'good':possible?'warn':''}" id="centerStatus">${measured?'Estimated from confirmed boundaries':previewReading?'UNVERIFIED auto suggestion · not a grade':'Awaiting reliable printed borders'}</p><p class="scan-soft-text">${esc(designMessage)}</p>
+ ${!measured&&possible&&!scan?.hasHolder?`<button class="primary-action" type="button" data-action="scan-accept">✓ Use detected borders</button>`:''}
+ ${!measured&&!possible?`<button class="secondary-action" type="button" data-action="scan-adjust">Adjust outline</button>`:''}
+ ${measured?`<details class="scan-grade-details"><summary>Photo-based grade range (experimental)</summary><div id="scanGradePanel">${renderScanGrade()}</div></details>`:''}
+ <button type="button" class="secondary-action" data-action="scan-side" data-side="${side==='front'?'back':'front'}">📷 ${side==='front'?'Scan card back':'Scan card front'} →</button>
+ </div></div>`:`<div class="scan-intro-placeholder"><div class="scan-icon">▣</div><strong>Point your camera at the whole card</strong><span>We will outline the detected card in real time.<br>Auto capture when stable, or tap the shutter yourself.</span></div>`;
+ return `<section class="tool-surface real-scanner scan-simple"><div class="scan-simple-head"><div><span class="eyebrow">REAL CARD SCANNER · NOT GAME GRADING</span><h2>Point. Scan. Check.</h2><p>Automatic card outline in the camera. We measure printed margins only if the border is readable. Your photo stays on this device.</p></div><span class="pill mint">PHYSICAL CARDS</span></div>${sideToggle}${controls}${result}${advanced}<p class="tool-disclaimer" style="margin-top:14px">Photo centering is an estimate, not a professional PSA/CGC/BGS grade. Sleeves, glare and full-art designs can make a printed-border measurement unreliable.</p></section>`;
 }
 
 function updateCenterVisual(){const c=ui.centering,r=centeringSummary();for(const side of ['left','right','top','bottom']){const x=document.getElementById('centerGuide_'+side);if(x)x.style[side]=c[side]+'%';const input=document.querySelector(`[data-center="${side}"]`);if(input&&document.activeElement!==input)input.value=c[side];const v=document.getElementById('centerVal_'+side);if(v)v.textContent=c[side].toFixed(1)+'%';}
@@ -1206,9 +1284,9 @@ function computeScanWarp(scan,override=false){
  scan.image=warped.toDataURL('image/jpeg',.92);
  scan.quality=cv.photoQuality(warped);scan.wear=cv.blueWear(warped);
  scan.innerReliability=frame.reliability;scan.innerDetails=frame.edgeDetails;
- const regular=realScanStyle()==='standard';
+ const regular=realScanStyle()==='standard'||realScanStyle()==='unknown';
  scan.centering=regular&&frame.ok?Object.fromEntries(Object.entries(frame.guides).map(([k,v])=>[k,Math.round(v*10)/10])):{left:8,right:8,top:7,bottom:7};
- scan.measured=false;scan.suggested=regular&&frame.ok;
+ scan.measured=false;scan.suggested=regular&&frame.ok&&frame.edgeDetails.every(v=>v.coverage>=.56&&v.reliability>=1.45&&v.strength>=17);
  scan.centerMethod=regular&&frame.ok?'suggested':'';
  scan.hintText=regular&&frame.ok?'Inner print edges are UNVERIFIED suggestions. Confirm the four actual cardboard corners first, then adjust printed guides manually.':realScanStyle()==='thin'?'Illustration/full-art card: automatic color-edge detection is disabled to avoid treating artwork or holographic glare as a border. Only manually mark a continuously visible thin printed rim.':realScanStyle()==='borderless'?'No continuous front printed frame. Do not measure front centering with the regular-card method; scan the back.':scan.outerConfidence==='none'?'Outer card edge uncertain; correct the four CARD corners (not holder), then confirm.':'Choose the correct card design and manually verify all four printed edges.';
  if(scan.hasHolder)scan.hintText='⚠ Card is in a holder. Its plastic edges and reflections may be mistaken for cardboard. '+scan.hintText;
@@ -1253,7 +1331,25 @@ function confirmInnerGuides(){
  syncActiveScan();updateCenterVisual();toast(`${ui.scanSide==='front'?'Front':'Back'} printed borders confirmed.`, 'success');
 }
 
-function resetPhysicalCard(){centerAnalysisToken++;ui.scanScans={front:null,back:null};ui.scanSide='front';ui.scanDesign='unknown';ui.scanHolder=false;ui.scanCornerSelected=0;ui.scanEditOutline=false;ui.visibleCondition={corners:'unknown',edges:'unknown',surface:'unknown'};ui.centerImage='';ui.centerMeasured=false;ui.centerMethod='';ui.centerHint='';ui.centering={left:8,right:8,top:7,bottom:7};render();toast('Ready to scan a new physical card.','success');}
+function acceptScanSuggestion(){
+ const scan=activeScan();if(!scan?.rawCanvas)return;
+ if(scan.hasHolder){toast('A sleeve or holder can be detected as the card. Remove it or use the manual corner adjustment.','error');ui.scanAdvanced=true;render();return;}
+ if(!['high','medium','manual'].includes(scan.outerConfidence)){ui.scanAdvanced=true;render();toast('Card outline is uncertain. Adjust the corners or retake.','error');return;}
+ const v=scan.centering;
+ const plausible=scan.suggested&&v&&Object.values(v).every(x=>Number.isFinite(x)&&x>=2&&x<=24);
+ if(ui.scanSide==='front'&&ui.scanDesign==='unknown'&&plausible)ui.scanDesign='standard';
+ scan.outerConfirmed=true;scan.measured=false;
+ // Re-measure from the corrected rectangle, with a low-trust estimate explicitly labelled.
+ computeScanWarp(scan);
+ if(scan.suggested&&isMeasurableStyle()){
+  scan.measured=true;scan.centerMethod='automatic-review';
+  scan.hintText='Automatic photo estimate, not a certified grade. If the printed border does not match, open Adjust borders.';
+  toast('Preliminary centering reading ready. Review the card image before relying on it.','success');
+ }else toast('Card outline found, but printed centering edges are unclear. Use the back or Adjust borders.');
+ displayScan(scan);
+}
+function resetPhysicalCard(){centerAnalysisToken++;ui.scanScans={front:null,back:null};ui.scanSide='front';ui.scanDesign='unknown';ui.scanHolder=false;ui.scanAdvanced=false;ui.scanCornerSelected=0;ui.scanEditOutline=false;ui.visibleCondition={corners:'unknown',edges:'unknown',surface:'unknown'};ui.centerImage='';ui.centerMeasured=false;ui.centerMethod='';ui.centerHint='';ui.centering={left:8,right:8,top:7,bottom:7};render();toast('Ready to scan a new physical card.','success');}
+
 function applyOuterCorrection(){const s=activeScan();if(!s?.rawCanvas){toast('Take a photo first.','error');return;}
  const pts=s.quadPct; if(!pts||pts.some(p=>!Number.isFinite(p.x+p.y))){toast('The outline needs four corners.','error');return;}
  const corners=window.PackLabVision.cornersToPixels(pts,s.rawCanvas.width,s.rawCanvas.height);
@@ -1268,17 +1364,19 @@ function applyOuterCorrection(){const s=activeScan();if(!s?.rawCanvas){toast('Ta
 
 // Live camera stays outside #app so UI redraws never detach video.
 let centerCameraStream=null,centerCameraRequest=0,centerCameraFacing='environment',cameraDetectTimer=null;
+let centerCameraMode='auto',cameraStableFrames=0,cameraLastQuad=null,cameraLockedQuad=null,cameraCaptureBusy=false;
+function cameraQuadDistance(a,b){if(!a||!b)return Infinity;return Math.max(...a.map((p,i)=>Math.hypot(p.x-b[i].x,p.y-b[i].y)));}
+function updateCameraModeLabel(){for(const value of ['auto','manual']){const button=document.getElementById(`cameraMode_${value}`);if(button)button.setAttribute('aria-pressed',String(value===centerCameraMode));}}
+
+
 function cameraLayer(){return document.getElementById('cameraLayer');}
 function cameraStatus(message,kind=''){const el=document.getElementById('cameraStatus');if(el){el.textContent=message;el.dataset.kind=kind;}}
-function closeCenterCamera(){centerCameraRequest++;if(cameraDetectTimer){clearTimeout(cameraDetectTimer);cameraDetectTimer=null;}
+function closeCenterCamera(){centerCameraRequest++;cameraLockedQuad=null;cameraLastQuad=null;cameraStableFrames=0;cameraCaptureBusy=false;if(cameraDetectTimer){clearTimeout(cameraDetectTimer);cameraDetectTimer=null;}
  if(centerCameraStream){centerCameraStream.getTracks().forEach(t=>t.stop());centerCameraStream=null;}
  const video=document.getElementById('centerCameraVideo');if(video){video.pause();video.srcObject=null;}
  const layer=cameraLayer();if(layer){layer.hidden=true;layer.innerHTML='';}document.body.classList.remove('camera-open');}
-function cameraHintNormalized(){const stage=document.getElementById('centerCameraStage'),frame=document.getElementById('centerCameraFrame');
- if(!stage||!frame)return null;const a=stage.getBoundingClientRect(),b=frame.getBoundingClientRect();
- const vr=cameraImageRect();if(!vr)return null;
- return {l:Math.max(0,Math.min(1,((b.left-a.left)/a.width-vr.l)/vr.w)),r:Math.max(0,Math.min(1,((b.right-a.left)/a.width-vr.l)/vr.w)),t:Math.max(0,Math.min(1,((b.top-a.top)/a.height-vr.t)/vr.h)),b:Math.max(0,Math.min(1,((b.bottom-a.top)/a.height-vr.t)/vr.h))};
-}
+function cameraHintNormalized(){return cameraLockedQuad?{quadPct:cameraLockedQuad.map(p=>({...p})),confidence:'high',fromLive:true}:null;}
+
 function captureCameraStage(maxDim=980){
  const video=document.getElementById('centerCameraVideo');
  if(!video?.videoWidth||!video?.videoHeight)throw Error('Camera picture is not ready.');
@@ -1290,30 +1388,59 @@ function captureCameraStage(maxDim=980){
 function cameraImageRect(){
  const stage=document.getElementById('centerCameraStage'),video=document.getElementById('centerCameraVideo');
  if(!stage||!video?.videoWidth||!video?.videoHeight)return null;
- const box=stage.getBoundingClientRect();const scale=Math.min(box.width/video.videoWidth,box.height/video.videoHeight);
+ const box=stage.getBoundingClientRect();const scale=Math.max(box.width/video.videoWidth,box.height/video.videoHeight);
  const w=video.videoWidth*scale,h=video.videoHeight*scale;
  return {l:(box.width-w)/2/box.width,t:(box.height-h)/2/box.height,w:w/box.width,h:h/box.height};
 }
-function updateCameraDetectedOutline(quad,visible){const overlay=document.getElementById('cameraDetectedOverlay'),poly=document.getElementById('cameraDetectedPoly');
- if(!overlay||!poly)return;overlay.hidden=!visible;if(visible){const r=cameraImageRect();if(r){poly.setAttribute('points',quad.map(p=>`${(100*r.l+p.x*r.w).toFixed(2)},${(100*r.t+p.y*r.h).toFixed(2)}`).join(' '));}else poly.setAttribute('points',quad.map(p=>`${p.x.toFixed(2)},${p.y.toFixed(2)}`).join(' '));}}
-function scanLiveCamera(request){
- if(request!==centerCameraRequest||cameraLayer()?.hidden||!centerCameraStream)return;
- try{
-  const cv=window.PackLabVision,source=captureCameraStage(420);
-  const scan=cv.detectOuterFlexible(source,cameraHintNormalized(),true);
-  if(scan.ok){updateCameraDetectedOutline(cv.cornersFromFrac(scan.quad,source.width,source.height),true);cameraStatus(ui.scanHolder?'A rectangular edge was found but it may be the PLASTIC HOLDER. After capture, correct all four actual cardboard corners.':'Possible rectangle found (not yet verified as cardboard). Confirm all four actual card corners after capture.','ready');}
-  else {updateCameraDetectedOutline([],false);cameraStatus('Move the camera to include all four card corners; your card does not need to be centered.','searching');}
- }catch(e){updateCameraDetectedOutline([],false);cameraStatus('Line up your card then take a photo. Borders are checked after capture.','searching');}
- cameraDetectTimer=setTimeout(()=>scanLiveCamera(request),820);
+function updateCameraDetectedOutline(quad,visible,locked=false){
+ const overlay=document.getElementById('cameraDetectedOverlay'),poly=document.getElementById('cameraDetectedPoly');
+ if(!overlay||!poly)return;
+ if(visible)overlay.removeAttribute('hidden');else overlay.setAttribute('hidden','');overlay.dataset.locked=String(locked);
+ if(visible){const r=cameraImageRect();if(r)poly.setAttribute('points',quad.map(p=>`${(100*r.l+p.x*r.w).toFixed(2)},${(100*r.t+p.y*r.h).toFixed(2)}`).join(' '));}
 }
-function showCameraDialog(){const layer=cameraLayer();if(!layer)return;layer.hidden=false;document.body.classList.add('camera-open');layer.innerHTML=`<div class="camera-dialog" role="dialog" aria-modal="true" aria-label="Card scan camera"><div class="camera-top"><div><span class="eyebrow">CAMERA GRADER · ${ui.scanSide.toUpperCase()}</span><h2>Find all four corners.</h2></div><button type="button" data-action="camera-close" class="camera-close" aria-label="Close camera">×</button></div>
- <p class="camera-instructions">Place the ${ui.scanSide} of your card on a contrasting matte surface. Keep the camera parallel with the entire card visible anywhere in the preview. The framing box is only a suggestion. Green lines show unverified rectangular edges; a toploader or sleeve may be detected instead of cardboard.</p>
- <div class="camera-stage" id="centerCameraStage"><video id="centerCameraVideo" autoplay muted playsinline aria-label="Live camera preview"></video><div class="camera-darken" aria-hidden="true"></div><div class="camera-card-frame" id="centerCameraFrame" aria-hidden="true"><span class="camera-bracket tl"></span><span class="camera-bracket tr"></span><span class="camera-bracket bl"></span><span class="camera-bracket br"></span><span class="camera-line x"></span><span class="camera-line y"></span></div><svg class="camera-detected-overlay" viewBox="0 0 100 100" preserveAspectRatio="none" id="cameraDetectedOverlay" hidden aria-hidden="true"><polygon id="cameraDetectedPoly" /></svg><span class="camera-live-tag">● LOCAL CAMERA</span></div>
- <p class="camera-status" role="status" id="cameraStatus">Requesting permission to use your camera…</p>
- <div class="camera-controls"><button class="secondary-action" type="button" data-action="camera-switch">⇄ Switch camera</button><button class="primary-action camera-shutter" type="button" id="cameraCapture" data-action="camera-capture" disabled>◉ Take ${ui.scanSide} photo</button></div>
- <div class="camera-secondary"><label for="cameraFallbackPhoto">Camera blocked? Use phone camera app</label><input id="cameraFallbackPhoto" type="file" accept="image/*" capture="environment" hidden></div><p class="camera-privacy">Photos and border measurements stay on your device. The camera closes after capture. A photo can suggest wear but cannot replace physical grading.</p></div>`;}
+
+function scanLiveCamera(request){
+ if(request!==centerCameraRequest||cameraLayer()?.hidden||!centerCameraStream||cameraCaptureBusy)return;
+ try{
+  const cv=window.PackLabVision,source=captureCameraStage(360);
+  // Search all image locations; the cursor is never a hard-coded central rectangle.
+  const scan=cv.detectOuterFlexible(source,null,true);
+  const good=!!scan.ok&&['high','medium'].includes(scan.confidence);
+  if(good){
+   const quad=cv.cornersFromFrac(scan.quad,source.width,source.height);
+   const spread=cameraQuadDistance(cameraLastQuad,quad);
+   cameraStableFrames=spread<3.4?cameraStableFrames+1:1;
+   cameraLastQuad=quad;
+   const minx=Math.min(...quad.map(p=>p.x)),maxx=Math.max(...quad.map(p=>p.x));
+   const miny=Math.min(...quad.map(p=>p.y)),maxy=Math.max(...quad.map(p=>p.y));
+   const sizeOK=maxx-minx>=20&&maxy-miny>=30&&maxx-minx<94&&maxy-miny<96;
+   const pictureOK=!cv.photoQuality(source).blurry;
+   const locked=cameraStableFrames>=3&&sizeOK&&pictureOK&&scan.confidence==='high'&&!ui.scanHolder;
+   cameraLockedQuad=locked?quad:null;
+   updateCameraDetectedOutline(quad,true,locked);
+   cameraStatus(ui.scanHolder?'Card-like outline found — sleeve may be mistaken for cardboard. Capture manually.':locked?'Card locked ✓':`Card detected · hold steady (${Math.min(3,cameraStableFrames)}/3)`,locked?'locked':'ready');
+   if(locked&&centerCameraMode==='auto'&&!ui.scanHolder){cameraCaptureBusy=true;cameraStatus('Card locked ✓ Capturing…','locked');
+    requestAnimationFrame(()=>{if(request===centerCameraRequest&&centerCameraStream)captureCenterPhoto('auto');});return;}
+  }else{cameraLockedQuad=null;cameraLastQuad=null;cameraStableFrames=0;updateCameraDetectedOutline([],false);cameraStatus('Point at a single card on a plain, contrasting surface','searching');}
+ }catch(e){cameraLockedQuad=null;cameraLastQuad=null;cameraStableFrames=0;updateCameraDetectedOutline([],false);cameraStatus('Keep the entire card visible, or tap Capture','searching');}
+ cameraDetectTimer=setTimeout(()=>scanLiveCamera(request),330);
+}
+
+function showCameraDialog(){
+ const layer=cameraLayer();if(!layer)return;layer.hidden=false;document.body.classList.add('camera-open');
+ layer.innerHTML=`<div class="camera-dialog" role="dialog" aria-modal="true" aria-label="Scan a real card">
+ <div class="camera-top"><div><span class="eyebrow">REAL CARD SCAN · ${ui.scanSide.toUpperCase()}</span><h2>Find the card</h2></div><button type="button" data-action="camera-close" class="camera-close" aria-label="Close camera">×</button></div>
+ <p class="camera-instructions">Point at one card against a plain background. The outline turns green when locked.</p>
+ <div class="camera-stage" id="centerCameraStage"><video id="centerCameraVideo" autoplay muted playsinline aria-label="Live physical card camera"></video><div class="camera-darken" aria-hidden="true"></div><svg class="camera-detected-overlay" viewBox="0 0 100 100" preserveAspectRatio="none" id="cameraDetectedOverlay" hidden aria-hidden="true"><polygon id="cameraDetectedPoly" /></svg><span class="camera-live-tag">● LOCAL CAMERA</span></div>
+ <p class="camera-status" role="status" id="cameraStatus">Opening camera…</p>
+ <div class="camera-controls camera-simple-controls"><div class="camera-scan-mode"><button id="cameraMode_auto" type="button" data-action="camera-mode" data-mode="auto" aria-pressed="${centerCameraMode==='auto'}">Auto</button><button id="cameraMode_manual" type="button" data-action="camera-mode" data-mode="manual" aria-pressed="${centerCameraMode==='manual'}">Manual</button></div><button class="primary-action camera-shutter" type="button" id="cameraCapture" data-action="camera-capture" disabled>◉ Capture</button><button class="secondary-action" type="button" data-action="camera-switch" aria-label="Switch camera">⇄</button></div>
+ <label class="camera-plain-toggle"><input type="checkbox" id="cameraHolderLive" ${ui.scanHolder?'checked':''}> Card is in a sleeve/toploader (manual capture only)</label>
+ <div class="camera-secondary"><label for="cameraFallbackPhoto">Camera unavailable? Take a regular photo</label><input id="cameraFallbackPhoto" type="file" accept="image/*" capture="environment" hidden></div>
+ <p class="camera-privacy">Processed locally in your browser. Automatic detection may confuse holders or foil reflections with cardboard.</p></div>`;
+}
+
 async function openCenterCamera(facing=centerCameraFacing){
- closeCenterCamera();centerCameraFacing=facing;showCameraDialog();const request=++centerCameraRequest;const capture=document.getElementById('cameraCapture');
+ closeCenterCamera();centerCameraFacing=facing;cameraCaptureBusy=false;showCameraDialog();const request=++centerCameraRequest;const capture=document.getElementById('cameraCapture');
  if(!navigator.mediaDevices?.getUserMedia){cameraStatus('Live camera needs HTTPS or localhost. Use the photo-camera option below.','error');return;}
  try{
   const stream=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:{ideal:facing},width:{ideal:1920},height:{ideal:1080}}});
@@ -1330,14 +1457,16 @@ async function openCenterCamera(facing=centerCameraFacing){
   cameraStatus(message,'error');if(capture)capture.disabled=true;
  }
 }
-function captureCenterPhoto(){
+function captureCenterPhoto(sourceMode='manual'){
  try{
   if(!centerCameraStream)throw Error('Camera is not ready.');
-  const canvas=captureCameraStage(1000),data=canvas.toDataURL('image/jpeg',.93),hint=cameraHintNormalized();
+  const hint=cameraHintNormalized();
+  const canvas=captureCameraStage(1280),data=canvas.toDataURL('image/jpeg',.94);
   if(data.length<200)throw Error('The camera returned an empty frame.');
   if(photoPreviewUrls.centerImage){URL.revokeObjectURL(photoPreviewUrls.centerImage);delete photoPreviewUrls.centerImage;}
-  closeCenterCamera();ui.toolTab='centering';navigate('tools');startScanImage(data,hint);toast('Camera captured. Detecting outside and printed borders…','success');
- }catch(err){console.warn('Capture failed',err);cameraStatus(err.message||'Unable to capture the card.','error');}
+  closeCenterCamera();ui.toolTab='centering';ui.scanAdvanced=false;navigate('tools');
+  startScanImage(data,hint);toast(sourceMode==='auto'?'Card automatically captured · checking edges':'Photo captured · detecting borders','success');
+ }catch(err){cameraCaptureBusy=false;console.warn('Capture failed',err);cameraStatus(err.message||'Unable to capture the card.','error');}
 }
 
 function cardLookupResults(){const c=catalogMemory.get(ui.lookupSet),q=(ui.lookupSearch||'').trim().toLowerCase();if(!c)return [];if(!q)return c.filter(x=>['Special Illustration Rare','Futuristic Rare','RGB Rare'].includes(x.rarity)).slice(0,16);const qNumber=q.replace(/\s*\/\s*\d+\s*$/,'').replace(/^#/,'');return c.filter(x=>x.name.toLowerCase().includes(q)||x.number.toLowerCase()===qNumber||String(x.number).toLowerCase().includes(q)).slice(0,35);}
@@ -1389,7 +1518,10 @@ function processAction(el){const action=el.dataset.action;if(!action)return;swit
  case 'camera-open':openCenterCamera();break;
  case 'camera-close':closeCenterCamera();break;
  case 'camera-switch':openCenterCamera(centerCameraFacing==='environment'?'user':'environment');break;
- case 'camera-capture':captureCenterPhoto();break;
+ case 'camera-mode':centerCameraMode=el.dataset.mode==='manual'?'manual':'auto';updateCameraModeLabel();cameraStatus(centerCameraMode==='auto'?'Auto: capture after the green lock appears':'Manual: tap Capture when the outline looks right','ready');break;
+ case 'camera-capture':captureCenterPhoto('manual');break;
+ case 'scan-accept':acceptScanSuggestion();break;
+ case 'scan-adjust':ui.scanAdvanced=true;render();document.getElementById('scanDetails')?.scrollIntoView({block:'nearest',behavior:'smooth'});break;
  case 'scan-side':chooseScanSide(el.dataset.side);break;
  case 'scan-new':resetPhysicalCard();break;
  case 'outer-edit':ui.scanEditOutline=true;render();break;
@@ -1443,7 +1575,9 @@ document.addEventListener('click',event=>{
  if(target.dataset.action){event.preventDefault();processAction(target);return;}
  if(target.dataset.nav){event.preventDefault();navigate(target.dataset.nav);}
 });
-document.addEventListener('change',event=>{const e=event.target;
+document.addEventListener('toggle',event=>{if(event.target?.id==='scanDetails')ui.scanAdvanced=event.target.open;},true);
+ document.addEventListener('change',event=>{const e=event.target;
+ if(e.id==='cameraHolderLive'){ui.scanHolder=!!e.checked;cameraStableFrames=0;cameraLockedQuad=null;cameraStatus(ui.scanHolder?'Holder mode: manual capture only · outline may detect the plastic':'Detecting card…','searching');return;}
  if(e.id==='scanDesign'){
   ui.scanDesign=['standard','thin','borderless','unknown'].includes(e.value)?e.value:'unknown';
   for(const sc of [ui.scanScans.front])if(sc?.rawCanvas){sc.measured=false;sc.centerMethod='';computeScanWarp(sc);}
