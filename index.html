@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#090e1c" />
   <meta name="description" content="PackLab: a mobile-friendly collector simulator prototype. Rip real-art 30th Celebration, Prismatic Evolutions, 151 and Surging Sparks boosters. Earn packs, grade pulls and battle." />
-  <title>PACKLAB — Collector v0.8.4 • Real Card Tools Restored</title>
+  <title>PACKLAB — Collector v0.9 • Cloud Accounts</title>
   
   <link rel="preload" as="image" href="https://upload.wikimedia.org/wikipedia/en/3/36/Pokemon_Trading_Card_Game_cardback.png" />
   <style>
@@ -436,6 +436,48 @@ body.camera-open{overflow:hidden}
 @media(max-width:900px){.real-portfolio-fields{grid-template-columns:repeat(2,minmax(0,1fr))}.real-portfolio-wide{grid-column:span 2}.real-portfolio-grid{grid-template-columns:1fr}}
 @media(max-width:650px){.real-portfolio-summary{grid-template-columns:repeat(2,minmax(0,1fr))}.real-portfolio-summary>div:first-child{grid-column:span 2}.real-portfolio-summary>div{padding:11px}.real-portfolio-summary span{line-height:1.35}.portfolio-actions .primary-action,.portfolio-actions .secondary-action{flex:1;min-height:37px;font-size:11px;padding:7px 8px}.real-portfolio-fields{grid-template-columns:1fr}.real-portfolio-wide{grid-column:auto}.real-portfolio-form{padding:12px}.real-portfolio-toolbar{grid-template-columns:1fr 1fr;gap:6px}.real-portfolio-toolbar input{grid-column:span 2}.real-portfolio-toolbar select{font-size:12px}.real-portfolio-entry{grid-template-columns:86px minmax(0,1fr);padding:8px;gap:10px}.real-portfolio-art{width:86px}.real-portfolio-value{font-size:18px}}
 
+
+/* PACKLAB v0.9 optional cloud accounts */
+.cloud-account-button{flex:none;display:inline-flex;align-items:center;justify-content:center;min-width:94px;max-width:145px;height:39px;padding:6px 10px;border-radius:11px;border:1px solid #4b6178;background:#1c3448;color:#d5fff4;font-size:12px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cloud-account-button:hover{border-color:#73dac5;background:#245063}
+.cloud-account-button.cloud-problem{border-color:#d08b73;color:#ffd9c3}
+.cloud-account-layer[hidden]{display:none!important}
+.cloud-account-layer{position:fixed;inset:0;z-index:200;background:#030812dc;backdrop-filter:blur(8px);overflow-y:auto;display:flex;justify-content:center;align-items:flex-start;padding:clamp(12px,4vh,38px) 12px calc(env(safe-area-inset-bottom,0px) + 22px)}
+.cloud-modal{background:linear-gradient(145deg,#222a42,#121d30);border:1px solid #506485;border-radius:19px;width:100%;max-width:620px;padding:22px;box-shadow:0 28px 90px #000c;color:#eff4ff}
+.cloud-modal-head,.cloud-user-summary{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.cloud-modal-head h2{font-size:clamp(21px,4vw,27px);margin:4px 0 16px}
+.cloud-modal-head small{color:#8df8dc;letter-spacing:2px;font-weight:900;font-size:10px}
+.cloud-close{border:1px solid #54627d;background:#1c2940;color:#fff;border-radius:10px;font-size:26px;line-height:28px;width:38px;height:38px;flex:none}
+.cloud-subtext,.cloud-small{color:#a7b9cd;font-size:12px;line-height:1.65;margin:10px 0 18px}
+.cloud-small{font-size:11px;margin-bottom:4px}
+.cloud-auth-switch{display:flex;gap:8px;margin:5px 0 13px}
+.cloud-auth-switch button{flex:1;min-height:39px;background:#273850;border:1px solid #3c4d66;border-radius:9px;color:#b9c4d9;font-weight:800}
+.cloud-auth-switch button.current{border-color:#8fd7c1;background:#225254;color:#fff}
+#packlabAccountForm{display:grid;gap:12px}
+#packlabAccountForm label{display:grid;gap:6px;color:#ced9ef;font-size:12px;font-weight:700}
+#packlabAccountForm input{width:100%;border-radius:10px;background:#111a2c;border:1px solid #405273;padding:12px 13px;color:white;min-height:46px}
+#packlabAccountForm button{margin-top:6px}
+.cloud-links{margin:14px 0;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.cloud-links button{background:transparent;border:0;padding:3px;color:#9eeddb;font-weight:700;font-size:12px}
+.cloud-notice{padding:12px 14px;border-radius:11px;background:#184042;color:#d0fff6;font-size:12px;border:1px solid #40766e;margin:7px 0 15px}
+.cloud-notice.danger{background:#492934;border-color:#a85e72;color:#ffdce0}
+.cloud-user-summary{align-items:center;background:#182842;border:1px solid #344e70;padding:13px;border-radius:12px}
+.cloud-user-summary strong{display:block;color:#fff;font-size:17px;overflow-wrap:anywhere}
+.cloud-user-summary span{display:block;font-size:11px;color:#a7b6cb;overflow-wrap:anywhere}
+.cloud-save-slot{background:#111c30;border:1px solid #365071;border-radius:14px;padding:15px;margin:14px 0}
+.cloud-save-head{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.cloud-save-head strong{font-size:16px}
+.cloud-status{border-radius:99px;padding:3px 9px;font-size:10px;font-weight:850;background:#4c394d;color:#f3cee3}
+.cloud-status.ready{background:#235747;color:#bdffde}.cloud-status.warning{background:#673a39;color:#ffd4d1}
+.cloud-slot-summary{display:grid;grid-template-columns:90px minmax(0,1fr);gap:6px 9px;margin:14px 0}
+.cloud-slot-summary span{font-size:9px;color:#8d9eb9;font-weight:900;letter-spacing:.6px}
+.cloud-slot-summary strong{font-size:12px;font-weight:700;color:#dee8f6;min-width:0;overflow-wrap:anywhere}
+.cloud-slot-actions{display:flex;gap:8px;flex-wrap:wrap}
+.cloud-slot-actions button{flex:1;font-size:12px;padding:9px 12px;min-width:135px}
+.cloud-danger{font-size:11px;color:#ffb4c2;margin:5px 0 12px}
+@media(max-width:700px){.cloud-modal{padding:16px}.cloud-account-button{min-width:65px;max-width:76px;font-size:10px;padding:5px 6px}.top-stats{gap:5px}.header-shell{gap:6px}.brand-copy small{display:none}.cloud-slot-summary{grid-template-columns:1fr}.cloud-slot-summary span{margin-top:5px}.cloud-save-slot{padding:11px}}
+@media(max-width:360px){.cloud-account-button{max-width:64px;min-width:58px}.brand-copy strong{font-size:15px}.stat-chip{min-width:50px}}
+
 </style>
 </head>
 <body>
@@ -446,11 +488,12 @@ body.camera-open{overflow:hidden}
           <span class="brand-mark">P<span class="brand-diamond">◆</span></span>
           <span class="brand-copy"><strong>PACKLAB</strong><small>COLLECTOR SIMULATOR</small></span>
         </button>
-        <div class="version-tag"><span class="live-indicator"></span> COLLECTOR v0.8.3</div>
+        <div class="version-tag"><span class="live-indicator"></span> COLLECTOR v0.9</div>
         <div class="top-stats">
           <div class="stat-chip coins"><span class="chip-icon">◈</span><span id="coinCount">—</span><small>COINS</small></div>
           <div class="stat-chip level"><span class="chip-icon">✦</span><span id="levelCount">1</span><small>LEVEL</small></div>
         </div>
+        <button type="button" id="cloudAccountButton" class="cloud-account-button" title="Optional account — sync your progress on multiple devices">☁ Guest</button>
       </div>
     </header>
 
@@ -472,7 +515,7 @@ body.camera-open{overflow:hidden}
             <small id="xpLabel">0 / 260 XP</small>
           </div>
           <button class="secondary-action full" data-action="how-to" type="button">ⓘ &nbsp; How to play</button>
-          <small class="sidebar-note">Fan-made, noncommercial prototype · Local browser save</small>
+          <small class="sidebar-note">Fan-made, noncommercial prototype · Optional cloud account</small>
         </div>
       </aside>
 
@@ -494,6 +537,7 @@ body.camera-open{overflow:hidden}
   </div>
   <div class="modal-layer" id="modalLayer" hidden></div>
   <div class="camera-layer" id="cameraLayer" hidden></div>
+  <div class="cloud-account-layer" id="cloudAccountLayer" hidden></div>
   <div class="toast-stack" id="toastStack" aria-live="polite"></div>
   <script>
 /* PackLab Vision 0.6: lightweight on-device, perspective-aware card scanner.
@@ -791,7 +835,7 @@ let state=loadSave();
 function freshState(){return {schema:1,coins:850,xp:0,selectedSet:'sv30',packs:{sv30:2,sv3pt5:1,sv8:1,sv8pt5:2},anniversaryGiftV02:true,prismaticGiftV03:true,collection:[],activePack:null,bulkResult:null,recentPulls:[],stats:{opened:0,won:0,graded:0},daily:{date:localDate(),opened:0,newCards:0,won:0,graded:0},claimed:{},battleRoster:[],battle:null,lastUpdated:Date.now()};}
 function localDate(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
 function loadSave(){try{const v=JSON.parse(localStorage.getItem(SAVE_KEY));if(v?.schema===1 && Array.isArray(v.collection) && v.packs && typeof v.coins==='number') {v.stats=v.stats||{opened:0,won:0,graded:0};v.claimed=v.claimed||{};v.battleRoster=Array.isArray(v.battleRoster)?v.battleRoster:[];v.recentPulls=Array.isArray(v.recentPulls)?v.recentPulls:[];v.daily=v.daily||{date:localDate(),opened:0,newCards:0,won:0,graded:0};if(v.daily.date!==localDate()) v.daily={date:localDate(),opened:0,newCards:0,won:0,graded:0};if(!SETS[v.selectedSet]) v.selectedSet='sv30';if(!v.anniversaryGiftV02){v.packs.sv30=(v.packs.sv30||0)+2;v.anniversaryGiftV02=true;}if(!v.prismaticGiftV03){v.packs.sv8pt5=(v.packs.sv8pt5||0)+2;v.prismaticGiftV03=true;}return v;}}catch(e){console.warn('Save recovery',e);}return freshState();}
-function save(){state.lastUpdated=Date.now();try{localStorage.setItem(SAVE_KEY,JSON.stringify(state));}catch(e){console.warn('Local save unavailable',e);toast('Browser storage is full or blocked. Your progress may not persist.','error');}updateHeader();}
+function save(){state.lastUpdated=Date.now();try{localStorage.setItem(SAVE_KEY,JSON.stringify(state));window.PackLabCloud?.changed?.('game');}catch(e){console.warn('Local save unavailable',e);toast('Browser storage is full or blocked. Your progress may not persist.','error');}updateHeader();}
 function esc(input){return String(input??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function fmt(n){return Math.round(Number(n)||0).toLocaleString('en-US');}
 function pct(num,den){return Math.min(100,Math.max(0,(num/Math.max(1,den))*100));}
@@ -1169,7 +1213,7 @@ function loadRealPortfolio(){
 let realPortfolio=loadRealPortfolio();
 function commitRealPortfolio(entries){
  const next={schema:1,entries,updatedAt:Date.now()};
- try{localStorage.setItem(REAL_PORTFOLIO_KEY,JSON.stringify(next));realPortfolio=next;return true;}
+ try{localStorage.setItem(REAL_PORTFOLIO_KEY,JSON.stringify(next));realPortfolio=next;window.PackLabCloud?.changed?.('portfolio');return true;}
  catch(e){toast('Real portfolio could not be saved. Check browser storage, and export a backup.','error');console.warn('Real portfolio save failed',e);return false;}
 }
 function portfolioHasAutomaticPrice(row){return row.pricingMode==='market'&&row.grader==='Raw'&&['Mint','Near Mint'].includes(row.condition)&&SETS[row.setId]&&!!row.cardId;}
@@ -2006,5 +2050,7 @@ render();
 // Rendering the Open tab starts the selected catalog; the second only starts once requested.
 
 </script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.81.1/dist/umd/supabase.js" crossorigin="anonymous"></script>
+<script src="cloud.js"></script>
 </body>
 </html>
