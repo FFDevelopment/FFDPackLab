@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#090e1c" />
   <meta name="description" content="PackLab: a mobile-friendly collector simulator prototype. Rip real-art 30th Celebration, Prismatic Evolutions, 151 and Surging Sparks boosters. Earn packs, grade pulls and battle." />
-  <title>PACKLAB — Collector Simulator • Quick Replay & Binder Tools v0.7</title>
+  <title>PACKLAB — Collector v0.8 • Real Card Tools & Bulk Rip</title>
   
   <link rel="preload" as="image" href="https://upload.wikimedia.org/wikipedia/en/3/36/Pokemon_Trading_Card_Game_cardback.png" />
   <style>
@@ -275,6 +275,16 @@ body.camera-open{overflow:hidden}
 @media(max-width:930px){.battle-replay-dock{bottom:calc(79px + env(safe-area-inset-bottom));left:10px;right:10px;max-width:none;width:auto}}
 @media(max-width:650px){.bulk-manager{padding:13px}.bulk-metrics{gap:6px}.bulk-metric{padding:8px}.bulk-metric strong{font-size:19px}.battle-replay-dock{padding:10px}.battle-replay-dock .replay-title{min-width:90px}.battle-replay-dock .replay-actions button{padding:7px 10px}.quick-result-actions button{flex:1}}
 
+
+/* Collector v0.8: single-tap batch opening with a preserved per-pack result grid. */
+.bulk-panel{padding:18px 21px;margin-bottom:20px;border-color:#3c4b70}.bulk-header{display:flex;justify-content:space-between;align-items:start;gap:16px}.bulk-header h2{font-size:21px}.bulk-header p{font-size:12px;max-width:670px;margin-top:6px;line-height:1.6}.bulk-actions{display:flex;flex-wrap:wrap;gap:9px;align-items:end;margin-top:15px}.bulk-select{font-size:11px;color:#aebdda;font-weight:800;display:grid;gap:5px}.bulk-select select{background:#1b2a46;color:#fff;border:1px solid #546585;border-radius:9px;padding:9px 15px;min-height:43px}.bulk-results{padding-top:20px;margin-top:17px;border-top:1px solid #33435d}.bulk-results-header{display:flex;gap:12px;align-items:start;justify-content:space-between;flex-wrap:wrap}.bulk-results-header strong{font-size:16px}.bulk-results-header p{font-size:12px;margin-top:4px}.bulk-filters{display:flex;flex-wrap:wrap;gap:7px;margin:14px 0}.bulk-reveal-strip{border:1px solid #59827d;background:#1d3739;padding:11px;border-radius:12px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;font-size:12px}.bulk-card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(105px,1fr));gap:10px}.bulk-card{background:#18243c;border:1px solid #3d526b;color:#fff;padding:7px;border-radius:11px;min-width:0;text-align:left}.bulk-card-image{display:block;aspect-ratio:245/342;position:relative;background:#121a32;overflow:hidden;border-radius:6px}.bulk-card-image>img{width:100%;height:100%;object-fit:contain}.bulk-card>small,.bulk-card>span:last-child{display:block;font-size:9px;color:#a7b6d3}.bulk-card strong{display:block;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.bulk-card>small{margin-top:5px}.bulk-more{text-align:center;margin-top:12px}
+@media(max-width:600px){.bulk-panel{padding:12px}.bulk-header{display:block}.bulk-header .pill{display:inline-block;margin-top:8px}.bulk-actions>*{flex:1 1 100%}.bulk-card-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.bulk-card{padding:4px}}
+
+/* Real Card Tools v0.8: full photo never cropped, alignment guides are editable */
+.camera-stage video{object-fit:contain!important}.camera-card-frame{opacity:.40;box-shadow:none!important;border-style:dotted!important}
+.full-photo-panel{border:1px solid #43677a;border-radius:15px;padding:14px;background:#111f34;margin:15px 0}.scan-measure-layout{display:grid;grid-template-columns:minmax(0,400px) minmax(0,1fr);gap:20px;align-items:start;margin:18px 0}.scan-step{display:flex;align-items:start;gap:10px;margin:8px 0 12px}.scan-step>div{flex:1}.scan-step strong{color:#e4f7f4;font-size:14px}.scan-step p{margin-top:3px;font-size:11px;line-height:1.6}.scan-number{display:grid;place-items:center;background:#315c61;border:1px solid #6dd6ce;border-radius:50%;width:29px;height:29px;flex:none;font-size:13px;font-weight:950;color:#d7fefa}.scan-confirm-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:12px 0}.scan-margin-box{border:1px solid #3c6b7a;background:#193148;padding:12px 13px;border-radius:12px;margin:12px 0}.scan-margin-box strong{display:block;color:#e9f9ff;font-size:13px;font-variant-numeric:tabular-nums}.scan-margin-box small{display:block;font-size:10px;color:#a5bdd2;margin-top:6px;line-height:1.5}.scan-place-holder{padding:22px;border:1px dashed #50718c;color:#b5d3df;border-radius:12px;font-size:12px}.real-scanner .centering-canvas{width:min(100%,420px);max-height:none;aspect-ratio:504/704;touch-action:none}.real-scanner .centering-canvas>img{object-fit:fill}.real-scanner .center-guide{box-sizing:border-box;border:0!important;filter:none!important;background:transparent!important;z-index:4}.real-scanner .center-guide.vertical{width:22px;transform:translateX(-50%);cursor:ew-resize}.real-scanner .center-guide.horizontal{height:22px;transform:translateY(-50%);cursor:ns-resize}.real-scanner .center-guide.vertical:before{content:'';position:absolute;left:50%;height:100%;width:2px;transform:translateX(-50%);background:#65ffed;box-shadow:0 0 2px #000}.real-scanner .center-guide.horizontal:before{content:'';position:absolute;top:50%;width:100%;height:2px;transform:translateY(-50%);background:#ffd477;box-shadow:0 0 2px #000}.real-scanner .center-guide:after{width:18px;height:18px;background:#65ffed;border:2px solid #1d283e}.real-scanner .center-guide.horizontal:after{background:#ffd477}.full-photo-panel .outer-corner-editor{width:min(100%,580px);border-radius:8px}.full-photo-panel .outer-handle{width:32px;height:32px;box-shadow:0 2px 8px #000c}.full-photo-panel .outer-polygon polygon{stroke-width:.8}.scan-results-col{min-width:0}.real-scanner .tool-slider-grid{margin:13px 0}
+@media(max-width:870px){.scan-measure-layout{grid-template-columns:1fr}.scan-measure-layout .centering-canvas{max-width:370px;margin:0 auto}.full-photo-panel{padding:10px}}
+@media(max-width:530px){.real-scanner .center-guide.vertical{width:26px}.real-scanner .center-guide.horizontal{height:26px}.full-photo-panel .outer-handle{height:34px;width:34px}.scan-confirm-row>button{width:100%}}
 </style>
 </head>
 <body>
@@ -285,7 +295,7 @@ body.camera-open{overflow:hidden}
           <span class="brand-mark">P<span class="brand-diamond">◆</span></span>
           <span class="brand-copy"><strong>PACKLAB</strong><small>COLLECTOR SIMULATOR</small></span>
         </button>
-        <div class="version-tag"><span class="live-indicator"></span> COLLECTOR v0.7</div>
+        <div class="version-tag"><span class="live-indicator"></span> COLLECTOR v0.8</div>
         <div class="top-stats">
           <div class="stat-chip coins"><span class="chip-icon">◈</span><span id="coinCount">—</span><small>COINS</small></div>
           <div class="stat-chip level"><span class="chip-icon">✦</span><span id="levelCount">1</span><small>LEVEL</small></div>
@@ -299,11 +309,11 @@ body.camera-open{overflow:hidden}
         <button type="button" class="nav-link active" data-nav="open"><span class="nav-ico">◩</span><span>Open packs</span><span class="nav-suffix" id="packNavCount"></span></button>
         <button type="button" class="nav-link" data-nav="store"><span class="nav-ico">▣</span><span>Pack store</span></button>
         <button type="button" class="nav-link" data-nav="binder"><span class="nav-ico">▥</span><span>My binder</span></button>
-        <button type="button" class="nav-link" data-nav="grading"><span class="nav-ico">◇</span><span>Card grading</span></button>
-        <button type="button" class="nav-link" data-nav="tools"><span class="nav-ico">⌗</span><span>Collector tools</span></button>
+        <button type="button" class="nav-link" data-nav="grading"><span class="nav-ico">◇</span><span>Game grading</span></button>
         <button type="button" class="nav-link" data-nav="battle"><span class="nav-ico">⚔</span><span>Quick battles</span></button>
         <div class="sidebar-group-title second">PROGRESSION</div>
         <button type="button" class="nav-link" data-nav="quests"><span class="nav-ico">◎</span><span>Daily missions</span><span class="nav-dot" id="questDot" hidden></span></button>
+        <button type="button" class="nav-link" data-nav="tools"><span class="nav-ico">⌗</span><span>Real Card Tools</span></button>
         <div class="sidebar-bottom">
           <div class="level-card">
             <div class="level-card-top"><span>COLLECTOR PROGRESS</span><strong id="sidebarLevel">LVL 1</strong></div>
@@ -325,10 +335,10 @@ body.camera-open{overflow:hidden}
       <button data-nav="open" class="mobile-nav-item active" type="button"><span>◩</span><small>OPEN</small></button>
       <button data-nav="store" class="mobile-nav-item" type="button"><span>▣</span><small>STORE</small></button>
       <button data-nav="binder" class="mobile-nav-item" type="button"><span>▥</span><small>BINDER</small></button>
-      <button data-nav="grading" class="mobile-nav-item" type="button"><span>◇</span><small>GRADE</small></button>
-      <button data-nav="tools" class="mobile-nav-item" type="button"><span>⌗</span><small>TOOLS</small></button>
+      <button data-nav="grading" class="mobile-nav-item" type="button"><span>◇</span><small>GAME GRADE</small></button>
       <button data-nav="battle" class="mobile-nav-item" type="button"><span>⚔</span><small>BATTLE</small></button>
       <button data-nav="quests" class="mobile-nav-item" type="button"><span>◎</span><small>QUESTS</small></button>
+      <button data-nav="tools" class="mobile-nav-item" type="button"><span>⌗</span><small>REAL TOOLS</small></button>
     </nav>
   </div>
   <div class="modal-layer" id="modalLayer" hidden></div>
@@ -507,7 +517,86 @@ function blueWear(canvas){const w=canvas.width,h=canvas.height,d=canvas.getConte
  const recognized=blueRate>.44;
  return {recognized,blueRate:+blueRate.toFixed(2),corners:recognized?(cornerWhite>.17?'possible-whitening':'no-obvious-whitening'):'unknown',edges:recognized?(edgeWhite>.13?'possible-whitening':'no-obvious-whitening'):'unknown',cornerWhite:+cornerWhite.toFixed(3),edgeWhite:+edgeWhite.toFixed(3)};
 }
-return {drawSource,detectOuter,guideForSize,bboxToQuad,warpCard,cornersFromFrac,cornersToPixels,findInnerFrame,photoQuality,blueWear};
+
+
+// Locate a contrasting physical card anywhere in the photo before refining its edges.
+// A coarse connected-component search avoids assuming the photograph is centered.
+function segmentCardBounds(canvas){
+ const w=canvas.width,h=canvas.height,ds=4,gw=Math.ceil(w/ds),gh=Math.ceil(h/ds);
+ const pix=canvas.getContext('2d',{willReadFrequently:true}).getImageData(0,0,w,h).data;
+ const at=(x,y)=>{const i=(Math.min(h-1,y)*w+Math.min(w-1,x))*4;return [pix[i],pix[i+1],pix[i+2]];};
+ const bgSamples=[at(5,5),at(w-6,5),at(5,h-6),at(w-6,h-6)];
+ const med=a=>a.slice().sort((v,t)=>v-t)[1];
+ const bg=[0,1,2].map(c=>med(bgSamples.map(x=>x[c])));
+ const mask=new Uint8Array(gw*gh);
+ for(let gy=1;gy<gh-1;gy++)for(let gx=1;gx<gw-1;gx++){
+  const value=at(gx*ds,gy*ds);const dr=value[0]-bg[0],dg=value[1]-bg[1],db=value[2]-bg[2];
+  if(dr*dr+dg*dg+db*db>3000)mask[gy*gw+gx]=1;
+ }
+ const done=new Uint8Array(mask.length),stack=new Int32Array(mask.length);
+ let best=null,bestScore=0;
+ for(let gy=1;gy<gh-1;gy++)for(let gx=1;gx<gw-1;gx++){
+  const start=gy*gw+gx;if(!mask[start]||done[start])continue;
+  let head=0,tail=0,left=gx,right=gx,top=gy,bottom=gy;
+  stack[tail++]=start;done[start]=1;
+  while(head<tail){const n=stack[head++],x=n%gw,y=(n/gw)|0;
+   if(x<left)left=x;if(x>right)right=x;if(y<top)top=y;if(y>bottom)bottom=y;
+   for(const step of [-gw,gw,-1,1,-gw-1,-gw+1,gw-1,gw+1]){
+    const k=n+step;if(k<0||k>=mask.length||done[k]||!mask[k])continue;
+    const xx=k%gw;if(Math.abs(xx-x)>1)continue;
+    done[k]=1;stack[tail++]=k;
+   }
+  }
+  const bw=(right-left+1)*ds,bh=(bottom-top+1)*ds,ratio=bw/Math.max(1,bh);
+  const dense=tail/Math.max(1,(right-left+1)*(bottom-top+1));
+  const size=tail/Math.max(1,gw*gh);
+  if(ratio<.46||ratio>1.10||bw<w*.17||bh<h*.18||size<.008||dense<.12)continue;
+  const score=tail*(.4+.6*dense);
+  if(score>bestScore){bestScore=score;best={l:Math.max(0,left*ds/w),r:Math.min(1,(right+1)*ds/w),t:Math.max(0,top*ds/h),b:Math.min(1,(bottom+1)*ds/h)};}
+ }
+ return best;
+}
+
+function detectOuterFlexible(canvas,hint=null,fast=false){
+ const w=canvas.width,h=canvas.height;
+ const width=Math.min(w*.78,h*.8*63/88),height=width*88/63;
+ const guesses=[];
+ const segmented=segmentCardBounds(canvas);
+ // The segmented extent is an excellent detector seed for off-center cards.
+ if(segmented){
+  const refined=detectOuter(canvas,segmented,fast);
+  if(refined.ok)return refined;
+  guesses.push(segmented);
+ }
+ if(hint)guesses.push(hint);
+ const typical=guideForSize(w,h);guesses.push({l:typical.l/w,r:typical.r/w,t:typical.t/h,b:typical.b/h});
+ // Search card locations independently of the camera's alignment box. Partial cards
+ // may be visible, but measurements are only accepted after all four OUTER edges are checked.
+ const ratios=fast?[.32,.5,.68]:[.27,.42,.58,.73];
+ const midY=fast?[.36,.5,.64]:[.30,.45,.60,.73];
+ const wGuess=fast?width*.91:width*.80,hGuess=wGuess*88/63;
+ for(const cy of midY)for(const cx of ratios){
+  guesses.push({l:Math.max(0,cx-wGuess/w/2),r:Math.min(1,cx+wGuess/w/2),t:Math.max(0,cy-hGuess/h/2),b:Math.min(1,cy+hGuess/h/2)});
+ }
+ let best=null,bestScore=-Infinity;
+ // Fast line detection for initial candidates; refine only the best with the full scan.
+ for(const guess of guesses){
+  if(!(guess.r-guess.l>.14&&guess.b-guess.t>.24))continue;
+  const detected=detectOuter(canvas,guess,true);
+  if(!detected?.quad||detected.quad.some(p=>!Number.isFinite(p.x+p.y)))continue;
+  const edges=detected.edges||[];
+  const coverage=edges.length?Math.min(...edges.map(e=>e.continuity)):0;
+  const strength=edges.length?Math.min(...edges.map(e=>e.strength)):0;
+  const conf=detected.ok?55:detected.geometry&&detected.confidence==='low'?12:0;
+  const score=conf+Math.min(60,strength)*.75+coverage*17-(detected.geometry?0:25);
+  if(score>bestScore){bestScore=score;best={detected,guess};}
+ }
+ if(!best)return detectOuter(canvas,hint,fast);
+ const refined=fast?best.detected:detectOuter(canvas,best.guess,false);
+ return refined.ok||!best.detected.ok?refined:best.detected;
+}
+
+return {drawSource,detectOuter,detectOuterFlexible,guideForSize,bboxToQuad,warpCard,cornersFromFrac,cornersToPixels,findInnerFrame,photoQuality,blueWear};
 })();
 
 </script>
@@ -541,13 +630,13 @@ const app=document.getElementById('mainView');
 const catalogMemory=new Map();
 const catalogLoading=new Map();
 const catalogErrors=new Map();
-const ui={page:'open',binderSet:'sv30',binderMode:'owned',binderRarity:'all',binderSort:'rarity-desc',binderSearch:'',binderPage:1,bulkSellOpen:false,bulkSellScope:'all',bulkSaleUndo:null,inspection:null,tearStart:null,revealStart:null,
+const ui={page:'open',binderSet:'sv30',binderMode:'owned',binderRarity:'all',binderSort:'rarity-desc',binderSearch:'',binderPage:1,bulkQty:5,bulkDisplay:'all',bulkViewCount:45,bulkSellOpen:false,bulkSellScope:'all',bulkSaleUndo:null,inspection:null,tearStart:null,revealStart:null,
  toolTab:'rates',ratesSet:'sv8pt5',rateRarity:'Special Illustration Rare',ratePacks:36,guideScores:{centering:9,corners:9,edges:9,surface:9},profit:{raw:50,graded:110,fee:25,shipping:7,selling:0,service:'PSA 10'},
  centering:{left:8,right:8,top:7,bottom:7},centerImage:'',centerDrag:null,centerMeasured:false,centerMethod:'',centerHint:'',scanSide:'front',scanScans:{front:null,back:null},scanEditOutline:false,scanOuterDrag:null,visibleCondition:{corners:'unknown',edges:'unknown',surface:'unknown'},lookupImage:'',lookupSet:'sv8pt5',lookupSearch:'',ocrBusy:false,ocrText:''};
 let toastTimers=[];
 let state=loadSave();
 
-function freshState(){return {schema:1,coins:850,xp:0,selectedSet:'sv30',packs:{sv30:2,sv3pt5:1,sv8:1,sv8pt5:2},anniversaryGiftV02:true,prismaticGiftV03:true,collection:[],activePack:null,recentPulls:[],stats:{opened:0,won:0,graded:0},daily:{date:localDate(),opened:0,newCards:0,won:0,graded:0},claimed:{},battleRoster:[],battle:null,lastUpdated:Date.now()};}
+function freshState(){return {schema:1,coins:850,xp:0,selectedSet:'sv30',packs:{sv30:2,sv3pt5:1,sv8:1,sv8pt5:2},anniversaryGiftV02:true,prismaticGiftV03:true,collection:[],activePack:null,bulkResult:null,recentPulls:[],stats:{opened:0,won:0,graded:0},daily:{date:localDate(),opened:0,newCards:0,won:0,graded:0},claimed:{},battleRoster:[],battle:null,lastUpdated:Date.now()};}
 function localDate(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
 function loadSave(){try{const v=JSON.parse(localStorage.getItem(SAVE_KEY));if(v?.schema===1 && Array.isArray(v.collection) && v.packs && typeof v.coins==='number') {v.stats=v.stats||{opened:0,won:0,graded:0};v.claimed=v.claimed||{};v.battleRoster=Array.isArray(v.battleRoster)?v.battleRoster:[];v.recentPulls=Array.isArray(v.recentPulls)?v.recentPulls:[];v.daily=v.daily||{date:localDate(),opened:0,newCards:0,won:0,graded:0};if(v.daily.date!==localDate()) v.daily={date:localDate(),opened:0,newCards:0,won:0,graded:0};if(!SETS[v.selectedSet]) v.selectedSet='sv30';if(!v.anniversaryGiftV02){v.packs.sv30=(v.packs.sv30||0)+2;v.anniversaryGiftV02=true;}if(!v.prismaticGiftV03){v.packs.sv8pt5=(v.packs.sv8pt5||0)+2;v.prismaticGiftV03=true;}return v;}}catch(e){console.warn('Save recovery',e);}return freshState();}
 function save(){state.lastUpdated=Date.now();try{localStorage.setItem(SAVE_KEY,JSON.stringify(state));}catch(e){console.warn('Local save unavailable',e);toast('Browser storage is full or blocked. Your progress may not persist.','error');}updateHeader();}
@@ -754,6 +843,46 @@ function currentActive(){return state.activePack;}
 function activeInstance(){const a=currentActive();return a?.cards?state.collection.find(i=>i.instanceId===a.cards[a.index]):null;}
 function revealAdvance(){const a=currentActive();if(!a||!a.cards)return;if(a.index>=a.cards.length)return;if(!a.revealed){a.revealed=true;save();render();return;}a.index++;a.revealed=false;save();render();}
 function finishPack(){if(!state.activePack?.cards)return;state.activePack=null;save();render();}
+
+// Bulk rip uses precisely the same per-set pack collation as a normal opening.
+// Generate the complete batch before changing inventory; never charge for a partial failed batch.
+const BULK_HIT_RARITIES=new Set(['Double Rare','ACE SPEC Rare','Illustration Rare','Ultra Rare','Special Illustration Rare','Hyper Rare','Futuristic Rare','Classic Collection','RGB Rare']);
+function bulkRipPacks(setId,requested,revealAll=true){
+ const count=Math.floor(Number(requested));
+ if(state.activePack){toast('Finish the single pack on your desk before bulk ripping.','error');return;}
+ if(!SETS[setId]||!Number.isInteger(count)||count<1||count>25){toast('Choose 1–25 packs.','error');return;}
+ if(!catalogMemory.has(setId)){toast('Load the verified expansion checklist first.','error');requireCatalog(setId);return;}
+ if((state.packs[setId]||0)<count){toast(`Only ${state.packs[setId]||0} sealed packs are available.`,'error');return;}
+ let batches=[];
+ try{for(let p=0;p<count;p++)batches.push(awardCardsForPack(setId));}
+ catch(err){console.error('Bulk rip aborted without charging packs',err);toast('Bulk rip failed validation. No packs were used.','error');return;}
+ if(batches.length!==count||batches.some(cards=>cards.length!==SETS[setId].cardsPerPack||cards.some(c=>c.setId!==setId))){toast('Set collation error; batch cancelled.','error');return;}
+ const prior=new Set(state.collection.map(i=>i.cardId));let newCount=0,hitCount=0;
+ const all=batches.flat();const rarityMap=new Map(catalogMemory.get(setId).map(c=>[c.id,c.rarity]));
+ for(const instance of all){const wasNew=!prior.has(instance.cardId);instance.newPull=wasNew;if(wasNew){newCount++;prior.add(instance.cardId);}if(BULK_HIT_RARITIES.has(rarityMap.get(instance.cardId)))hitCount++;}
+ state.packs[setId]-=count;state.collection.push(...all);state.stats.opened+=count;state.daily.opened+=count;state.daily.newCards+=newCount;addXp(count*45+newCount*5);
+ state.bulkResult={setId,packs:count,ids:all.map(i=>i.instanceId),newCount,hitCount,revealed:!!revealAll,openedAt:Date.now()};
+ state.recentPulls=[...all.slice(-3).reverse().map(i=>({cardId:i.cardId,setId,rarity:rarityMap.get(i.cardId)||'',time:Date.now()})),...state.recentPulls].slice(0,7);
+ ui.bulkViewCount=45;ui.bulkDisplay='all';save();render();toast(`${count} ${SETS[setId].name} packs opened · ${all.length} cards saved.`, 'success');
+}
+function renderBulkPanel(id,catalog){
+ const available=Math.max(0,state.packs[id]||0),active=!!state.activePack;
+ const count=Math.max(1,Math.min(25,Math.max(1,available),Math.floor(Number(ui.bulkQty)||1)));
+ ui.bulkQty=count;
+ const result=state.bulkResult;
+ const options=[1,2,3,5,10,25].filter(x=>x<=Math.max(available,1));
+ if(!options.includes(count))options.push(count);
+ options.sort((a,b)=>a-b);
+ const selection=`<div class="bulk-header"><div><span class="eyebrow">BULK RIP & FLIP</span><h2>Open many packs at once.</h2><p>Uses the same real-set checklist and simulated rarity odds as single-pack opening. Cards are saved individually, with their own condition scores.</p></div><span class="pill mint">${available} SEALED PACKS</span></div><div class="bulk-actions"><label class="bulk-select">Packs to rip <select id="bulkPackQty" aria-label="Number of packs to open">${options.map(n=>`<option value="${n}" ${n===count?'selected':''}>${n} pack${n!==1?'s':''}</option>`).join('')}</select></label><button type="button" class="primary-action" data-action="bulk-rip" data-reveal="all" ${active||!catalog||available<count?'disabled':''}>⚡ Rip & flip ${count} at once</button><button type="button" class="secondary-action" data-action="bulk-rip" data-reveal="later" ${active||!catalog||available<count?'disabled':''}>Rip face-down → flip all</button></div>`;
+ let preview='';
+ if(result?.ids?.length){const cards=result.ids.map((instanceId,i)=>{const instance=state.collection.find(v=>v.instanceId===instanceId);return instance?{instance,card:getCard(instance),position:i}:null;}).filter(x=>x&&x.card);
+  const visible=ui.bulkDisplay==='hits'?cards.filter(x=>BULK_HIT_RARITIES.has(x.card.rarity)):ui.bulkDisplay==='new'?cards.filter(x=>x.instance.newPull):cards;
+  const shown=visible.slice(0,ui.bulkViewCount),perPack=SETS[result.setId]?.cardsPerPack||10;
+  preview=`<div class="bulk-results" id="bulkResults"><div class="bulk-results-header"><div><strong>${result.packs} × ${esc(SETS[result.setId]?.name||result.setId)} · ${cards.length} cards</strong><p>${result.newCount} first-time pulls · ${result.hitCount} special rarities · all cards saved to binder</p></div><button type="button" class="secondary-action small-button" data-action="bulk-dismiss">Close results</button></div>${!result.revealed?`<div class="bulk-reveal-strip"><span>Your ${result.packs} packs are ripped. Flip every card together when ready.</span><button type="button" class="primary-action" data-action="bulk-flip-all">↻ Flip all ${cards.length} cards</button></div>`:''}<div class="bulk-filters"><button type="button" class="${ui.bulkDisplay==='all'?'primary-action':'secondary-action'} small-button" data-action="bulk-filter" data-filter="all">All cards</button><button type="button" class="${ui.bulkDisplay==='hits'?'primary-action':'secondary-action'} small-button" data-action="bulk-filter" data-filter="hits">Rare hits (${result.hitCount})</button><button type="button" class="${ui.bulkDisplay==='new'?'primary-action':'secondary-action'} small-button" data-action="bulk-filter" data-filter="new">New (${result.newCount})</button></div><div class="bulk-card-grid">${shown.map(({instance,card,position})=>`<button class="bulk-card ${!result.revealed?'face-down':''}" type="button" ${result.revealed?`data-action="inspect" data-card="${esc(card.id)}"`:'data-action="bulk-flip-all"'} aria-label="${result.revealed?'Inspect '+esc(card.name):'Flip all cards'}"><span class="bulk-card-image">${result.revealed?imgTag(card):`<img src="${ENGLISH_CARD_BACK_URL}" alt="Pokémon card back" loading="lazy">`}</span><small>PACK ${Math.floor(position/perPack)+1} · #${position%perPack+1}</small>${result.revealed?`<strong>${esc(card.name)}</strong><span>${esc(card.rarity)} ${instance.newPull?'· NEW':''}</span>`:''}</button>`).join('')}</div>${visible.length>shown.length?`<div class="bulk-more"><button type="button" class="secondary-action" data-action="bulk-more">Show next ${Math.min(45,visible.length-shown.length)} cards</button></div>`:''}</div>`;
+ }
+ return `<section class="panel bulk-panel">${selection}${preview}</section>`;
+}
+
 function renderOpen(){
  const id=state.activePack?.setId||state.selectedSet,s=SETS[id],catalog=requireCatalog(id),completion=storeSetTotal(id),count=s.cardsPerPack;
  const setOpts=orderedSets().map(item=>`<option value="${item.id}" ${item.id===state.selectedSet?'selected':''}>${esc(item.name)}</option>`).join('');
@@ -778,7 +907,7 @@ function renderOpen(){
  }
  const selection=`<select aria-label="Choose expansion" class="set-select" id="selectedSet" ${state.activePack?'disabled title="Finish the current pack before switching expansions"':''}>${setOpts}</select>`;
  const recent=state.recentPulls.length?state.recentPulls.slice(0,4).map(row=>{const card=catalogMemory.get(row.setId)?.find(c=>c.id===row.cardId);return `<div class="recent-row">${card?`<span class="recent-thumb">${imgTag(card)}</span>`:`<span class="recent-icon">✦</span>`}<div class="recent-meta"><strong>${esc(card?.name||row.cardId)}</strong><small>${esc(SETS[row.setId]?.name)} · ${esc(row.rarity||'')}</small></div><span class="pill ${chipRarity(row.rarity)}">PULL</span></div>`;}).join(''):'<div class="empty-note small">Open a pack to start your pull history.</div>';
- return `<div class="open-lead"><div><div class="eyebrow">YOUR OWN PACK RIPPING DESK</div><h1>Rip packs. Chase hits<span class="accent">.</span></h1></div>${selection}</div><div class="set-tabs">${orderedSets().map(x=>`<button type="button" data-action="select-set" data-set="${x.id}" class="set-tab ${id===x.id?'selected':''}" ${state.activePack?'disabled':''}><span>${esc(x.name)}</span><small>${fmt(state.packs[x.id]||0)} PACKS</small></button>`).join('')}</div>${stats}<div class="grid-two"><div class="panel"><div class="open-stage ${id==='sv30'?'celebration-stage':''}"><span class="stage-topnote">THE RIP DESK · ART EDITION</span><span class="stage-badge">${esc(s.name.toUpperCase())}</span>${stageContent}</div><div class="stage-bottom"><span>✦ &nbsp; ${stageHint}</span><strong>SET-LOCKED ✓</strong></div></div><div class="opening-side"><div class="panel selected-set-panel"><div class="mini-set-title"><h3>${esc(s.fullName)}</h3><span class="pill mint">ENGLISH</span></div><p class="set-desc">${esc(s.blurb)}</p><div class="set-progress"><div class="progress-top"><span>SET CHECKLIST</span><strong>${completion} / ${s.total}</strong></div><div class="progress-rail"><div style="width:${pct(completion,s.total)}%"></div></div></div><p class="micro">${fmt(state.packs[id]||0)} sealed booster packs owned</p><p class="micro">Odds are modeled from observed openings, not official factory guarantees. <button class="text-link" type="button" data-nav="tools">View pull rates →</button></p><div class="open-tools" style="justify-content:flex-start"><button class="secondary-action small-button" data-nav="store">Pack shop ↗</button><button class="secondary-action small-button" data-nav="binder">Set checklist</button></div></div><div class="panel panel-pad"><div class="section-heading">Your latest cards <small>REAL CARD IMAGES</small></div><div class="recent-hits">${recent}</div></div><div class="panel quick-help"><h3>Earn the next pack</h3><p>Complete daily challenges, battle trainers, or sell duplicates for virtual coins. Your binder, cards and grading results all save locally.</p><button class="tertiary-action small-button" data-nav="quests" style="margin-top:12px">Earn rewards →</button></div></div></div>`;
+ return `<div class="open-lead"><div><div class="eyebrow">YOUR OWN PACK RIPPING DESK</div><h1>Rip packs. Chase hits<span class="accent">.</span></h1></div>${selection}</div><div class="set-tabs">${orderedSets().map(x=>`<button type="button" data-action="select-set" data-set="${x.id}" class="set-tab ${id===x.id?'selected':''}" ${state.activePack?'disabled':''}><span>${esc(x.name)}</span><small>${fmt(state.packs[x.id]||0)} PACKS</small></button>`).join('')}</div>${renderBulkPanel(id,catalog)}${stats}<div class="grid-two"><div class="panel"><div class="open-stage ${id==='sv30'?'celebration-stage':''}"><span class="stage-topnote">THE RIP DESK · ART EDITION</span><span class="stage-badge">${esc(s.name.toUpperCase())}</span>${stageContent}</div><div class="stage-bottom"><span>✦ &nbsp; ${stageHint}</span><strong>SET-LOCKED ✓</strong></div></div><div class="opening-side"><div class="panel selected-set-panel"><div class="mini-set-title"><h3>${esc(s.fullName)}</h3><span class="pill mint">ENGLISH</span></div><p class="set-desc">${esc(s.blurb)}</p><div class="set-progress"><div class="progress-top"><span>SET CHECKLIST</span><strong>${completion} / ${s.total}</strong></div><div class="progress-rail"><div style="width:${pct(completion,s.total)}%"></div></div></div><p class="micro">${fmt(state.packs[id]||0)} sealed booster packs owned</p><p class="micro">Odds are modeled from observed openings, not official factory guarantees. <button class="text-link" type="button" data-nav="tools">View pull rates →</button></p><div class="open-tools" style="justify-content:flex-start"><button class="secondary-action small-button" data-nav="store">Pack shop ↗</button><button class="secondary-action small-button" data-nav="binder">Set checklist</button></div></div><div class="panel panel-pad"><div class="section-heading">Your latest cards <small>REAL CARD IMAGES</small></div><div class="recent-hits">${recent}</div></div><div class="panel quick-help"><h3>Earn the next pack</h3><p>Complete daily challenges, battle trainers, or sell duplicates for virtual coins. Your binder, cards and grading results all save locally.</p><button class="tertiary-action small-button" data-nav="quests" style="margin-top:12px">Earn rewards →</button></div></div></div>`;
 }
 function renderStore(){return `${pageHeading('THE VIRTUAL CARD SHOP','Stock your collection.','Spend coins earned in-game on verified English booster packs. All sealed packs use their own real set checklist.',`<span class="pill mint">◈ ${fmt(state.coins)} COINS AVAILABLE</span>`)}
  <div class="store-grid">${orderedSets().map(s=>`<article class="panel product-card"><div class="product-banner ${s.id==='sv8'?'surge':s.id==='sv30'?'celebration-banner':''}"><div class="product-pack second">${compactPack(s.id)}</div><div class="product-pack first">${compactPack(s.id)}</div></div><div class="product-info"><div class="top"><h2>${esc(s.name)}</h2><span class="pill">${s.total} CARDS</span></div><p>${esc(s.blurb)}</p><div class="progress-top" style="margin-top:12px"><span>SEALED IN INVENTORY</span><strong>×${fmt(state.packs[s.id]||0)}</strong></div><div class="product-buy"><button class="primary-action" data-action="buy-pack" data-set="${s.id}" data-count="1" ${state.coins<s.price?'disabled':''}>◈ ${s.price} · 1 PACK</button><button class="secondary-action" data-action="buy-pack" data-set="${s.id}" data-count="6" ${state.coins<s.boxPrice?'disabled':''}>◈ ${s.boxPrice} · 6 PACKS</button></div><button class="tertiary-action full" style="margin-top:10px" data-action="store-open" data-set="${s.id}">Open this expansion →</button></div></article>`).join('')}</div>
@@ -813,8 +942,8 @@ function renderBinder(){
  const end=ui.binderPage*45,shown=cards.slice(0,end),owned=storeSetTotal(id),gr=state.collection.filter(i=>i.setId===id&&i.grade).length;
  return base+`<div class="grid-stats"><div class="metric"><small>DIFFERENT CARDS</small><strong>${owned}</strong><span>/ ${s.total}</span></div><div class="metric"><small>COPIES OWNED</small><strong>${state.collection.filter(i=>i.setId===id).length}</strong></div><div class="metric"><small>GRADED COPIES</small><strong>${gr}</strong></div></div><div class="binder-helper">✓ ${esc(s.name)} checklist verified: <strong>${s.total} collectible cards</strong>${id==='sv30'?' (161 anniversary + 30 Classic Collection)':' ('+s.printed+' main prints + secret rares)'}. <span class="accent-mint">${shown.length} shown${shown.length<cards.length?' of '+cards.length:''}.</span></div>${controls}<div class="binder-sort-hint">${ui.binderSort==='rarity-desc'?'★ Rarest cards appear first':ui.binderSort==='rarity-asc'?'▾ Common to rare':ui.binderSort==='copies'?'▦ Largest duplicate stacks first':ui.binderSort==='condition'?'◇ Best virtual card condition first':'# Collector number order'} · <button class="text-link" type="button" data-action="bulk-preview-toggle">Review weaker duplicates →</button></div>${undo}${bulk}${cards.length?`<div class="binder-grid">${shown.map(c=>{const owned=cardCopies(c),holo=owned.some(i=>i.variant!=='Normal');return `<button type="button" class="card-tile ${holo?'holo':''}" data-action="inspect" data-card="${esc(c.id)}"><div class="tile-picture">${imgTag(c)}${owned.length?`<span class="count-chip">×${owned.length}</span>`:''}${owned.some(i=>i.newPull)?'<span class="new-chip">OWNED</span>':''}</div><div class="tile-details"><strong>${esc(c.name)}</strong><small>#${esc(c.number)} · ${esc(c.rarity)}</small></div></button>`;}).join('')}</div>${end<cards.length?`<div class="binder-pager"><button class="secondary-action" data-action="binder-more">Load more (${cards.length-end} left) ↓</button></div>`:''}`:`<div class="empty-note">${ui.binderMode==='owned'?'No owned cards match the search yet. Open some packs!':'No cards match these filters.'}</div>`}`;
 }
-function renderGrading(){const setIds=new Set(state.collection.map(i=>i.setId));setIds.forEach(id=>requireCatalog(id));const queue=state.collection.filter(i=>i.status==='grading'),results=state.collection.filter(i=>i.status==='graded').sort((a,b)=>(b.gradeDue||0)-(a.gradeDue||0));const ungraded=state.collection.filter(i=>i.status==='raw');const actions=`<button class="primary-action" data-action="camera-open">▣ Camera grader · front/back</button> <button class="secondary-action" data-nav="binder">Choose cards in binder ↗</button>`;
- return pageHeading('THE GRADING COUNTER','Find your perfect 10.','Every pulled copy has its own centering, corners, edges and surface stats. Simulated grades depend on that condition, not random rerolls.',actions)+`<div class="grid-stats"><div class="metric"><small>RAW COPIES</small><strong>${ungraded.length}</strong></div><div class="metric"><small>SUBMISSIONS</small><strong>${queue.length}</strong></div><div class="metric"><small>GRADED SLABS</small><strong>${results.length}</strong></div></div><div class="grading-layout"><section class="panel panel-pad"><div class="section-heading">At the graders <small>EXPRESS: 6s · STANDARD: 20s</small></div>${queue.length?queue.map(i=>{const c=getCard(i)||{name:i.cardId};const remain=Math.max(0,Math.ceil((i.gradeDue-Date.now())/1000));return `<div class="grading-case"><div class="grade-thumbnail">${imgTag(c)}</div><div class="meta"><h3>${esc(c.name)}</h3><p>${esc(SETS[i.setId].name)} · ${esc(i.variant)}</p><span class="pill mint">◷ &nbsp; ${remain?remain+' seconds remaining':'Ready — checking results'}</span></div></div>`;}).join(''):'<div class="empty-note">No submissions in progress. Open your binder, select a copy, and submit it for grading.</div>'}<div class="divider"></div><h3>Grading fees</h3><p class="grade-inspect" style="margin-top:8px">Standard grading: <strong>90 coins</strong> · Express grading: <strong>130 coins</strong>. These are playtest timers and fictional services, not PSA/CGC submissions.</p></section><section class="panel panel-pad"><div class="section-heading">Returned slabs <small>${results.length} TOTAL</small></div>${results.length?results.slice(0,10).map(i=>{const c=getCard(i)||{name:i.cardId};return `<div class="grading-case"><div class="grade-thumbnail">${imgTag(c)}</div><div class="meta"><h3>${esc(c.name)}</h3><p>#${esc(c.number||'?')} · ${esc(SETS[i.setId].name)}</p><span class="grade-result">PACKLAB GEM ${i.grade}</span></div><button class="secondary-action small-button" data-action="inspect" data-card="${esc(i.cardId)}">View</button></div>`;}).join(''):'<div class="empty-note">Your graded cards and results will appear here.</div>'}</section></div><div class="store-note"><strong>How grade works:</strong> Every card is assigned a hidden, immutable condition when its pack is torn. Inspecting cards reveals that condition. Submitting a card calculates the grade from its weakest and average condition scores. No real card or grading service is involved.</div>`;}
+function renderGrading(){const setIds=new Set(state.collection.map(i=>i.setId));setIds.forEach(id=>requireCatalog(id));const queue=state.collection.filter(i=>i.status==='grading'),results=state.collection.filter(i=>i.status==='graded').sort((a,b)=>(b.gradeDue||0)-(a.gradeDue||0));const ungraded=state.collection.filter(i=>i.status==='raw');const actions=`<span class="pill mint">GAME CARDS · SIMULATED</span> <button class="secondary-action" data-nav="binder">Choose game cards ↗</button>`;
+ return pageHeading('VIRTUAL GAME GRADING','Grade your game pulls.','Game cards have simulated condition scores; grading costs virtual coins. For a PHYSICAL card photo, use Real Card Tools at the end of the navigation.',actions)+`<div class="grid-stats"><div class="metric"><small>RAW COPIES</small><strong>${ungraded.length}</strong></div><div class="metric"><small>SUBMISSIONS</small><strong>${queue.length}</strong></div><div class="metric"><small>GRADED SLABS</small><strong>${results.length}</strong></div></div><div class="grading-layout"><section class="panel panel-pad"><div class="section-heading">At the graders <small>EXPRESS: 6s · STANDARD: 20s</small></div>${queue.length?queue.map(i=>{const c=getCard(i)||{name:i.cardId};const remain=Math.max(0,Math.ceil((i.gradeDue-Date.now())/1000));return `<div class="grading-case"><div class="grade-thumbnail">${imgTag(c)}</div><div class="meta"><h3>${esc(c.name)}</h3><p>${esc(SETS[i.setId].name)} · ${esc(i.variant)}</p><span class="pill mint">◷ &nbsp; ${remain?remain+' seconds remaining':'Ready — checking results'}</span></div></div>`;}).join(''):'<div class="empty-note">No submissions in progress. Open your binder, select a copy, and submit it for grading.</div>'}<div class="divider"></div><h3>Grading fees</h3><p class="grade-inspect" style="margin-top:8px">Standard grading: <strong>90 coins</strong> · Express grading: <strong>130 coins</strong>. These are playtest timers and fictional services, not PSA/CGC submissions.</p></section><section class="panel panel-pad"><div class="section-heading">Returned slabs <small>${results.length} TOTAL</small></div>${results.length?results.slice(0,10).map(i=>{const c=getCard(i)||{name:i.cardId};return `<div class="grading-case"><div class="grade-thumbnail">${imgTag(c)}</div><div class="meta"><h3>${esc(c.name)}</h3><p>#${esc(c.number||'?')} · ${esc(SETS[i.setId].name)}</p><span class="grade-result">PACKLAB GEM ${i.grade}</span></div><button class="secondary-action small-button" data-action="inspect" data-card="${esc(i.cardId)}">View</button></div>`;}).join(''):'<div class="empty-note">Your graded cards and results will appear here.</div>'}</section></div><div class="store-note"><strong>Game grading only — no camera scans or physical cards here.</strong> Every virtual card is assigned hidden condition when its pack is torn. Inspecting cards reveals that condition. Submitting a card calculates the grade from its weakest and average condition scores. No real card or grading service is involved.</div>`;}
 function submitGrade(instanceId,express){const i=state.collection.find(x=>x.instanceId===instanceId);if(!i||i.status!=='raw'){toast('Card is already graded or submitted.','error');return;}const price=express?130:90;if(state.coins<price){toast(`Grading costs ${price} virtual coins.`,'error');return;}state.coins-=price;i.status='grading';i.gradeDue=Date.now()+(express?6000:20000);i.gradeService=express?'Express':'Standard';state.daily.graded++;state.stats.graded++;addXp(25);save();if(ui.inspection){openInspector(i.cardId);}render();toast(`${i.gradeService} submission accepted!`,'success');}
 function resolveGrades(){let done=0;for(const i of state.collection){if(i.status==='grading'&&Date.now()>=i.gradeDue){i.grade=calculateGrade(i);i.status='graded';done++;}}if(done){addXp(done*15);save();toast(`${done} card${done===1?'':'s'} back from grading!`,'success');if(ui.inspection)openInspector(ui.inspection);if(ui.page==='grading')render();}return done;}
 function sellDuplicate(instanceId){const i=state.collection.find(x=>x.instanceId===instanceId);if(!i)return;const copies=state.collection.filter(v=>v.cardId===i.cardId);if(copies.length<=1){toast('Keep at least one copy of every collected card.','error');return;}if(i.status==='grading'){toast('Submitted cards cannot be sold.','error');return;}const coin=coinValue(i);state.collection=state.collection.filter(x=>x.instanceId!==instanceId);state.battleRoster=state.battleRoster.filter(x=>x!==instanceId);state.coins+=coin;save();if(ui.inspection)openInspector(i.cardId);render();toast(`Duplicate sold for ◈ ${coin} virtual coins.`,'success');}
@@ -877,7 +1006,7 @@ function setPreviewImage(field,file){
 function renderTools(){
  const choices=TOOL_TABS.map(([key,title])=>`<button type="button" data-action="tool-tab" data-tab="${key}" class="tool-tab ${ui.toolTab===key?'active':''}">${title}</button>`).join('');
  const contents=({rates:renderToolRates,profit:renderToolProfit,centering:renderToolCentering,scanner:renderToolLookup,guide:renderToolGuide}[ui.toolTab]||renderToolRates)();
- return pageHeading('COLLECTOR WORKSHOP','Collector Tools.','Set-accurate probability estimates, grading math, image-based centering checks and a card finder. No cash transactions or physical grading.')+
+ return pageHeading('REAL CARD WORKSHOP','Real Card Tools.','Tools for physical cards: camera centering, card identification, sample pull-rate references and grading-profit math. These never alter the game collection, coins, or simulated grades.')+
  `<div class="tool-tabs" role="tablist">${choices}</div>${contents}<div class="tool-note">The pack simulator, card finder and gameplay are fan-built. Card artwork is loaded from third parties. Probability figures are estimates, not official published factory odds; calculations do not predict individual results.</div>`;
 }
 function rarityRateRows(id){
@@ -939,14 +1068,14 @@ function syncActiveScan(){const s=activeScan();if(s){s.centering={...ui.centerin
 function chooseScanSide(side){if(side!=='front'&&side!=='back')return;syncActiveScan();ui.scanSide=side;ui.scanEditOutline=false;const s=activeScan();ui.centerImage=s?.image||'';ui.centering={...(s?.centering||{left:8,right:8,top:7,bottom:7})};ui.centerMeasured=!!s?.measured;ui.centerMethod=s?.centerMethod||'';ui.centerHint=s?.hintText||'';render();}
 function centeringSummary(){
  if(!ui.centerImage)return {horizontal:'—',vertical:'—',status:'Scan the '+ui.scanSide+' of your card'};
- if(!ui.centerMeasured)return {horizontal:'Not measured',vertical:'Not measured',status:'Measurement needs review'};
+ if(!ui.centerMeasured){const r=centerRatios();return {horizontal:`${r.left.toFixed(1)} / ${r.right.toFixed(1)}`,vertical:`${r.top.toFixed(1)} / ${r.bottom.toFixed(1)}`,status:'Guide preview · confirm edges to measure'};}
  const r=centerRatios(),off=Math.max(Math.abs(r.left-50),Math.abs(r.top-50));
  return {horizontal:`${r.left.toFixed(1)} / ${r.right.toFixed(1)}`,vertical:`${r.top.toFixed(1)} / ${r.bottom.toFixed(1)}`,status:off<=2?'Near 50 / 50':off<=5?'Slight centering offset':'Noticeable centering offset'};
 }
 const emptyResult={label:'No estimate yet',range:'—',type:'none',notes:[],confidence:'Not evaluated'};
 function gradeScanEstimate(){
  const front=ui.scanScans.front,back=ui.scanScans.back,measured=[front,back].filter(s=>s?.measured&&s.outerConfidence!=='none');
- if(!measured.length)return {...emptyResult,label:'Take a clear card photo',notes:['Both the outer edges and inner printed frame must be measured before estimating centering.']};
+ if(!measured.length)return {...emptyResult,label:'Review and confirm both frames',notes:['Review four outside cardboard corners, tap Set outer card edges, then adjust and confirm all four inner printed guides. Unconfirmed scans are not graded.']};
  const unreadable=measured.some(s=>s.quality?.blurry||s.quality?.glareRisk);
  const clear=measured.filter(s=>!s.quality?.blurry&&!s.quality?.glareRisk);
  if(!clear.length)return {label:'Retake photo for grading',range:'—',type:'retry',confidence:'Low',notes:['The card photo may be blurred or overexposed. Retake it under diffuse, even lighting.']};
@@ -980,25 +1109,31 @@ function gradeScanEstimate(){
  const confidence=both&&!unreadable&&verified&&back?.wear?.recognized?'Limited / moderate centering':'Low';
  return {label:both?'Provisional photo grade range':'Centering-only grade ceiling',range:`${low}–${high}`,type:'estimated',notes,confidence};
 }
-function renderScanGrade(){const est=gradeScanEstimate();return `<div class="photo-grade-estimate"><div class="photo-grade-top"><div><small>PACKLAB PHOTO-GRADE PREVIEW</small><h3>${esc(est.label)}</h3></div><strong class="photo-grade-range">${est.range}</strong></div><p>1–10 scale · Confidence: <strong>${esc(est.confidence)}</strong></p><div class="photo-grade-notes">${est.notes.map(n=>`<div>• ${esc(n)}</div>`).join('')}</div><p class="tool-disclaimer">This is a cautious game-tool estimate, <strong>not a PSA, CGC, or BGS grade</strong>. Never use it as an appraisal, authenticity check, or resale guarantee.</p><details class="condition-note-input"><summary>Optional: note flaws you can see yourself</summary><p>Camera analysis cannot reliably find every dent, scratch, or tiny corner defect. Describe obvious visible problems; selecting “None obvious” never guarantees a 10.</p><div class="condition-input-grid">${['corners','edges','surface'].map(key=>`<label>${key[0].toUpperCase()+key.slice(1)}<select data-condition="${key}">${[['unknown','Not checked'],['none','None obvious'],['minor','Tiny imperfection'],['moderate','Noticeable wear'],['severe','Significant damage']].map(([value,label])=>`<option value="${value}" ${ui.visibleCondition[key]===value?'selected':''}>${label}</option>`).join('')}</select></label>`).join('')}</div></details></div>`;}
-function renderOuterEditor(){const s=activeScan();if(!s?.rawPreview||!s.quadPct)return '';
- const coords=s.quadPct.map(p=>`${p.x.toFixed(2)},${p.y.toFixed(2)}`).join(' ');
- const corners=['Top left','Top right','Bottom right','Bottom left'];
- return `<div class="outer-options"><button type="button" class="secondary-action small-button" data-action="outer-edit">${ui.scanEditOutline?'Close outline editor':'◻ Adjust outside corners'}</button><span class="scan-outer-status">${s.outerConfidence==='high'?'High-confidence card outline':s.outerConfidence==='medium'?'Detected card outline':s.outerConfidence==='manual'?'Manually aligned outline':'Outline not confirmed'}</span></div>${ui.scanEditOutline?`<div class="outer-edit-panel"><p>Drag the four dots onto the ACTUAL outside corners of the card, then apply the crop. Include the full cardboard edge, not just its printed frame.</p><div class="outer-corner-editor" id="outerCornerEditor"><img src="${esc(s.rawPreview)}" alt="Original photo with editable card outline" draggable="false"><svg class="outer-polygon" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><polygon id="outerPolygon" points="${coords}" /></svg>${s.quadPct.map((p,i)=>`<button type="button" class="outer-handle" data-outer-corner="${i}" style="left:${p.x}%;top:${p.y}%" aria-label="Move ${corners[i]} corner"></button>`).join('')}</div><button type="button" class="primary-action" data-action="outer-apply">✓ Apply corrected card outline</button></div>`:''}`;
+function renderScanGrade(){const est=gradeScanEstimate();return `<div class="photo-grade-estimate"><div class="photo-grade-top"><div><small>REAL CARD · PHOTO ESTIMATE</small><h3>${esc(est.label)}</h3></div><strong class="photo-grade-range">${est.range}</strong></div><p>1–10 scale · Confidence: <strong>${esc(est.confidence)}</strong></p><div class="photo-grade-notes">${est.notes.map(n=>`<div>• ${esc(n)}</div>`).join('')}</div><p class="tool-disclaimer">This is a cautious PHYSICAL-card photo estimate, <strong>not a PSA, CGC, or BGS grade</strong>. Never use it as an appraisal, authenticity check, or resale guarantee.</p><details class="condition-note-input"><summary>Optional: note flaws you can see yourself</summary><p>Camera analysis cannot reliably find every dent, scratch, or tiny corner defect. Describe obvious visible problems; selecting “None obvious” never guarantees a 10.</p><div class="condition-input-grid">${['corners','edges','surface'].map(key=>`<label>${key[0].toUpperCase()+key.slice(1)}<select data-condition="${key}">${[['unknown','Not checked'],['none','None obvious'],['minor','Tiny imperfection'],['moderate','Noticeable wear'],['severe','Significant damage']].map(([value,label])=>`<option value="${value}" ${ui.visibleCondition[key]===value?'selected':''}>${label}</option>`).join('')}</select></label>`).join('')}</div></details></div>`;}
+function renderOuterEditor(){const scan=activeScan();if(!scan?.rawPreview||!scan.quadPct)return '';
+ const pts=scan.quadPct;const corners=['Top left','Top right','Bottom right','Bottom left'];
+ const coords=pts.map(v=>`${v.x.toFixed(2)},${v.y.toFixed(2)}`).join(' ');
+ const status=scan.outerConfirmed?'OUTER EDGES CONFIRMED':scan.outerConfidence==='high'?'Suggested high-confidence card outline · tap Set edges to verify':scan.outerConfidence==='medium'?'Suggested card outline':'Please correct the outer edges';
+ return `<section class="full-photo-panel" aria-label="Original full photograph and four adjustable outer corners"><div class="scan-step"><span class="scan-number">1</span><div><strong>Original photo · OUTSIDE card corners</strong><p>Move each GREEN dot to the four physical cardboard corners. The card can be anywhere in the photo—never align these to the camera center.</p></div></div><div class="outer-corner-editor" id="outerCornerEditor"><img src="${esc(scan.rawPreview)}" alt="Full uncropped photograph of the card, with adjustable outer corners" draggable="false"><svg class="outer-polygon" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><polygon id="outerPolygon" points="${coords}" /></svg>${pts.map((v,i)=>`<button type="button" class="outer-handle" data-outer-corner="${i}" style="left:${v.x}%;top:${v.y}%" aria-label="Adjust ${corners[i]} outside corner"></button>`).join('')}</div><div class="scan-confirm-row"><span class="scan-outer-status">${status}</span><button type="button" class="primary-action" data-action="outer-apply">✓ Set outer card edges</button></div></section>`;
 }
-function renderToolCentering(){const c=ui.centering,r=centeringSummary(),scan=activeScan(),b=(side)=>`<label class="field-block"><span class="center-field-header">${side[0].toUpperCase()+side.slice(1)} printed border <strong id="centerVal_${side}">${c[side].toFixed(1)}%</strong></span><input type="range" min="1" max="35" step="0.5" data-center="${side}" value="${c[side]}"></label>`;
- return `<section class="tool-surface"><div class="tool-intro"><div><span class="eyebrow">AUTOMATIC CARD DETECTION · PHOTO GRADER</span><h2>Scan, straighten, estimate.</h2><p>Camera detects the entire card outline, straightens perspective, then measures printed centering. Scan both sides to add a cautious condition-based grade estimate.</p></div><span class="pill mint">ON-DEVICE · NO UPLOAD</span></div>
- <div class="scan-side-toggle" aria-label="Select side to scan"><button type="button" data-action="scan-side" data-side="front" class="${ui.scanSide==='front'?'active':''}">① Front ${ui.scanScans.front?.image?'✓':''}</button><button type="button" data-action="scan-side" data-side="back" class="${ui.scanSide==='back'?'active':''}">② Back ${ui.scanScans.back?.image?'✓':''}</button></div>
- <div class="camera-entry"><div class="camera-entry-icon">⌗</div><div class="camera-entry-copy"><strong>Live ${ui.scanSide} scanner</strong><span>Lay card flat on a contrasting matte surface. Even lighting · no sleeve · hold camera parallel</span></div><button type="button" class="primary-action" data-action="camera-open">▣ Scan ${ui.scanSide}</button></div>
- <div class="photo-upload-row"><button type="button" class="secondary-action small-button" data-action="scan-new">↻ New physical card</button><label class="secondary-action photo-button" for="centerTakePhoto">📷 Phone camera</label><input type="file" hidden id="centerTakePhoto" accept="image/*" capture="environment"><label class="secondary-action photo-button" for="centerPhoto">↑ Use existing photo</label><input type="file" hidden id="centerPhoto" accept="image/*"><button type="button" class="secondary-action small-button" data-action="center-auto" ${scan?.rawUrl?'':'disabled'}>⌗ Rescan borders</button><button type="button" class="secondary-action small-button" data-action="centering-reset">Reset inner guides</button></div>
- <div class="center-layout"><div><div class="centering-canvas" id="centeringCanvas">${ui.centerImage?`<img src="${esc(ui.centerImage)}" alt="Perspective-corrected scan of the ${ui.scanSide} of the card" onerror="this.style.display='none'">`:`<div class="center-placeholder"><strong>${ui.scanSide.toUpperCase()} CARD SCAN</strong><span>Open the camera and frame all four outside corners</span></div>`}
+function realMarginReadout(c=ui.centering){
+ const digits=x=>(Math.round(Math.max(0,x)*100)/100).toFixed(2);
+ return `L ${digits(c.left*.63)} / R ${digits(c.right*.63)} mm* · T ${digits(c.top*.88)} / B ${digits(c.bottom*.88)} mm*`;
+}
+function renderToolCentering(){const c=ui.centering,r=centeringSummary(),scan=activeScan(),slide=side=>`<label class="field-block"><span class="center-field-header">${side[0].toUpperCase()+side.slice(1)} inner border <strong id="centerVal_${side}">${c[side].toFixed(1)}%</strong></span><input type="range" min="1" max="35" step="0.1" data-center="${side}" value="${c[side]}"></label>`;
+ return `<section class="tool-surface real-scanner"><div class="tool-intro"><div><span class="eyebrow">REAL PHYSICAL CARDS · ON-DEVICE</span><h2>Measure from the cardboard, not the camera frame.</h2><p>Keep the FULL photo. Set the four outside corners first; then place four inside printed-border guides on the straightened card. Ratios use the distances between those guides and the physical edges, regardless of where the photo was taken.</p></div><span class="pill mint">REAL CARD TOOL · NO GAME GRADES</span></div>
+ <div class="scan-side-toggle" aria-label="Select side to scan"><button type="button" data-action="scan-side" data-side="front" class="${ui.scanSide==='front'?'active':''}">① Front ${ui.scanScans.front?.measured?'✓':''}</button><button type="button" data-action="scan-side" data-side="back" class="${ui.scanSide==='back'?'active':''}">② Back ${ui.scanScans.back?.measured?'✓':''}</button></div>
+ <div class="camera-entry"><div class="camera-entry-icon">⌗</div><div class="camera-entry-copy"><strong>Live ${ui.scanSide} camera</strong><span>Lay the card anywhere on a matte, contrasting surface. Do not crop; photograph the whole card and some background.</span></div><button type="button" class="primary-action" data-action="camera-open">▣ Scan ${ui.scanSide}</button></div>
+ <div class="photo-upload-row"><button type="button" class="secondary-action small-button" data-action="scan-new">↻ Another real card</button><label class="secondary-action photo-button" for="centerTakePhoto">📷 Phone camera</label><input type="file" hidden id="centerTakePhoto" accept="image/*" capture="environment"><label class="secondary-action photo-button" for="centerPhoto">↑ Existing photo</label><input type="file" hidden id="centerPhoto" accept="image/*"><button type="button" class="secondary-action small-button" data-action="center-auto" ${scan?.rawUrl?'':'disabled'}>⌗ Retry automatic edge suggestions</button></div>
+ ${scan?.rawPreview?renderOuterEditor():`<div class="scan-place-holder">1 · Photograph the card. The complete original photo and its four movable outer handles will appear here.</div>`}
+ <div class="scan-measure-layout"><div><div class="scan-step"><span class="scan-number">2</span><div><strong>Printed INNER frame on the perspective-corrected card</strong><p>Drag the cyan/yellow guides onto the inside printing boundary. The edge of this image is the OUTER cardboard edge you confirmed above.</p></div></div><div class="centering-canvas" id="centeringCanvas">${ui.centerImage?`<img src="${esc(ui.centerImage)}" alt="Corrected, full card image used to compare actual outside and printed borders" draggable="false">`:`<div class="center-placeholder"><strong>${ui.scanSide.toUpperCase()} SCAN</strong><span>Set the outside corners to create a straightened full-card view</span></div>`}
  <span class="center-guide vertical" data-guide="left" id="centerGuide_left" style="left:${c.left}%"></span><span class="center-guide vertical" data-guide="right" id="centerGuide_right" style="right:${c.right}%"></span><span class="center-guide horizontal" data-guide="top" id="centerGuide_top" style="top:${c.top}%"></span><span class="center-guide horizontal" data-guide="bottom" id="centerGuide_bottom" style="bottom:${c.bottom}%"></span></div>
- <p class="tool-disclaimer" id="centerHint">${esc(ui.centerHint||'Outer edges will be detected automatically. Check that the inner blue/gold lines follow the printed border, not the outside cardboard edge.')}</p>
- ${renderOuterEditor()}</div><div><div class="tool-metrics"><div><small>Left / right</small><strong id="centerRatioHorizontal">${r.horizontal}</strong></div><div><small>Top / bottom</small><strong id="centerRatioVertical">${r.vertical}</strong></div></div><div class="tool-slider-grid">${['left','right','top','bottom'].map(b).join('')}</div>
- <div class="result-card"><small>CENTERING MEASUREMENT · ${ui.scanSide.toUpperCase()}</small><strong id="centerStatus">${r.status}</strong><span>Check the automatically placed inner guides. Move them if needed. Front and back use different centering tolerances.</span></div><div id="scanGradePanel">${renderScanGrade()}</div><p class="tool-disclaimer">All photos stay in this browser tab. Camera scans do not affect virtual grading of game cards. Glare, artwork, different borders and camera angles can mislead both automatic measurements and condition estimates.</p></div></div></section>`;
+ <p class="tool-disclaimer" id="centerHint">${esc(ui.centerHint||'Set the four outside corners, then adjust inner printing lines.')}</p></div>
+ <div class="scan-results-col"><div class="scan-step"><span class="scan-number">3</span><div><strong>Confirm measured spacing</strong><p>Ratios reflect outer-to-inner border distances, NOT the image's position on your camera screen.</p></div></div><div class="tool-metrics"><div><small>Left / Right centering</small><strong id="centerRatioHorizontal">${r.horizontal}</strong></div><div><small>Top / Bottom centering</small><strong id="centerRatioVertical">${r.vertical}</strong></div></div><div class="scan-margin-box"><strong id="realGapLabel">${realMarginReadout(c)}</strong><small>*Approx. millimeters assuming a standard 63 × 88 mm card, after perspective correction. Check the actual guides; results are not certified measurements.</small></div><div class="tool-slider-grid">${['left','right','top','bottom'].map(slide).join('')}</div>
+ <div class="scan-confirm-row"><button type="button" class="primary-action" data-action="center-confirm" ${scan?.image&&scan?.outerConfirmed?'':'disabled'}>✓ Confirm these INNER edges</button><button type="button" class="secondary-action" data-action="centering-reset" ${scan?.image?'':'disabled'}>Reset inner guides</button></div><div class="result-card"><small>CENTERING · ${ui.scanSide.toUpperCase()}</small><strong id="centerStatus">${r.status}</strong><span>Ratios are valid only after you confirm BOTH the four outside corners and inner printed edges.</span></div><div id="scanGradePanel">${renderScanGrade()}</div><p class="tool-disclaimer">Physical card tools operate on photos locally and never change game grading, virtual coins, or binder cards. Glare, border designs and perspective can mislead automatic suggestions. Inspect the real card in person for surface/corner defects.</p></div></div></section>`;
 }
 function updateCenterVisual(){const c=ui.centering,r=centeringSummary();for(const side of ['left','right','top','bottom']){const x=document.getElementById('centerGuide_'+side);if(x)x.style[side]=c[side]+'%';const input=document.querySelector(`[data-center="${side}"]`);if(input&&document.activeElement!==input)input.value=c[side];const v=document.getElementById('centerVal_'+side);if(v)v.textContent=c[side].toFixed(1)+'%';}
- const x=document.getElementById('centerRatioHorizontal'),y=document.getElementById('centerRatioVertical'),s=document.getElementById('centerStatus'),hint=document.getElementById('centerHint');if(x)x.textContent=r.horizontal;if(y)y.textContent=r.vertical;if(s)s.textContent=r.status;if(hint)hint.textContent=ui.centerHint||'Check the four INNER printed borders.';syncActiveScan();const panel=document.getElementById('scanGradePanel');if(panel)panel.innerHTML=renderScanGrade();}
+ const x=document.getElementById('centerRatioHorizontal'),y=document.getElementById('centerRatioVertical'),s=document.getElementById('centerStatus'),hint=document.getElementById('centerHint');if(x)x.textContent=r.horizontal;if(y)y.textContent=r.vertical;if(s)s.textContent=r.status;if(hint)hint.textContent=ui.centerHint||'Check the four INNER printed borders.';const gap=document.getElementById('realGapLabel');if(gap)gap.textContent=realMarginReadout(c);syncActiveScan();const panel=document.getElementById('scanGradePanel');if(panel)panel.innerHTML=renderScanGrade();}
 let centerAnalysisToken=0;
 function displayScan(s){ui.centerImage=s?.image||'';ui.centering={...(s?.centering||{left:8,right:8,top:7,bottom:7})};ui.centerMeasured=!!s?.measured;ui.centerMethod=s?.centerMethod||'';ui.centerHint=s?.hintText||'';render();}
 function computeScanWarp(scan,override=false){
@@ -1011,9 +1146,9 @@ function computeScanWarp(scan,override=false){
  scan.quality=cv.photoQuality(warped);scan.wear=cv.blueWear(warped);
  scan.innerReliability=frame.reliability;scan.innerDetails=frame.edgeDetails;
  scan.centering=frame.ok?Object.fromEntries(Object.entries(frame.guides).map(([k,v])=>[k,Math.round(v*10)/10])):{left:8,right:8,top:7,bottom:7};
- scan.measured=frame.ok&&(scan.outerConfidence!=='none');
- scan.centerMethod=frame.ok?'auto':'';
- scan.hintText=scan.measured?'Outside edges found and perspective corrected. Check INNER blue/gold guides; patterned artwork may confuse automatic detection.':scan.outerConfidence==='none'?'Outside card outline is uncertain. Adjust the four corners, apply the crop, then confirm the inner printed guides.':'No four reliable printed borders found. Drag INNER guides onto the printed frame to measure.';
+ scan.measured=false;scan.suggested=frame.ok;
+ scan.centerMethod=frame.ok?'suggested':'';
+ scan.hintText=frame.ok?'Automatic inner guides are SUGGESTIONS. Adjust the printed borders and tap Confirm these INNER edges before calculating a grade.':scan.outerConfidence==='none'?'Outside card outline is uncertain. Adjust the four corners, apply the crop, then confirm the inner printed guides.':'No four reliable printed borders found. Drag INNER guides onto the printed frame to measure.';
  if(scan.quality.blurry)scan.hintText+=' Photo appears soft or blurry; use more light and hold steady.';
  if(scan.quality.glareRisk)scan.hintText+=' Potential overexposure: try diffuse light without glare.';
 }
@@ -1021,8 +1156,8 @@ function startScanImage(url,hint=null){
  const side=ui.scanSide;
  // Starting a new front photo invalidates any previous back. Never combine two physical cards.
  if(side==='front'){ui.scanScans.back=null;ui.visibleCondition={corners:'unknown',edges:'unknown',surface:'unknown'};}
- const rec={rawUrl:url,rawPreview:'',rawCanvas:null,image:'',hint,quadPct:null,outerConfidence:'none',measured:false,centerMethod:'',hintText:'Looking for four outside card edges…',centering:{left:8,right:8,top:7,bottom:7},quality:null,wear:null};
- ui.scanScans[side]=rec;ui.scanEditOutline=false;displayScan(rec);
+ const rec={rawUrl:url,rawPreview:'',rawCanvas:null,image:'',hint,quadPct:null,outerConfidence:'none',outerConfirmed:false,measured:false,centerMethod:'',hintText:'Looking for four outside card edges…',centering:{left:8,right:8,top:7,bottom:7},quality:null,wear:null};
+ ui.scanScans[side]=rec;ui.scanEditOutline=true;displayScan(rec);
  analyzeCenterPhoto(url,hint,side);
 }
 function analyzeCenterPhoto(url,hint=null,side=ui.scanSide){
@@ -1032,8 +1167,8 @@ function analyzeCenterPhoto(url,hint=null,side=ui.scanSide){
   try{
    const cv=window.PackLabVision;
    const source=cv.drawSource(img,680);
-   const scan=cv.detectOuter(source,hint);
-   rec.rawCanvas=source;rec.rawPreview=source.toDataURL('image/jpeg',.88);
+   const scan=cv.detectOuterFlexible(source,hint,false);
+   rec.rawCanvas=source;rec.rawPreview=source.toDataURL('image/jpeg',.94);
    rec.quadPct=cv.cornersFromFrac(scan.quad,source.width,source.height);
    rec.outerConfidence=scan.ok?scan.confidence:'none';
    rec.outerReason=scan.reason;
@@ -1045,12 +1180,26 @@ function analyzeCenterPhoto(url,hint=null,side=ui.scanSide){
  img.onerror=()=>{if(token!==centerAnalysisToken)return;rec.measured=false;rec.hintText='This image cannot be decoded. Try a JPG photo.';if(ui.scanSide===side)displayScan(rec);};
  img.src=url;
 }
+function confirmInnerGuides(){
+ const scan=activeScan();
+ if(!scan?.image||!scan.outerConfirmed){toast('First tap Set outer card edges after reviewing the four corner dots.','error');return;}
+ const g=ui.centering,valid=['left','right','top','bottom'].every(side=>Number.isFinite(g[side])&&g[side]>=1&&g[side]<=35);
+ if(!valid||g.left+g.right>=55||g.top+g.bottom>=55){toast('Check the four printed guides—they must leave space for the card artwork.','error');return;}
+ ui.centerMeasured=true;ui.centerMethod='confirmed';ui.centerHint='Confirmed manually. The measured ratios are normalized to the OUTER cardboard boundaries; verify card size and light before relying on them.';
+ syncActiveScan();updateCenterVisual();toast(`${ui.scanSide==='front'?'Front':'Back'} printed borders confirmed.`, 'success');
+}
+
 function resetPhysicalCard(){centerAnalysisToken++;ui.scanScans={front:null,back:null};ui.scanSide='front';ui.scanEditOutline=false;ui.visibleCondition={corners:'unknown',edges:'unknown',surface:'unknown'};ui.centerImage='';ui.centerMeasured=false;ui.centerMethod='';ui.centerHint='';ui.centering={left:8,right:8,top:7,bottom:7};render();toast('Ready to scan a new physical card.','success');}
 function applyOuterCorrection(){const s=activeScan();if(!s?.rawCanvas){toast('Take a photo first.','error');return;}
  const pts=s.quadPct; if(!pts||pts.some(p=>!Number.isFinite(p.x+p.y))){toast('The outline needs four corners.','error');return;}
- const area=Math.abs(pts.reduce((n,p,i)=>{const q=pts[(i+1)%4];return n+p.x*q.y-q.x*p.y;},0)/2);
- if(area<1200){toast('Card outline is too small. Place all four corners correctly.','error');return;}
- s.outerConfidence='manual';computeScanWarp(s);ui.scanEditOutline=false;displayScan(s);toast('Card straightened using your outline. Check the inner guides.','success');
+ const corners=window.PackLabVision.cornersToPixels(pts,s.rawCanvas.width,s.rawCanvas.height);
+ const area=Math.abs(corners.reduce((n,p,i)=>{const q=corners[(i+1)%4];return n+p.x*q.y-q.x*p.y;},0)/2);
+ const cross=pts.map((pt,i)=>{const b=pts[(i+1)%4],c=pts[(i+2)%4];return (b.x-pt.x)*(c.y-b.y)-(b.y-pt.y)*(c.x-b.x);});
+ const shortSides=[0,1,2,3].map(i=>Math.hypot(corners[i].x-corners[(i+1)%4].x,corners[i].y-corners[(i+1)%4].y));
+ if(area<2500||shortSides.some(v=>v<45)||cross.some(v=>v<0)!==cross.every(v=>v<0)){
+  toast('Corner order is invalid or the card is too small. Place all four dots on the cardboard edge.','error');return;
+ }
+ s.outerConfidence='manual';s.outerConfirmed=true;computeScanWarp(s);ui.scanEditOutline=true;displayScan(s);toast('Outer edges confirmed. Now adjust all four INNER guides and confirm their measurements.','success');
 }
 
 // Live camera stays outside #app so UI redraws never detach video.
@@ -1063,34 +1212,38 @@ function closeCenterCamera(){centerCameraRequest++;if(cameraDetectTimer){clearTi
  const layer=cameraLayer();if(layer){layer.hidden=true;layer.innerHTML='';}document.body.classList.remove('camera-open');}
 function cameraHintNormalized(){const stage=document.getElementById('centerCameraStage'),frame=document.getElementById('centerCameraFrame');
  if(!stage||!frame)return null;const a=stage.getBoundingClientRect(),b=frame.getBoundingClientRect();
- return {l:(b.left-a.left)/a.width,r:(b.right-a.left)/a.width,t:(b.top-a.top)/a.height,b:(b.bottom-a.top)/a.height};
+ const vr=cameraImageRect();if(!vr)return null;
+ return {l:Math.max(0,Math.min(1,((b.left-a.left)/a.width-vr.l)/vr.w)),r:Math.max(0,Math.min(1,((b.right-a.left)/a.width-vr.l)/vr.w)),t:Math.max(0,Math.min(1,((b.top-a.top)/a.height-vr.t)/vr.h)),b:Math.max(0,Math.min(1,((b.bottom-a.top)/a.height-vr.t)/vr.h))};
 }
 function captureCameraStage(maxDim=980){
- const video=document.getElementById('centerCameraVideo'),stage=document.getElementById('centerCameraStage');
- if(!video||!stage||!video.videoWidth||!video.videoHeight)throw Error('Camera picture is not ready.');
- const sr=stage.getBoundingClientRect(),sourceW=video.videoWidth,sourceH=video.videoHeight;
- // CSS object-fit: cover crops the full video into the visible preview.
- const scale=Math.max(sr.width/sourceW,sr.height/sourceH),overscanX=(sourceW*scale-sr.width)/2,overscanY=(sourceH*scale-sr.height)/2;
- const sx=Math.max(0,overscanX/scale),sy=Math.max(0,overscanY/scale),sw=Math.min(sourceW-sx,sr.width/scale),sh=Math.min(sourceH-sy,sr.height/scale);
- const factor=Math.min(1,maxDim/Math.max(sw,sh)),canvas=document.createElement('canvas');
- canvas.width=Math.max(1,Math.round(sw*factor));canvas.height=Math.max(1,Math.round(sh*factor));
- const c=canvas.getContext('2d',{willReadFrequently:true});if(!c)throw Error('Browser canvas is not available.');
- c.drawImage(video,sx,sy,sw,sh,0,0,canvas.width,canvas.height);return canvas;
+ const video=document.getElementById('centerCameraVideo');
+ if(!video?.videoWidth||!video?.videoHeight)throw Error('Camera picture is not ready.');
+ const factor=Math.min(1,maxDim/Math.max(video.videoWidth,video.videoHeight));
+ const canvas=document.createElement('canvas');canvas.width=Math.round(video.videoWidth*factor);canvas.height=Math.round(video.videoHeight*factor);
+ const ctx=canvas.getContext('2d',{willReadFrequently:true});if(!ctx)throw Error('Image processing unavailable.');
+ ctx.drawImage(video,0,0,canvas.width,canvas.height);return canvas;
+}
+function cameraImageRect(){
+ const stage=document.getElementById('centerCameraStage'),video=document.getElementById('centerCameraVideo');
+ if(!stage||!video?.videoWidth||!video?.videoHeight)return null;
+ const box=stage.getBoundingClientRect();const scale=Math.min(box.width/video.videoWidth,box.height/video.videoHeight);
+ const w=video.videoWidth*scale,h=video.videoHeight*scale;
+ return {l:(box.width-w)/2/box.width,t:(box.height-h)/2/box.height,w:w/box.width,h:h/box.height};
 }
 function updateCameraDetectedOutline(quad,visible){const overlay=document.getElementById('cameraDetectedOverlay'),poly=document.getElementById('cameraDetectedPoly');
- if(!overlay||!poly)return;overlay.hidden=!visible;if(visible)poly.setAttribute('points',quad.map(p=>`${p.x.toFixed(2)},${p.y.toFixed(2)}`).join(' '));}
+ if(!overlay||!poly)return;overlay.hidden=!visible;if(visible){const r=cameraImageRect();if(r){poly.setAttribute('points',quad.map(p=>`${(100*r.l+p.x*r.w).toFixed(2)},${(100*r.t+p.y*r.h).toFixed(2)}`).join(' '));}else poly.setAttribute('points',quad.map(p=>`${p.x.toFixed(2)},${p.y.toFixed(2)}`).join(' '));}}
 function scanLiveCamera(request){
  if(request!==centerCameraRequest||cameraLayer()?.hidden||!centerCameraStream)return;
  try{
   const cv=window.PackLabVision,source=captureCameraStage(420);
-  const scan=cv.detectOuter(source,cameraHintNormalized(),true);
-  if(scan.ok){updateCameraDetectedOutline(cv.cornersFromFrac(scan.quad,source.width,source.height),true);cameraStatus('Four outside corners found. Keep the card still and tap Take photo.','ready');}
-  else {updateCameraDetectedOutline([],false);cameraStatus('Place the full card on a contrasting flat surface within the guides. Automatic edges still searching.','searching');}
+  const scan=cv.detectOuterFlexible(source,cameraHintNormalized(),true);
+  if(scan.ok){updateCameraDetectedOutline(cv.cornersFromFrac(scan.quad,source.width,source.height),true);cameraStatus('Possible card edges found. You can correct the four corners after taking the photo.','ready');}
+  else {updateCameraDetectedOutline([],false);cameraStatus('Move the camera to include all four card corners; your card does not need to be centered.','searching');}
  }catch(e){updateCameraDetectedOutline([],false);cameraStatus('Line up your card then take a photo. Borders are checked after capture.','searching');}
  cameraDetectTimer=setTimeout(()=>scanLiveCamera(request),820);
 }
 function showCameraDialog(){const layer=cameraLayer();if(!layer)return;layer.hidden=false;document.body.classList.add('camera-open');layer.innerHTML=`<div class="camera-dialog" role="dialog" aria-modal="true" aria-label="Card scan camera"><div class="camera-top"><div><span class="eyebrow">CAMERA GRADER · ${ui.scanSide.toUpperCase()}</span><h2>Find all four corners.</h2></div><button type="button" data-action="camera-close" class="camera-close" aria-label="Close camera">×</button></div>
- <p class="camera-instructions">Place the ${ui.scanSide} of your card on a contrasting matte surface. Keep the camera parallel, with the ENTIRE card inside the corner frame. Green lines will follow the detected outer edges.</p>
+ <p class="camera-instructions">Place the ${ui.scanSide} of your card on a contrasting matte surface. Keep the camera parallel with the entire card visible anywhere in the preview. The framing box is only a suggestion. Green lines will follow the detected outer edges.</p>
  <div class="camera-stage" id="centerCameraStage"><video id="centerCameraVideo" autoplay muted playsinline aria-label="Live camera preview"></video><div class="camera-darken" aria-hidden="true"></div><div class="camera-card-frame" id="centerCameraFrame" aria-hidden="true"><span class="camera-bracket tl"></span><span class="camera-bracket tr"></span><span class="camera-bracket bl"></span><span class="camera-bracket br"></span><span class="camera-line x"></span><span class="camera-line y"></span></div><svg class="camera-detected-overlay" viewBox="0 0 100 100" preserveAspectRatio="none" id="cameraDetectedOverlay" hidden aria-hidden="true"><polygon id="cameraDetectedPoly" /></svg><span class="camera-live-tag">● LOCAL CAMERA</span></div>
  <p class="camera-status" role="status" id="cameraStatus">Requesting permission to use your camera…</p>
  <div class="camera-controls"><button class="secondary-action" type="button" data-action="camera-switch">⇄ Switch camera</button><button class="primary-action camera-shutter" type="button" id="cameraCapture" data-action="camera-capture" disabled>◉ Take ${ui.scanSide} photo</button></div>
@@ -1105,7 +1258,7 @@ async function openCenterCamera(facing=centerCameraFacing){
   video.srcObject=stream;await video.play();if(request!==centerCameraRequest)return;
   if(video.videoWidth<1||video.videoHeight<1){cameraStatus('Waiting for a camera frame. Try again if it stays black.','error');return;}
   if(capture)capture.disabled=false;
-  cameraStatus('Camera ready. Looking for the outside card edges…','searching');
+  cameraStatus('Camera ready. You may position the card anywhere in the full frame.','searching');
   cameraDetectTimer=setTimeout(()=>scanLiveCamera(request),350);
   const track=stream.getVideoTracks()[0];if(track)track.addEventListener('ended',()=>{if(centerCameraStream===stream){if(capture)capture.disabled=true;cameraStatus('Camera stopped. Close and reopen it.','error');}});
  }catch(err){if(request!==centerCameraRequest)return;console.warn('Camera error',err);if(centerCameraStream){centerCameraStream.getTracks().forEach(t=>t.stop());centerCameraStream=null;}const failedVideo=document.getElementById('centerCameraVideo');if(failedVideo)failedVideo.srcObject=null;
@@ -1124,8 +1277,8 @@ function captureCenterPhoto(){
 }
 
 function cardLookupResults(){const c=catalogMemory.get(ui.lookupSet),q=(ui.lookupSearch||'').trim().toLowerCase();if(!c)return [];if(!q)return c.filter(x=>['Special Illustration Rare','Futuristic Rare','RGB Rare'].includes(x.rarity)).slice(0,16);const qNumber=q.replace(/\s*\/\s*\d+\s*$/,'').replace(/^#/,'');return c.filter(x=>x.name.toLowerCase().includes(q)||x.number.toLowerCase()===qNumber||String(x.number).toLowerCase().includes(q)).slice(0,35);}
-function lookupList(){const results=cardLookupResults();if(!catalogMemory.has(ui.lookupSet))return statusCatalog(ui.lookupSet);return results.length?`<div class="lookup-grid">${results.map(c=>`<button class="lookup-card" type="button" data-action="inspect" data-card="${esc(c.id)}"><div class="lookup-picture">${imgTag(c)}</div><strong>${esc(c.name)}</strong><small>#${esc(c.number)} · ${esc(c.rarity)}</small></button>`).join('')}</div>`:`<div class="empty-note">No matching card in ${esc(SETS[ui.lookupSet].name)}. Check its name and number or choose the correct set.</div>`;}
-function renderToolLookup(){requireCatalog(ui.lookupSet);return `<section class="tool-surface"><div class="tool-intro"><div><span class="eyebrow">PHOTO + CHECKLIST LOOKUP</span><h2>Identify a card.</h2><p>Upload a card photo, optionally read printed text on-device, and match its name and collector number against one of the four verified checklists.</p></div><span class="pill gold">SCAN BETA</span></div>
+function lookupList(){const results=cardLookupResults();if(!catalogMemory.has(ui.lookupSet))return statusCatalog(ui.lookupSet);return results.length?`<div class="lookup-grid">${results.map(c=>`<article class="lookup-card" aria-label="Physical card reference: ${esc(c.name)}"><div class="lookup-picture">${imgTag(c)}</div><strong>${esc(c.name)}</strong><small>#${esc(c.number)} · ${esc(c.rarity)}</small></article>`).join('')}</div>`:`<div class="empty-note">No matching card in ${esc(SETS[ui.lookupSet].name)}. Check its name and number or choose the correct set.</div>`;}
+function renderToolLookup(){requireCatalog(ui.lookupSet);return `<section class="tool-surface"><div class="tool-intro"><div><span class="eyebrow">PHOTO + CHECKLIST LOOKUP</span><h2>Identify a card.</h2><p>Upload a card photo, optionally read printed text on-device, and match its name and collector number against known set checklists. These are real-card REFERENCE results, not cards added to your game binder.</p></div><span class="pill gold">SCAN BETA</span></div>
  <div class="photo-upload-row"><label class="secondary-action photo-button" for="lookupPhoto">↑ Add photo</label><input type="file" hidden id="lookupPhoto" accept="image/*"><button type="button" class="primary-action small-button" data-action="lookup-ocr" ${!ui.lookupImage||ui.ocrBusy?'disabled':''}>${ui.ocrBusy?'Reading photo…':'Scan text in browser'}</button></div>
  ${ui.lookupImage?`<div class="scan-preview"><img src="${esc(ui.lookupImage)}" alt="Your uploaded photo"><span>${ui.ocrText?esc(ui.ocrText):'Ready for name/number search'}</span></div>`:''}
  <div class="tool-fields"><label class="field-block">Card expansion<select id="lookupSet">${orderedSets().map(x=>`<option value="${x.id}" ${x.id===ui.lookupSet?'selected':''}>${esc(x.name)}</option>`).join('')}</select></label><label class="field-block">Name or collector number<input id="lookupSearch" type="search" placeholder="Umbreon ex, Pikachu, 161/131…" value="${esc(ui.lookupSearch)}" autocomplete="off"></label></div>
@@ -1149,7 +1302,7 @@ function renderToolGuide(){return `<section class="tool-surface"><div class="too
  <p class="tool-disclaimer">Before paying for grading, photograph both sides, compare recent sold examples, check the current official fee schedule, and consider lower-grade outcomes.</p></section>`;}
 function updateGuideEstimate(){const n=document.getElementById('guideEstimate');if(n)n.textContent=`~${guideEstimate()} / 10`;for(const key of Object.keys(ui.guideScores)){const s=document.getElementById('guideScore_'+key);if(s)s.textContent=ui.guideScores[key].toFixed(1);}}
 
-function renderInfo(){return pageHeading('YOUR PLAYTEST GUIDE','How to play PackLab.','Everything in this prototype is simulated, free to test, and stored in your own browser.')+`<div class="panel panel-pad"><h3>1. Start opening packs</h3><p class="howto-copy">New collectors start with two <strong>30th Celebration</strong> boosters, two <strong>Prismatic Evolutions</strong> boosters, one <strong>151</strong> booster and one <strong>Surging Sparks</strong> booster. Open a pack at the desk, drag over the silver wrapper or tap Tear, then flip each card to inspect it. The 30th Celebration pack yields five collectible foil cards (including one Pikachu). Scarlet & Violet sets yield 10 game cards. Basic Energy and code cards are visual extras, not tradable or redeemable.</p><div class="divider"></div><h3>2. Earn more products</h3><p class="howto-copy">Claim a free daily booster, win prototype quick battles, and complete the missions. Buy additional packs using only virtual coins. Use binder rarity sorting and safe bulk sale to keep your strongest copy of each card and foil finish; virtual grading and battle copies are protected.</p><div class="divider"></div><h3>3. Grade, collect, battle</h3><p class="howto-copy">Inspect a card in your binder to see its condition and send an individual copy for a simulated 6- or 20-second grade. Open Card grading → Camera grader or Collector Tools → Centering to use your camera with alignment guides and a cropped scan. Permission is required; HTTPS/localhost works best, while the standalone file may vary by browser. Scans estimate the outside corners, straighten the photo, and detect inner borders. Scan both sides for a provisional grade range. Measurements and visible-wear checks are estimates and can be corrected manually. In the Battle tab, pick three owned Pokémon and challenge a quick-duel NPC. Full official-rules 60-card battling and PvP aren't implemented yet.</p><div class="divider"></div><h3>4. Data integrity & saving</h3><p class="howto-copy">Set lists come from the public Pokémon TCG dataset (including me55 and me55c for 30th Celebration), with a TCGdex fallback for Scarlet & Violet sets. Full set sizes, collector IDs and rarities are verified before pack generation. Never mixing cards between sets is an enforced rule. The first load requires internet; successful catalogs are cached locally. Card art and the official English Pokémon card-back image are streamed and may not display while offline.</p><p class="howto-copy"><strong>Art sources:</strong> Pack images are linked to external collector-shop images, and card scans are streamed from historical card-data providers. They may become unavailable or restrict hotlinking. <strong>Local only:</strong> Your coins, packs, collection, grade results and battles are saved in this browser. A different device/browser is a different save until a multiplayer account backend is added.</p><div class="open-tools" style="justify-content:flex-start"><button class="primary-action" data-action="export-save">⇩ Export your progress (.json)</button><label class="secondary-action" for="saveImport" style="cursor:pointer">⇧ Import saved progress</label><input hidden id="saveImport" type="file" accept=".json,application/json"><button class="danger-action" data-action="reset-save">Reset playtest</button></div><div class="store-note" style="margin-bottom:0">This is a noncommercial fan-made gameplay test, not an official or licensed Pokémon product. Pokémon imagery is owned by its respective rights holders. No virtual item is redeemable for physical goods, cash, grading, or real Pokémon TCG Live codes.</div></div>`;}
+function renderInfo(){return pageHeading('YOUR PLAYTEST GUIDE','How to play PackLab.','The game uses virtual cards, while Real Card Tools handles photos of your physical cards locally. Neither is a professional grading service.')+`<div class="panel panel-pad"><h3>1. Start opening packs</h3><p class="howto-copy">New collectors start with two <strong>30th Celebration</strong> boosters, two <strong>Prismatic Evolutions</strong> boosters, one <strong>151</strong> booster and one <strong>Surging Sparks</strong> booster. Open a pack at the desk, drag over the silver wrapper or tap Tear, then flip each card to inspect it. The 30th Celebration pack yields five collectible foil cards (including one Pikachu). Scarlet & Violet sets yield 10 game cards. Basic Energy and code cards are visual extras, not tradable or redeemable.</p><div class="divider"></div><h3>2. Earn more products</h3><p class="howto-copy">Claim a free daily booster, win prototype quick battles, and complete the missions. Buy additional packs using only virtual coins. Use binder rarity sorting and safe bulk sale to keep your strongest copy of each card and foil finish; virtual grading and battle copies are protected.</p><div class="divider"></div><h3>3. Grade, collect, battle</h3><p class="howto-copy">Inspect a card in your binder to see its condition and send an individual copy for a simulated 6- or 20-second grade. Open Real Card Tools → Centering for physical cards using the camera and editable guides. Permission is required; HTTPS/localhost works best, while the standalone file may vary by browser. Physical scans preserve the full photograph; move the outer card corners, then compare the straightened card against four adjustable printed-border guides. Scan both sides for a provisional grade range. Measurements and visible-wear checks are estimates and can be corrected manually. In the Battle tab, pick three owned Pokémon and challenge a quick-duel NPC. Full official-rules 60-card battling and PvP aren't implemented yet.</p><div class="divider"></div><h3>4. Data integrity & saving</h3><p class="howto-copy">Set lists come from the public Pokémon TCG dataset (including me55 and me55c for 30th Celebration), with a TCGdex fallback for Scarlet & Violet sets. Full set sizes, collector IDs and rarities are verified before pack generation. Never mixing cards between sets is an enforced rule. The first load requires internet; successful catalogs are cached locally. Card art and the official English Pokémon card-back image are streamed and may not display while offline.</p><p class="howto-copy"><strong>Art sources:</strong> Pack images are linked to external collector-shop images, and card scans are streamed from historical card-data providers. They may become unavailable or restrict hotlinking. <strong>Local only:</strong> Your coins, packs, collection, grade results and battles are saved in this browser. A different device/browser is a different save until a multiplayer account backend is added.</p><div class="open-tools" style="justify-content:flex-start"><button class="primary-action" data-action="export-save">⇩ Export your progress (.json)</button><label class="secondary-action" for="saveImport" style="cursor:pointer">⇧ Import saved progress</label><input hidden id="saveImport" type="file" accept=".json,application/json"><button class="danger-action" data-action="reset-save">Reset playtest</button></div><div class="store-note" style="margin-bottom:0">This is a noncommercial fan-made gameplay test, not an official or licensed Pokémon product. Pokémon imagery is owned by its respective rights holders. No virtual item is redeemable for physical goods, cash, grading, or real Pokémon TCG Live codes.</div></div>`;}
 function conditionBar(label,value){return `<div class="condition-bar">${esc(label)} <strong>${Number(value).toFixed(1)}</strong><div class="progress-rail"><div style="width:${pct(value,10)}%"></div></div></div>`;}
 function openInspector(cardId){const id=Object.keys(SETS).find(s=>cardId.startsWith(s+'-'));if(!id)return;ui.inspection=cardId;const catalog=requireCatalog(id),card=catalog?.find(c=>c.id===cardId),copies=allCopies(cardId);const layer=document.getElementById('modalLayer');layer.hidden=false;
  if(!card){layer.innerHTML=`<div class="modal-dialog"><button class="icon-button modal-close" data-action="close-modal" aria-label="Close">×</button>${statusCatalog(id)}</div>`;return;}
@@ -1175,10 +1328,11 @@ function processAction(el){const action=el.dataset.action;if(!action)return;swit
  case 'camera-capture':captureCenterPhoto();break;
  case 'scan-side':chooseScanSide(el.dataset.side);break;
  case 'scan-new':resetPhysicalCard();break;
- case 'outer-edit':ui.scanEditOutline=!ui.scanEditOutline;render();break;
+ case 'outer-edit':ui.scanEditOutline=true;render();break;
  case 'outer-apply':applyOuterCorrection();break;
+ case 'center-confirm':confirmInnerGuides();break;
  case 'center-auto':if(activeScan()?.rawUrl){const scan=activeScan();scan.measured=false;analyzeCenterPhoto(scan.rawUrl,scan.hint);}break;
- case 'centering-reset':ui.centering={left:8,right:8,top:7,bottom:7};ui.centerMeasured=false;ui.centerMethod='';ui.centerHint='Guides reset. Align all four lines to the INNER printed border.';updateCenterVisual();break;
+ case 'centering-reset':ui.centering={left:8,right:8,top:7,bottom:7};ui.centerMeasured=false;ui.centerMethod='manual';ui.centerHint='Guides reset—align them to the printed frame then tap Confirm.';updateCenterVisual();break;
  case 'retry-catalog':retryCatalog(el.dataset.set||state.selectedSet);break;
  case 'buy-pack':buyPacks(el.dataset.set,Number(el.dataset.count)||1);break;
  case 'store-open':state.selectedSet=el.dataset.set;save();navigate('open');break;
@@ -1187,7 +1341,12 @@ function processAction(el){const action=el.dataset.action;if(!action)return;swit
  case 'tear-pack':claimOpenedPack();break;
  case 'tear-gesture':if(Date.now()>ignoreClickUntil)toast('Drag across the top seal, or use Tear wrapper.');break;
  case 'flip-card':if(Date.now()>ignoreClickUntil)revealAdvance();break;
- case 'finish-pack':finishPack();break;
+  case 'finish-pack':finishPack();break;
+  case 'bulk-rip':bulkRipPacks(state.selectedSet,ui.bulkQty,el.dataset.reveal!=='later');break;
+  case 'bulk-flip-all':if(state.bulkResult){state.bulkResult.revealed=true;save();render();}break;
+  case 'bulk-filter':ui.bulkDisplay=['hits','new'].includes(el.dataset.filter)?el.dataset.filter:'all';ui.bulkViewCount=45;render();break;
+  case 'bulk-more':ui.bulkViewCount+=45;render();break;
+  case 'bulk-dismiss':state.bulkResult=null;save();render();break;
  case 'binder-more':ui.binderPage++;render();break;
   case 'bulk-preview-toggle':ui.bulkSellOpen=!ui.bulkSellOpen;render();break;
   case 'bulk-sale-confirm':confirmBulkSale();break;
@@ -1219,7 +1378,8 @@ document.addEventListener('click',event=>{
  if(target.dataset.nav){event.preventDefault();navigate(target.dataset.nav);}
 });
 document.addEventListener('change',event=>{const e=event.target;
- if(e.id==='selectedSet'){if(!state.activePack&&SETS[e.value]){state.selectedSet=e.value;save();render();}}
+  if(e.id==='bulkPackQty'){ui.bulkQty=Math.min(25,Math.max(1,Math.floor(Number(e.value)||1)));render();}
+  else if(e.id==='selectedSet'){if(!state.activePack&&SETS[e.value]){state.selectedSet=e.value;save();render();}}
  else if(e.id==='binderSet'){ui.binderSet=SETS[e.value]?e.value:'sv30';ui.binderPage=1;ui.binderSearch='';render();}
  else if(e.id==='binderMode'){ui.binderMode=e.value==='all'?'all':'owned';ui.binderPage=1;render();}
  else if(e.id==='binderRarity'){ui.binderRarity=e.value;ui.binderPage=1;render();}
@@ -1239,7 +1399,7 @@ document.addEventListener('input',event=>{
  if(target.id==='ratePacks'){ui.ratePacks=target.value;updateRatesProbability();return;}
  if(target.dataset.guideScore){ui.guideScores[target.dataset.guideScore]=Number(target.value)||1;updateGuideEstimate();return;}
  if(target.dataset.profit){ui.profit[target.dataset.profit]=Number(target.value)||0;updateProfitView();return;}
- if(target.dataset.center){ui.centering[target.dataset.center]=Number(target.value)||0;ui.centerMeasured=!!ui.centerImage;ui.centerMethod='manual';ui.centerHint='Manual guide placement. Check that each line follows the INNER printed border, not the outer card edge.';updateCenterVisual();return;}
+ if(target.dataset.center){ui.centering[target.dataset.center]=Number(target.value)||0;ui.centerMeasured=false;ui.centerMethod='manual';ui.centerHint='Guides changed. Confirm all four printed edges when aligned.';updateCenterVisual();return;}
  if(target.id==='lookupSearch'){ui.lookupSearch=target.value;updateLookupResults();return;}
  if(target.id!=='binderSearch')return;const el=target;const pos=el.selectionStart;ui.binderSearch=el.value;ui.binderPage=1;render();const fresh=document.getElementById('binderSearch');if(fresh){fresh.focus();fresh.setSelectionRange(pos,pos);}});
 document.addEventListener('keydown',event=>{
@@ -1260,8 +1420,8 @@ document.addEventListener('pointermove',e=>{if(!ui.scanOuterDrag)return;const ed
  const polygon=document.getElementById('outerPolygon');if(polygon)polygon.setAttribute('points',scan.quadPct.map(p=>`${p.x},${p.y}`).join(' '));e.preventDefault();});
 document.addEventListener('pointerup',()=>{ui.scanOuterDrag=null;});
 document.addEventListener('pointercancel',()=>{ui.scanOuterDrag=null;});
-document.addEventListener('pointerdown',e=>{const guide=e.target.closest('[data-guide]');if(!guide)return;const canvas=document.getElementById('centeringCanvas');if(!canvas)return;ui.centerDrag={side:guide.dataset.guide};e.preventDefault();});
-document.addEventListener('pointermove',e=>{if(!ui.centerDrag)return;const canvas=document.getElementById('centeringCanvas');if(!canvas)return;const rect=canvas.getBoundingClientRect(),side=ui.centerDrag.side;const x=((e.clientX-rect.left)/rect.width)*100,y=((e.clientY-rect.top)/rect.height)*100;const value=Math.max(1,Math.min(35,(side==='left'?x:side==='right'?100-x:side==='top'?y:100-y)));ui.centering[side]=Math.round(value*10)/10;ui.centerMeasured=!!ui.centerImage;ui.centerMethod='manual';ui.centerHint='Manual measurement. Adjust the other guides too before trusting the ratio.';updateCenterVisual();});
+document.addEventListener('pointerdown',e=>{const guide=e.target.closest('[data-guide]');if(!guide)return;const canvas=document.getElementById('centeringCanvas');if(!canvas)return;ui.centerDrag={side:guide.dataset.guide};try{guide.setPointerCapture(e.pointerId);}catch(_){ }e.preventDefault();});
+document.addEventListener('pointermove',e=>{if(!ui.centerDrag)return;const canvas=document.getElementById('centeringCanvas');if(!canvas)return;const rect=canvas.getBoundingClientRect(),side=ui.centerDrag.side;const x=((e.clientX-rect.left)/rect.width)*100,y=((e.clientY-rect.top)/rect.height)*100;const value=Math.max(1,Math.min(35,(side==='left'?x:side==='right'?100-x:side==='top'?y:100-y)));ui.centering[side]=Math.round(value*10)/10;ui.centerMeasured=false;ui.centerMethod='manual';ui.centerHint='Drag the remaining guides to the printed border, then confirm all four.';updateCenterVisual();});
 document.addEventListener('pointerup',()=>{ui.centerDrag=null;});
 document.addEventListener('pointerdown',e=>{const pack=e.target.closest('.booster-pack[data-action="tear-gesture"]');const flip=e.target.closest('.revealer[data-action="flip-card"]');if(pack){ui.tearStart={x:e.clientX,y:e.clientY,target:pack,id:e.pointerId};try{pack.setPointerCapture(e.pointerId);}catch(_){}}else if(flip){ui.revealStart={x:e.clientX,y:e.clientY,id:e.pointerId};}});
 document.addEventListener('pointermove',e=>{if(!ui.tearStart||e.pointerId!==ui.tearStart.id)return;const dx=Math.abs(e.clientX-ui.tearStart.x);const fill=document.getElementById('tearProgress');if(fill)fill.style.width=Math.min(100,dx/100*100)+'%';});
