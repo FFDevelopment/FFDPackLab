@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#090e1c" />
   <meta name="description" content="PackLab: a mobile-friendly collector simulator prototype. Rip real-art 30th Celebration, Prismatic Evolutions, 151 and Surging Sparks boosters. Earn packs, grade pulls and battle." />
-  <title>PACKLAB — Collector v0.8.3 • Real Card Tools Restored</title>
+  <title>PACKLAB — Collector v0.8.4 • Real Card Tools Restored</title>
   
   <link rel="preload" as="image" href="https://upload.wikimedia.org/wikipedia/en/3/36/Pokemon_Trading_Card_Game_cardback.png" />
   <style>
@@ -375,7 +375,7 @@ body.camera-open{overflow:hidden}
 
 
 /* PACKLAB v0.8.3 — Visible physical-card tools, independent of Game Grading. */
-.tool-tabs-visible{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin:0 0 18px}
+.tool-tabs-visible{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px;margin:0 0 18px}
 .tool-tabs-visible .tool-tab{padding:12px 7px;min-height:47px;white-space:normal;line-height:1.25;border-radius:12px;text-align:center}
 .tool-tabs-visible .tool-tab.active{box-shadow:inset 0 -3px 0 #70ecd5}
 .market-links{display:flex;flex-wrap:wrap;gap:9px;margin:12px 0 16px}
@@ -404,6 +404,38 @@ body.camera-open{overflow:hidden}
 .lookup-price-button{border:1px solid #53847d;background:#1e4346;color:#b4f7e8;border-radius:7px;padding:8px 5px;font-weight:800;font-size:11px;margin-top:auto;width:100%}
 @media(max-width:1000px){.tool-tabs-visible{grid-template-columns:repeat(3,minmax(0,1fr))}.price-pick-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media(max-width:650px){.tool-tabs-visible{gap:5px;margin-bottom:12px}.tool-tabs-visible .tool-tab{font-size:11px;padding:9px 3px;min-height:42px}.price-pick-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.price-pick-card{padding:5px}.price-pick-card strong{font-size:11px}.selected-card-heading{grid-template-columns:90px minmax(0,1fr);gap:11px}.selected-card-heading h3{font-size:17px}.selected-price-card{padding:10px}.market-links a{flex:1;font-size:11px;padding:9px 8px}}
+
+/* PACKLAB physical-card portfolio — a second, independent local inventory. */
+.real-portfolio-summary{display:grid;grid-template-columns:minmax(0,1.45fr) 1fr 1fr;gap:10px;margin:16px 0}
+.real-portfolio-summary>div{display:flex;flex-direction:column;gap:3px;background:#17253b;border:1px solid #34435d;border-radius:14px;padding:15px;min-width:0}
+.real-portfolio-summary small{color:#9aaccb;letter-spacing:.8px;font-weight:800;font-size:10px}
+.real-portfolio-summary strong{font-size:clamp(18px,2vw,29px);color:#e5fdf6;line-height:1.3}
+.real-portfolio-summary span{font-size:10px;color:#a3b0c9}
+.portfolio-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.portfolio-actions>*{min-width:0}
+.portfolio-backups{margin:10px 0 19px}
+.real-portfolio-form{padding:19px;background:#0e1f32;border:1px solid #526f7d;border-radius:16px;margin:22px 0;scroll-margin-top:100px}
+.real-portfolio-form .section-heading{margin:0 0 13px}
+.real-portfolio-fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:13px}
+.real-portfolio-fields input,.real-portfolio-fields select,.real-portfolio-fields textarea,.real-portfolio-toolbar input,.real-portfolio-toolbar select{width:100%;border:1px solid #405473;color:#f0f9ff;background:#17263f;border-radius:9px;padding:11px;font:inherit;min-width:0}
+.real-portfolio-fields .field-block{min-width:0}.real-portfolio-fields textarea{resize:vertical}.real-portfolio-wide{grid-column:span 3}.portfolio-input-hint{display:block;color:#97a9c4;font-size:10px;line-height:1.5;margin-top:5px}
+.real-portfolio-toolbar{display:grid;grid-template-columns:minmax(0,2fr) minmax(120px,1fr) minmax(120px,1fr);gap:10px;margin:20px 0}
+.real-portfolio-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.real-portfolio-entry{display:grid;grid-template-columns:92px minmax(0,1fr);gap:12px;min-width:0;border:1px solid #384865;background:#162138;border-radius:14px;padding:12px}
+.real-portfolio-art{aspect-ratio:245/342;border-radius:7px;background:#202d47;overflow:hidden;position:relative;align-self:start}
+.real-portfolio-art img{width:100%;height:100%;object-fit:contain}.real-portfolio-art .fallback-image{font-size:10px;padding:6px}
+.real-portfolio-description{display:flex;flex-direction:column;gap:4px;min-width:0}
+.real-portfolio-description>strong{font-size:14px;line-height:1.35;overflow-wrap:anywhere}
+.real-portfolio-description>small{font-size:11px;color:#97a9c3;line-height:1.4}
+.real-portfolio-tags{display:flex;gap:5px;flex-wrap:wrap}
+.real-portfolio-tags>span{font-size:10px;border:1px solid #4b5673;border-radius:30px;padding:2px 7px;color:#c7d1e9}
+.real-portfolio-value{font-size:20px;color:#8eefd4;font-weight:900}.real-portfolio-value>small{display:block;color:#b0c3d0;font-size:10px;font-weight:600}
+.real-portfolio-source{color:#8b9fbb;font-size:10px;line-height:1.35}
+.real-portfolio-row-actions{display:flex;gap:5px;flex-wrap:wrap;margin-top:auto;padding-top:7px}
+.real-portfolio-row-actions button{font-size:10px;min-height:28px;padding:5px 8px}
+@media(max-width:900px){.real-portfolio-fields{grid-template-columns:repeat(2,minmax(0,1fr))}.real-portfolio-wide{grid-column:span 2}.real-portfolio-grid{grid-template-columns:1fr}}
+@media(max-width:650px){.real-portfolio-summary{grid-template-columns:repeat(2,minmax(0,1fr))}.real-portfolio-summary>div:first-child{grid-column:span 2}.real-portfolio-summary>div{padding:11px}.real-portfolio-summary span{line-height:1.35}.portfolio-actions .primary-action,.portfolio-actions .secondary-action{flex:1;min-height:37px;font-size:11px;padding:7px 8px}.real-portfolio-fields{grid-template-columns:1fr}.real-portfolio-wide{grid-column:auto}.real-portfolio-form{padding:12px}.real-portfolio-toolbar{grid-template-columns:1fr 1fr;gap:6px}.real-portfolio-toolbar input{grid-column:span 2}.real-portfolio-toolbar select{font-size:12px}.real-portfolio-entry{grid-template-columns:86px minmax(0,1fr);padding:8px;gap:10px}.real-portfolio-art{width:86px}.real-portfolio-value{font-size:18px}}
+
 </style>
 </head>
 <body>
@@ -1110,8 +1142,192 @@ function claimQuest(key){const quest=getQuests().find(q=>q.key===key);if(!quest|
 function renderQuests(){const quests=getQuests();const eligible=quests.filter(q=>q.current()>=q.target&&!state.claimed[q.key]).length;
  return pageHeading('DAILY PROGRESSION','Earn what you open.','Pick up a free anniversary booster each day, or finish challenges to fund more packs and grading.',`<span class="pill mint">${eligible} REWARDS READY</span>`)+`<div class="quest-stats"><span>◷ Resets each day (local device date)</span><span>◈ All rewards are virtual</span><span>✦ +30 XP per claimed mission</span></div><div class="quests-grid">${quests.map(q=>{const progress=Math.min(q.target,q.current()),claimed=!!state.claimed[q.key],ready=progress>=q.target;return `<article class="panel quest"><div class="quest-top"><div class="quest-ico">${q.icon}</div><div class="quest-content"><h3>${esc(q.title)}</h3><p>${esc(q.desc)}</p></div></div><div class="set-progress"><div class="progress-top"><span>PROGRESS</span><strong>${progress} / ${q.target}</strong></div><div class="progress-rail"><div style="width:${pct(progress,q.target)}%"></div></div></div><div class="quest-foot"><strong>REWARD: ${esc(q.reward)}</strong><button type="button" class="${ready&&!claimed?'primary-action':'secondary-action'} small-button" data-action="claim-quest" data-quest="${esc(q.key)}" ${!ready||claimed?'disabled':''}>${claimed?'✓ Claimed':ready?'Claim reward':'Not ready'}</button></div></article>`;}).join('')}</div><div class="panel panel-pad" style="margin-top:20px"><div class="section-heading">Your lifetime achievements</div><div class="grid-stats" style="margin-bottom:0"><div class="metric"><small>BOOSTERS OPENED</small><strong>${fmt(state.stats.opened)}</strong></div><div class="metric"><small>BATTLES WON</small><strong>${fmt(state.stats.won)}</strong></div><div class="metric"><small>GRADES SUBMITTED</small><strong>${fmt(state.stats.graded)}</strong></div></div></div>`;}
 // PACKLAB Collector Tools — local-first calculators and photo-assisted lookup.
-const TOOL_TABS=[['centering','📷 Scanner'],['scanner','🔍 Card Finder'],['prices','💲 Price Check'],['rates','🎲 Pull Rates'],['profit','📊 Grading Profit'],['guide','📖 Grading Guide']];
+const TOOL_TABS=[['centering','📷 Scanner'],['portfolio','📚 My Real Binder'],['scanner','🔍 Card Finder'],['prices','💲 Price Check'],['rates','🎲 Pull Rates'],['profit','📊 Grading Profit'],['guide','📖 Grading Guide']];
 const priceCache = new Map(); // Public price feed only. Never touches the player's collection or game coins.
+// PACKLAB real-card portfolio: physically owned cards, separate storage and economics.
+// None of the functions in this section read or mutate PACKLAB's virtual-game save.
+const REAL_PORTFOLIO_KEY = 'packlab_real_card_portfolio_v1';
+const portfolioUI = {search:'',set:'all',sort:'value',limit:48,draft:null,editingId:null,busy:false};
+const realMoney = n => '$'+Number(n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+function cleanPortfolioEntry(row){
+ if(!row||typeof row!=='object')return null;
+ const trim=(v,n=250)=>String(v??'').trim().slice(0,n);
+ const safeNumber=v=>v===null||v===undefined||v===''?null:(Number.isFinite(Number(v))&&Number(v)>=0&&Number(v)<=1e8?Number(v):null);
+ const name=trim(row.name,130),number=trim(row.number,60),setName=trim(row.setName,100);
+ if(!name||!setName)return null;
+ const gradeCompany=['Raw','PSA','CGC','BGS','TAG','Other'].includes(row.grader)?row.grader:'Raw';
+ const finish=['Normal','Holo Foil','Reverse Holo','Poké Ball Foil','Master Ball Foil','Special Foil','Other'].includes(row.finish)?row.finish:'Normal';
+ const condition=['Mint','Near Mint','Lightly Played','Moderately Played','Heavily Played','Damaged'].includes(row.condition)?row.condition:'Near Mint';
+ const image=trim(row.image,1000),setId=SETS[row.setId]?row.setId:'other',id=trim(row.id,100)||uuid();
+ return {id,setId,cardId:trim(row.cardId,120),name,number,setName,rarity:trim(row.rarity,100),image:/^https:\/\//i.test(image)?image:'',language:trim(row.language,40)||'English',finish,condition,grader:gradeCompany,grade:gradeCompany==='Raw'?'':trim(row.grade,25),quantity:Math.min(9999,Math.max(1,Math.floor(Number(row.quantity)||1))),pricingMode:row.pricingMode==='manual'?'manual':'market',manualPrice:safeNumber(row.manualPrice),purchasePrice:safeNumber(row.purchasePrice),marketPrice:safeNumber(row.marketPrice),marketSource:trim(row.marketSource,100),marketAt:Number.isFinite(Number(row.marketAt))?Number(row.marketAt):null,notes:trim(row.notes,900),createdAt:Number(row.createdAt)||Date.now(),updatedAt:Number(row.updatedAt)||Date.now()};
+}
+function loadRealPortfolio(){
+ try{const data=JSON.parse(localStorage.getItem(REAL_PORTFOLIO_KEY)||'null');if(data?.schema!==1||!Array.isArray(data.entries))return {schema:1,entries:[],updatedAt:Date.now()};
+   return {schema:1,entries:data.entries.slice(0,20000).map(cleanPortfolioEntry).filter(Boolean),updatedAt:Number(data.updatedAt)||Date.now()};
+ }catch(e){console.warn('Physical portfolio could not load',e);return {schema:1,entries:[],updatedAt:Date.now()};}
+}
+let realPortfolio=loadRealPortfolio();
+function commitRealPortfolio(entries){
+ const next={schema:1,entries,updatedAt:Date.now()};
+ try{localStorage.setItem(REAL_PORTFOLIO_KEY,JSON.stringify(next));realPortfolio=next;return true;}
+ catch(e){toast('Real portfolio could not be saved. Check browser storage, and export a backup.','error');console.warn('Real portfolio save failed',e);return false;}
+}
+function portfolioHasAutomaticPrice(row){return row.pricingMode==='market'&&row.grader==='Raw'&&['Mint','Near Mint'].includes(row.condition)&&SETS[row.setId]&&!!row.cardId;}
+function portfolioUnitValue(row){
+ if(row.pricingMode==='manual'){return Number.isFinite(row.manualPrice)?{amount:row.manualPrice,method:'Your estimate'}:null;}
+ if(portfolioHasAutomaticPrice(row)&&Number.isFinite(row.marketPrice))return {amount:row.marketPrice,method:row.marketSource||'TCGplayer reference',at:row.marketAt};
+ return null;
+}
+function portfolioTotals(){let qty=0,known=0,unpriced=0,cost=0,pricedUnits=0;
+ for(const entry of realPortfolio.entries){const n=entry.quantity;qty+=n;const p=portfolioUnitValue(entry);if(p){known+=p.amount*n;pricedUnits+=n;}else unpriced+=n;if(entry.purchasePrice!=null)cost+=entry.purchasePrice*n;}
+ return {qty,known,unpriced,cost,pricedUnits};
+}
+function portfolioTemplate(card){
+ return {id:uuid(),setId:card?.setId||'other',cardId:card?.id||'',name:card?.name||'',number:card?.number||'',setName:SETS[card?.setId]?.fullName||'',rarity:card?.rarity||'',image:card?.imageLarge||card?.image||'',language:'English',finish:card?.setId==='sv30'?'Holo Foil':'Normal',condition:'Near Mint',grader:'Raw',grade:'',quantity:1,pricingMode:'market',manualPrice:null,purchasePrice:null,marketPrice:null,marketSource:'',marketAt:null,notes:'',createdAt:Date.now(),updatedAt:Date.now()};
+}
+function beginPortfolioEdit(id=null,card=null){
+ if(id){const existing=realPortfolio.entries.find(x=>x.id===id);if(!existing)return;portfolioUI.editingId=id;portfolioUI.draft={...existing};}
+ else {portfolioUI.editingId=null;portfolioUI.draft=portfolioTemplate(card);}
+ ui.toolTab='portfolio';navigate('tools');document.getElementById('realPortfolioForm')?.scrollIntoView({block:'start',behavior:'smooth'});
+}
+function beginPortfolioFromCard(cardId){
+ const set=Object.keys(SETS).find(x=>String(cardId).startsWith(x+'-'));const card=set&&(catalogMemory.get(set)||[]).find(x=>x.id===cardId);
+ if(!card){toast('The exact card must load before you can add it.','error');return;}
+ beginPortfolioEdit(null,card);
+}
+function closePortfolioEditor(){portfolioUI.draft=null;portfolioUI.editingId=null;render();}
+function savePortfolioForm(){
+ const form=document.getElementById('realPortfolioForm');if(!form)return;
+ const data=new FormData(form),get=k=>String(data.get(k)||'').trim(),previous=portfolioUI.editingId?realPortfolio.entries.find(x=>x.id===portfolioUI.editingId):null;
+ const draft=portfolioUI.draft||portfolioTemplate();
+ const row={...draft,id:previous?.id||uuid(),name:get('name'),number:get('number'),setName:get('setName'),language:get('language'),finish:get('finish'),condition:get('condition'),grader:get('grader'),grade:get('grade'),quantity:Number(get('quantity')),pricingMode:get('pricingMode'),manualPrice:get('manualPrice'),purchasePrice:get('purchasePrice'),notes:get('notes'),image:get('image'),updatedAt:Date.now()};
+ if(!row.name||!row.setName){toast('Enter both the card name and its set.','error');return;}
+ if(!Number.isInteger(row.quantity)||row.quantity<1||row.quantity>9999){toast('Quantity must be between 1 and 9,999.','error');return;}
+ if(row.grader!=='Raw'&&!/^((10(\.0)?|[1-9](\.\d)?))$/.test(row.grade)){toast('For graded cards, enter a grade between 1 and 10.','error');return;}
+ const clean=cleanPortfolioEntry(row);if(!clean)return;
+ if(previous&&(previous.finish!==clean.finish||previous.condition!==clean.condition||previous.grader!==clean.grader||previous.cardId!==clean.cardId||previous.language!==clean.language)){clean.marketPrice=null;clean.marketAt=null;clean.marketSource='';}
+ if(!previous){clean.marketPrice=null;clean.marketAt=null;clean.marketSource='';}
+ if(!commitRealPortfolio(previous?realPortfolio.entries.map(x=>x.id===previous.id?clean:x):[clean,...realPortfolio.entries]))return;
+ portfolioUI.draft=null;portfolioUI.editingId=null;render();toast(previous?'Physical card entry updated.':'Physical card added to your real portfolio!','success');
+ if(!previous&&portfolioHasAutomaticPrice(clean))void refreshPortfolioPrice(clean.id);
+}
+function deletePortfolioEntry(id){const row=realPortfolio.entries.find(x=>x.id===id);if(!row)return;
+ if(!confirm(`Remove ${row.quantity} × ${row.name} #${row.number} from your REAL portfolio? No game cards are affected.`))return;
+ if(commitRealPortfolio(realPortfolio.entries.filter(x=>x.id!==id))){render();toast('Physical card entry removed.','success');}
+}
+function portfolioMarketQuote(entry,data){
+ if(!portfolioHasAutomaticPrice(entry)||entry.language.toLowerCase()!=='english')return null;
+ const tcg=data?.pricing?.tcgplayer||data?.prices?.tcgplayer;
+ const rows=quoteRows(tcg);if(!rows.length)return null;
+ let match;
+ const by=(test)=>rows.find(r=>test(r.key.toLowerCase())&&Number.isFinite(r.market)&&r.market>0);
+ switch(entry.finish){
+  case 'Normal':match=by(k=>/normal/.test(k)&&!/reverse/.test(k));break;
+  case 'Holo Foil':match=by(k=>/holofoil|holo/.test(k)&&!/reverse/.test(k));break;
+  case 'Reverse Holo':match=by(k=>/reverse/.test(k));break;
+  case 'Poké Ball Foil':match=by(k=>/pok[eé]?\s?ball|pokeball/.test(k)&&!/master/.test(k));break;
+  case 'Master Ball Foil':match=by(k=>/master\s?ball|masterball/.test(k));break;
+  default:return null;
+ }
+ // Different foil finishes command very different values; never substitute a mismatched market row.
+ if(!match)return null;
+ return {value:match.market,source:'TCGplayer via TCGdex · '+match.key,at:tcg?.updated?Date.parse(tcg.updated)||Date.now():Date.now()};
+}
+const portfolioFetches=new Set();
+async function refreshPortfolioPrice(id,force=false){
+ const entry=realPortfolio.entries.find(x=>x.id===id);if(!entry||portfolioFetches.has(id))return false;
+ if(!portfolioHasAutomaticPrice(entry)||entry.language.toLowerCase()!=='english'){toast('Automatic quotes are for supported English raw Mint/Near Mint cards. Enter a manual sold-price estimate for graded or other conditions.');return false;}
+ if(!force&&entry.marketAt&&Date.now()-entry.marketAt<10*60*1000)return true;
+ const key=tcgdexCardKey(entry);if(!key){toast('No exact automated card mapping for this print. Enter a manual value instead.');return false;}
+ portfolioFetches.add(id);if(ui.page==='tools'&&ui.toolTab==='portfolio')render();
+ const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),10500);
+ try{const res=await fetch(`https://api.tcgdex.net/v2/en/cards/${encodeURIComponent(key)}`,{signal:controller.signal});if(!res.ok)throw Error(`HTTP ${res.status}`);
+  const data=await res.json();const clean=x=>String(x||'').toLowerCase().replace(/[^a-z0-9]/g,'');
+  if(data.id!==key||!clean(data.name)||!(clean(data.name)===clean(entry.name)||clean(data.name).includes(clean(entry.name))||clean(entry.name).includes(clean(data.name))))throw Error('Card identity mismatch');
+  const quote=portfolioMarketQuote(entry,data);
+  if(!quote){toast('No verified matching finish/market quote. Use a manual estimate or marketplace links.');return false;}
+  const fresh=realPortfolio.entries.find(x=>x.id===id);if(!fresh)return false;
+  const updated={...fresh,marketPrice:quote.value,marketAt:quote.at,marketSource:quote.source,updatedAt:Date.now()};
+  const ok=commitRealPortfolio(realPortfolio.entries.map(x=>x.id===id?updated:x));if(ok&&ui.page==='tools'&&ui.toolTab==='portfolio')render();return ok;
+ }catch(err){console.warn('Physical-card portfolio price unavailable',entry.name,err);toast('Live market price unavailable for this exact card/finish. A manual price is available.');return false;}
+ finally{clearTimeout(timer);portfolioFetches.delete(id);if(ui.page==='tools'&&ui.toolTab==='portfolio')render();}
+}
+async function refreshPortfolioBatch(){if(portfolioUI.busy)return;
+ const eligible=realPortfolio.entries.filter(x=>portfolioHasAutomaticPrice(x)&&x.language.toLowerCase()==='english'&&(!x.marketAt||Date.now()-x.marketAt>10*60*1000)).slice(0,20);
+ if(!eligible.length){toast('No eligible raw-card quotes need refreshing.');return;}
+ portfolioUI.busy=true;render();let complete=0;
+ try{for(let i=0;i<eligible.length;i+=3){const batch=eligible.slice(i,i+3);const results=await Promise.all(batch.map(x=>refreshPortfolioPrice(x.id,true)));complete+=results.filter(Boolean).length;}}
+ finally{portfolioUI.busy=false;render();toast(`Updated ${complete} of ${eligible.length} card price${eligible.length===1?'':'s'}. Missing quotes remain unpriced.`,complete?'success':'');}
+}
+function portfolioFilteredRows(){
+ const q=portfolioUI.search.trim().toLowerCase();const rows=realPortfolio.entries.filter(x=>(portfolioUI.set==='all'||x.setId===portfolioUI.set)&&(!q||`${x.name} ${x.number} ${x.setName} ${x.rarity} ${x.notes}`.toLowerCase().includes(q)));
+ const val=x=>portfolioUnitValue(x)?.amount;
+ rows.sort((a,b)=>{
+  switch(portfolioUI.sort){
+   case 'name':return a.name.localeCompare(b.name)||a.number.localeCompare(b.number);
+   case 'set':return a.setName.localeCompare(b.setName)||a.number.localeCompare(b.number);
+   case 'recent':return b.createdAt-a.createdAt;
+   case 'quantity':return b.quantity-a.quantity;
+   case 'value':default:{const av=val(a),bv=val(b);return (bv??-1)-(av??-1)||a.name.localeCompare(b.name);}
+  }
+ });return rows;
+}
+function realPortfolioForm(){const d=portfolioUI.draft;if(!d)return '';
+ const option=(values,value)=>values.map(x=>`<option ${x===value?'selected':''}>${esc(x)}</option>`).join('');
+ const field=(label,name,val,type='text',extra='')=>`<label class="field-block">${label}<input name="${name}" type="${type}" value="${esc(val??'')}" ${extra}></label>`;
+ return `<form class="real-portfolio-form" id="realPortfolioForm"><div class="section-heading">${portfolioUI.editingId?'Edit physical copy':'Add physical card'} <small>DOES NOT AFFECT GAME INVENTORY</small></div>
+ <div class="real-portfolio-fields">${field('Card name','name',d.name,'text','maxlength="130" required')}${field('Set / expansion','setName',d.setName,'text','maxlength="100" required')}${field('Card number','number',d.number,'text','maxlength="60"')}${field('Language','language',d.language,'text','maxlength="40"')}
+ <label class="field-block">Foil / printing<select name="finish">${option(['Normal','Holo Foil','Reverse Holo','Poké Ball Foil','Master Ball Foil','Special Foil','Other'],d.finish)}</select></label>
+ <label class="field-block">Physical condition<select name="condition">${option(['Mint','Near Mint','Lightly Played','Moderately Played','Heavily Played','Damaged'],d.condition)}</select></label>
+ <label class="field-block">Grading status<select name="grader">${option(['Raw','PSA','CGC','BGS','TAG','Other'],d.grader)}</select></label>
+ ${field('Grade (if slabbed)','grade',d.grade,'text','maxlength="25" placeholder="e.g. 9.5"')}${field('Copies owned','quantity',d.quantity,'number','min="1" max="9999" step="1" required')}
+ <label class="field-block">Valuation source<select name="pricingMode">${option(['market','manual'],d.pricingMode)}</select><span class="portfolio-input-hint">Market = matching raw English NM quote when available. Manual = your sold-price estimate; required for graded slabs.</span></label>
+ ${field('Manual value EACH, USD','manualPrice',d.manualPrice,'number','min="0" step="0.01" placeholder="Optional, leave blank if unknown"')}${field('Paid EACH, USD','purchasePrice',d.purchasePrice,'number','min="0" step="0.01" placeholder="Optional"')}
+ ${field('Card picture URL (HTTPS)','image',d.image,'url','maxlength="1000" placeholder="Optional"')}
+ <label class="field-block real-portfolio-wide">Notes<textarea name="notes" rows="2" maxlength="900" placeholder="Binder page, certification number, purchase notes…">${esc(d.notes)}</textarea></label></div>
+ <p class="tool-disclaimer">The portfolio tracks your real cards. Automatic prices are not guaranteed and are not suitable for graded or heavily played copies. No login or cloud sync: export a backup.</p>
+ <div class="portfolio-actions"><button type="submit" class="primary-action">✓ ${portfolioUI.editingId?'Save changes':'Add to real portfolio'}</button><button type="button" class="secondary-action" data-action="portfolio-cancel">Cancel</button></div></form>`;
+}
+function renderPortfolioEntry(entry){
+ const est=portfolioUnitValue(entry),source=est?.method||'No verified price',stale=est?.at&&(Date.now()-est.at)>24*3600*1000;
+ const card={name:entry.name,number:entry.number,image:entry.image,imageLarge:entry.image};
+ return `<article class="real-portfolio-entry"><div class="real-portfolio-art">${imgTag(card)}</div><div class="real-portfolio-description"><strong>${esc(entry.name)}</strong><small>${esc(entry.setName)} · #${esc(entry.number||'—')}</small><span class="real-portfolio-tags"><span>${esc(entry.finish)}</span><span>${esc(entry.grader==='Raw'?entry.condition:entry.grader+' '+entry.grade)}</span><span>×${entry.quantity}</span></span><span class="real-portfolio-value">${est?realMoney(est.amount*entry.quantity):'Unpriced'} <small>${est?realMoney(est.amount)+' / card':'Set a manual estimate or refresh price'}</small></span><span class="real-portfolio-source">${esc(source)}${stale?' · previous quote':''}</span>
+ <div class="real-portfolio-row-actions"><button type="button" class="secondary-action small-button" data-action="portfolio-edit" data-id="${esc(entry.id)}">Edit</button><button type="button" class="tertiary-action small-button" data-action="portfolio-refresh" data-id="${esc(entry.id)}" ${!portfolioHasAutomaticPrice(entry)||portfolioFetches.has(entry.id)?'disabled':''}>${portfolioFetches.has(entry.id)?'Checking…':'↻ Price'}</button><button type="button" class="danger-action small-button" data-action="portfolio-delete" data-id="${esc(entry.id)}">Remove</button></div></div></article>`;
+}
+function renderToolPortfolio(){
+ const t=portfolioTotals(),items=portfolioFilteredRows(),visible=items.slice(0,portfolioUI.limit);
+ const sets=[...new Set(realPortfolio.entries.map(x=>x.setId))];
+ const setOptions=`<option value="all" ${portfolioUI.set==='all'?'selected':''}>All expansions</option>`+sets.map(k=>`<option value="${esc(k)}" ${portfolioUI.set===k?'selected':''}>${esc(SETS[k]?.name||'Other / custom sets')}</option>`).join('');
+ const sortOptions=[['value','Highest value'],['recent','Recently added'],['name','Card name'],['set','Expansion'],['quantity','Most copies']].map(([k,v])=>`<option value="${k}" ${portfolioUI.sort===k?'selected':''}>${v}</option>`).join('');
+ return `<section class="tool-surface portfolio-tool-surface"><div class="tool-intro"><div><span class="eyebrow">REAL CARD COLLECTION · USD</span><h2>My physical Pokémon portfolio</h2><p>Your real cards, raw and graded copies, and their estimated USD values—completely separate from the pack-opening game's binder.</p></div><span class="pill mint">ON-DEVICE LIBRARY</span></div>
+ <div class="real-portfolio-summary"><div><small>EST. PRICED COLLECTION</small><strong>${realMoney(t.known)}</strong><span>${t.unpriced?`${t.unpriced} card${t.unpriced===1?'':'s'} missing verified value`:'All cards have estimates'} · not guaranteed resale proceeds</span></div><div><small>PHYSICAL CARDS</small><strong>${fmt(t.qty)}</strong><span>${fmt(realPortfolio.entries.length)} inventory records</span></div><div><small>RECORDED ACQUISITION COST</small><strong>${realMoney(t.cost)}</strong><span>Only amounts you've entered</span></div></div>
+ <div class="portfolio-actions"><button class="primary-action" type="button" data-action="portfolio-add-manual">＋ Add physical card</button><button class="secondary-action" type="button" data-action="portfolio-from-finder">Find a card ↗</button><button class="secondary-action" type="button" data-action="portfolio-refresh-all" ${portfolioUI.busy?'disabled':''}>${portfolioUI.busy?'Updating prices…':'↻ Refresh market quotes'}</button></div>
+ <div class="portfolio-actions portfolio-backups"><button type="button" class="secondary-action small-button" data-action="portfolio-export-json">⇩ Backup portfolio</button><button type="button" class="secondary-action small-button" data-action="portfolio-export-csv">⇩ Export CSV</button><label class="secondary-action small-button" for="portfolioImport">⇧ Import portfolio backup</label><input id="portfolioImport" type="file" accept=".json,application/json" hidden></div>
+ ${realPortfolioForm()}
+ <div class="real-portfolio-toolbar"><input id="portfolioSearch" type="search" value="${esc(portfolioUI.search)}" placeholder="Find Pokémon, number, set…" aria-label="Search your physical cards"><select id="portfolioSet" aria-label="Filter physical card set">${setOptions}</select><select id="portfolioSort" aria-label="Sort physical card portfolio">${sortOptions}</select></div>
+ ${visible.length?`<div class="real-portfolio-grid">${visible.map(renderPortfolioEntry).join('')}</div>${items.length>visible.length?`<div class="binder-pager"><button class="secondary-action" data-action="portfolio-more">Load more (${items.length-visible.length} left)</button></div>`:''}`:`<div class="empty-note">${realPortfolio.entries.length?'No cards match your filters.':'No physical cards saved yet. Use Card Finder or Price Check to add an exact card with artwork, or add any card manually.'}</div>`}
+ <p class="tool-disclaimer">Portfolio estimates are informational. TCGplayer values are third-party raw-card reference prices where available; grading, condition, language and variant affect resale price. Never confuse these USD estimates with virtual game coins. Local browser storage does not sync between devices.</p></section>`;
+}
+function downloadPortfolioFile(name,mime,textContent){const blob=new Blob([textContent],{type:mime}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),10000);}
+function exportPortfolioJSON(){downloadPortfolioFile(`PackLab-REAL-Portfolio-${localDate()}.json`,'application/json;charset=utf-8',JSON.stringify({packlabRealPortfolio:true,exportedAt:new Date().toISOString(),portfolio:realPortfolio},null,2));toast('Real-card portfolio backup exported.','success');}
+function exportPortfolioCSV(){
+ const fields=['Name','Set','Set number','Language','Variant','Condition','Grader','Grade','Quantity','Price each USD','Price source','Price updated','Cost each USD','Estimated total USD','Notes'];
+ const quote=s=>{let v=String(s??'');if(/^[=+\-@\t\r]/.test(v))v="'"+v;return '"'+v.replace(/"/g,'""')+'"';};
+ const rows=realPortfolio.entries.map(x=>{const p=portfolioUnitValue(x);return [x.name,x.setName,x.number,x.language,x.finish,x.condition,x.grader,x.grade,x.quantity,p?.amount??'',p?.method??'',p?.at?new Date(p.at).toISOString():'',x.purchasePrice??'',p?p.amount*x.quantity:'',x.notes]});
+ downloadPortfolioFile(`PackLab-REAL-Portfolio-${localDate()}.csv`,'text/csv;charset=utf-8','\ufeff'+[fields,...rows].map(r=>r.map(quote).join(',')).join('\r\n'));
+ toast('Portfolio CSV exported.','success');
+}
+async function importPortfolioJSON(file){if(!file)return;try{
+ const data=JSON.parse(await file.text()),src=data?.packlabRealPortfolio?data.portfolio:data;
+ if(src?.schema!==1||!Array.isArray(src.entries)||src.entries.length>20000)throw Error('Not a supported real-portfolio backup.');
+ const rows=src.entries.map(cleanPortfolioEntry);if(rows.some(x=>!x))throw Error('Backup contains invalid entries.');
+ const known=new Set(realPortfolio.entries.map(x=>x.id)),added=[];
+ for(const item of rows)if(!known.has(item.id)){known.add(item.id);added.push(item);}
+ if(!added.length){toast('All entries from this backup are already present.');return;}
+ if(!confirm(`Import ${added.length} physical card record${added.length===1?'':'s'}? Existing portfolio records will be kept.`))return;
+ if(commitRealPortfolio([...realPortfolio.entries,...added])){render();toast(`${added.length} physical records imported successfully.`,'success');}
+ }catch(e){toast(e.message||'Could not read the portfolio backup.','error');}}
+
 
 let photoPreviewUrls={};
 const cash=n=>`${Number(n)<0?'−':''}$${Math.abs(Number(n)||0).toFixed(2)}`;
@@ -1127,8 +1343,8 @@ function setPreviewImage(field,file){
 }
 function renderTools(){
  const choices=TOOL_TABS.map(([key,title])=>`<button type="button" role="tab" aria-selected="${ui.toolTab===key}" data-action="tool-tab" data-tab="${key}" class="tool-tab ${ui.toolTab===key?'active':''}">${title}</button>`).join('');
- const contents=({rates:renderToolRates,profit:renderToolProfit,centering:renderToolCentering,scanner:renderToolLookup,prices:renderToolPrices,guide:renderToolGuide}[ui.toolTab]||renderToolCentering)();
- return pageHeading('REAL CARD TOOLS','Scan. Identify. Price-check.','Real physical-card references and calculators. Your virtual collection and Game Grading are separate.')+
+ const contents=({rates:renderToolRates,profit:renderToolProfit,centering:renderToolCentering,portfolio:renderToolPortfolio,scanner:renderToolLookup,prices:renderToolPrices,guide:renderToolGuide}[ui.toolTab]||renderToolCentering)();
+ return pageHeading('REAL CARD TOOLS','Scan. Collect. Price-check.','Real physical-card references, collection tracking and calculators. Your virtual collection and Game Grading are separate.')+
  `<div class="tool-tabs tool-tabs-visible" role="tablist" aria-label="Real Card Tools">${choices}</div>${contents}`;
 }
 function rarityRateRows(id){
@@ -1554,7 +1770,7 @@ function priceSelectedPanel(){
  const key=c.id,cache=priceCache.get(key),payload=cache?.data,attacks=payload?.attacks||c.attacks||[];
  const detail=payload?`<div class="real-card-stats"><span>Illustrator: ${esc(payload.illustrator||'Not supplied')}</span><span>Stage: ${esc(payload.stage||c.stage||'Not supplied')}</span><span>Weakness: ${esc((payload.weaknesses||[]).map(x=>`${x.type||''} ${x.value||''}`).join(', ')||'Not supplied')}</span><span>HP: ${esc(payload.hp||c.hp||'—')}</span></div>${attacks.length?`<div class="price-moves"><strong>Printed attacks</strong>${attacks.slice(0,3).map(a=>`<span>${esc(a.name||'Attack')} · ${esc(a.damage||a.effect||'—')}</span>`).join('')}</div>`:''}`:`<div class="real-card-stats"><span>HP: ${esc(c.hp||'—')}</span><span>Type: ${esc((c.types||[]).join(', ')||'—')}</span><span>Category: ${esc(c.category||'—')}</span></div>`;
  const body=ui.priceBusy?'<div class="price-unavailable">Checking public market-price data…</div>':ui.priceError?`<div class="price-unavailable">${esc(ui.priceError)}</div>`:payload?realPriceTable(payload):'<div class="price-unavailable">Select a card to request its available market prices.</div>';
- return `<section class="selected-price-card" aria-label="Selected real card and market values"><div class="selected-card-heading"><div class="selected-card-image">${imgTag(c,true)}</div><div><span class="pill gold">${esc(c.rarity)}</span><h3>${esc(c.name)}</h3><p>${esc(SETS[c.setId]?.fullName||'')} · #${esc(c.number)}${c.setId==='sv30'?' · verify Classic Collection print if applicable':''}</p>${detail}<button class="secondary-action small-button" type="button" data-action="price-refresh" ${ui.priceBusy?'disabled':''}>↻ Refresh price</button></div></div>${body}${marketSiteLinks(c)}</section>`;
+ return `<section class="selected-price-card" aria-label="Selected real card and market values"><div class="selected-card-heading"><div class="selected-card-image">${imgTag(c,true)}</div><div><span class="pill gold">${esc(c.rarity)}</span><h3>${esc(c.name)}</h3><p>${esc(SETS[c.setId]?.fullName||'')} · #${esc(c.number)}${c.setId==='sv30'?' · verify Classic Collection print if applicable':''}</p>${detail}<div class="portfolio-actions" style="margin-top:10px"><button class="primary-action small-button" type="button" data-action="portfolio-add-card" data-card="${esc(c.id)}">＋ Add to real binder</button><button class="secondary-action small-button" type="button" data-action="price-refresh" ${ui.priceBusy?'disabled':''}>↻ Refresh price</button></div></div></div>${body}${marketSiteLinks(c)}</section>`;
 }
 function priceLookupList(){
  const items=priceCandidates();const loading=!catalogMemory.has(ui.priceSet);
@@ -1598,7 +1814,7 @@ function selectPriceCard(id){
 }
 
 function cardLookupResults(){const c=catalogMemory.get(ui.lookupSet),q=(ui.lookupSearch||'').trim().toLowerCase();if(!c)return [];if(!q)return c.filter(x=>['Special Illustration Rare','Futuristic Rare','RGB Rare'].includes(x.rarity)).slice(0,16);const qNumber=q.replace(/\s*\/\s*\d+\s*$/,'').replace(/^#/,'');return c.filter(x=>x.name.toLowerCase().includes(q)||x.number.toLowerCase()===qNumber||String(x.number).toLowerCase().includes(q)).slice(0,35);}
-function lookupList(){const results=cardLookupResults();if(!catalogMemory.has(ui.lookupSet))return statusCatalog(ui.lookupSet);return results.length?`<div class="lookup-grid">${results.map(c=>`<article class="lookup-card" aria-label="Physical card reference: ${esc(c.name)}"><div class="lookup-picture">${imgTag(c)}</div><strong>${esc(c.name)}</strong><small>#${esc(c.number)} · ${esc(c.rarity)}</small><button type="button" class="lookup-price-button" data-action="lookup-to-price" data-card="${esc(c.id)}">Price + info ↗</button></article>`).join('')}</div>`:`<div class="empty-note">No matching card in ${esc(SETS[ui.lookupSet].name)}. Check its name and number or choose the correct set.</div>`;}
+function lookupList(){const results=cardLookupResults();if(!catalogMemory.has(ui.lookupSet))return statusCatalog(ui.lookupSet);return results.length?`<div class="lookup-grid">${results.map(c=>`<article class="lookup-card" aria-label="Physical card reference: ${esc(c.name)}"><div class="lookup-picture">${imgTag(c)}</div><strong>${esc(c.name)}</strong><small>#${esc(c.number)} · ${esc(c.rarity)}</small><div class="portfolio-actions"><button type="button" class="lookup-price-button" data-action="lookup-to-price" data-card="${esc(c.id)}">Price + info ↗</button><button type="button" class="lookup-price-button" data-action="portfolio-add-card" data-card="${esc(c.id)}">＋ My real binder</button></div></article>`).join('')}</div>`:`<div class="empty-note">No matching card in ${esc(SETS[ui.lookupSet].name)}. Check its name and number or choose the correct set.</div>`;}
 function renderToolLookup(){requireCatalog(ui.lookupSet);return `<section class="tool-surface"><div class="tool-intro"><div><span class="eyebrow">PHOTO + CHECKLIST LOOKUP</span><h2>Identify a card.</h2><p>Upload a card photo, optionally read printed text on-device, and match its name and collector number against known set checklists. These are real-card REFERENCE results, not cards added to your game binder.</p></div><span class="pill gold">SCAN BETA</span></div>
  <div class="photo-upload-row"><label class="secondary-action photo-button" for="lookupPhoto">↑ Add photo</label><input type="file" hidden id="lookupPhoto" accept="image/*"><button type="button" class="primary-action small-button" data-action="lookup-ocr" ${!ui.lookupImage||ui.ocrBusy?'disabled':''}>${ui.ocrBusy?'Reading photo…':'Scan text in browser'}</button></div>
  ${ui.lookupImage?`<div class="scan-preview"><img src="${esc(ui.lookupImage)}" alt="Your uploaded photo"><span>${ui.ocrText?esc(ui.ocrText):'Ready for name/number search'}</span></div>`:''}
@@ -1641,6 +1857,17 @@ function processAction(el){const action=el.dataset.action;if(!action)return;swit
  case 'how-to':navigate('info');break;
  case 'tool-tab':ui.toolTab=el.dataset.tab||'centering';navigate('tools');break;
  case 'lookup-to-price':selectPriceCard(el.dataset.card);break;
+  case 'portfolio-add-card':beginPortfolioFromCard(el.dataset.card);break;
+  case 'portfolio-add-manual':beginPortfolioEdit();break;
+  case 'portfolio-from-finder':ui.toolTab='scanner';navigate('tools');break;
+  case 'portfolio-edit':beginPortfolioEdit(el.dataset.id);break;
+  case 'portfolio-delete':deletePortfolioEntry(el.dataset.id);break;
+  case 'portfolio-cancel':closePortfolioEditor();break;
+  case 'portfolio-refresh':void refreshPortfolioPrice(el.dataset.id,true);break;
+  case 'portfolio-refresh-all':void refreshPortfolioBatch();break;
+  case 'portfolio-export-json':exportPortfolioJSON();break;
+  case 'portfolio-export-csv':exportPortfolioCSV();break;
+  case 'portfolio-more':portfolioUI.limit+=48;render();break;
  case 'price-select':selectPriceCard(el.dataset.card);break;
  case 'price-refresh':void loadPriceForSelectedCard(true);break;
  case 'open-rates':ui.toolTab='rates';navigate('tools');break;
@@ -1709,7 +1936,10 @@ document.addEventListener('click',event=>{
 });
 document.addEventListener('toggle',event=>{if(event.target?.id==='scanDetails')ui.scanAdvanced=event.target.open;},true);
  document.addEventListener('change',event=>{const e=event.target;
- if(e.id==='priceSet'){ui.priceSet=SETS[e.value]?e.value:'sv8pt5';ui.priceCardId='';ui.priceQuery='';ui.priceBusy=false;ui.priceError='';requireCatalog(ui.priceSet);render();return;}
+  if(e.id==='portfolioImport'){void importPortfolioJSON(e.files?.[0]);return;}
+  if(e.id==='portfolioSet'){portfolioUI.set=e.value;portfolioUI.limit=48;render();return;}
+  if(e.id==='portfolioSort'){portfolioUI.sort=e.value;render();return;}
+  if(e.id==='priceSet'){ui.priceSet=SETS[e.value]?e.value:'sv8pt5';ui.priceCardId='';ui.priceQuery='';ui.priceBusy=false;ui.priceError='';requireCatalog(ui.priceSet);render();return;}
  if(e.id==='cameraHolderLive'){ui.scanHolder=!!e.checked;cameraStableFrames=0;cameraLockedQuad=null;cameraStatus(ui.scanHolder?'Holder mode: manual capture only · outline may detect the plastic':'Detecting card…','searching');return;}
  if(e.id==='scanDesign'){
   ui.scanDesign=['standard','thin','borderless','unknown'].includes(e.value)?e.value:'unknown';
@@ -1738,14 +1968,16 @@ document.addEventListener('toggle',event=>{if(event.target?.id==='scanDetails')u
 });
 document.addEventListener('input',event=>{
  const target=event.target;
- if(target.id==='priceSearch'){const pos=target.selectionStart;ui.priceQuery=target.value;ui.priceCardId='';ui.priceError='';ui.priceBusy=false;render();const fresh=document.getElementById('priceSearch');if(fresh){fresh.focus();try{fresh.setSelectionRange(pos,pos);}catch(_){}}return;}
+  if(target.id==='portfolioSearch'){const pos=target.selectionStart;portfolioUI.search=target.value;portfolioUI.limit=48;render();const fresh=document.getElementById('portfolioSearch');if(fresh){fresh.focus();try{fresh.setSelectionRange(pos,pos);}catch(_){}}return;}
+  if(target.id==='priceSearch'){const pos=target.selectionStart;ui.priceQuery=target.value;ui.priceCardId='';ui.priceError='';ui.priceBusy=false;render();const fresh=document.getElementById('priceSearch');if(fresh){fresh.focus();try{fresh.setSelectionRange(pos,pos);}catch(_){}}return;}
  if(target.id==='ratePacks'){ui.ratePacks=target.value;updateRatesProbability();return;}
  if(target.dataset.guideScore){ui.guideScores[target.dataset.guideScore]=Number(target.value)||1;updateGuideEstimate();return;}
  if(target.dataset.profit){ui.profit[target.dataset.profit]=Number(target.value)||0;updateProfitView();return;}
  if(target.dataset.center){ui.centering[target.dataset.center]=Number(target.value)||0;ui.centerMeasured=false;ui.centerMethod='manual';ui.centerHint='Guides changed. Confirm all four printed edges when aligned.';updateCenterVisual();return;}
  if(target.id==='lookupSearch'){ui.lookupSearch=target.value;updateLookupResults();return;}
  if(target.id!=='binderSearch')return;const el=target;const pos=el.selectionStart;ui.binderSearch=el.value;ui.binderPage=1;render();const fresh=document.getElementById('binderSearch');if(fresh){fresh.focus();fresh.setSelectionRange(pos,pos);}});
-document.addEventListener('keydown',event=>{
+document.addEventListener('submit',event=>{if(event.target?.id==='realPortfolioForm'){event.preventDefault();savePortfolioForm();}});
+ document.addEventListener('keydown',event=>{
  if(event.key==='Escape'&&!cameraLayer()?.hidden){closeCenterCamera();return;}
  if(event.key==='Escape'&&!document.getElementById('modalLayer').hidden){closeModal();return;}
  if((event.key==='Enter'||event.key===' ')&&event.target.matches('[data-action="flip-card"],[data-action="tear-gesture"]')){event.preventDefault();if(event.target.dataset.action==='flip-card')revealAdvance();else claimOpenedPack();}
