@@ -539,6 +539,12 @@ body{background:radial-gradient(circle at 85% 4%,#10307188,transparent 37%),radi
 .camera-stage.has-outline .camera-search-guide{opacity:.09}
 .camera-detected-overlay polygon{transition:stroke .3s,fill .3s;stroke:#ffc36b;fill:#ffc36b0d;stroke-width:2.5;filter:drop-shadow(0 0 4px #090b20)}
 .camera-detected-overlay[data-locked="true"] polygon{stroke:#3ff5af;fill:#28ffc314;stroke-width:3;filter:drop-shadow(0 0 6px #11bb89)}
+
+/* v0.9.3 real binder matching feedback */
+.real-portfolio-error{font-size:11px;line-height:1.5;color:#ffc99d;background:#53321e3d;border:1px solid #8b674b;padding:7px 10px;border-radius:9px}
+.real-portfolio-row-actions .market-links{font-size:10px}
+.real-portfolio-entry .market-links{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}
+.real-portfolio-entry .market-links a{font-size:10px;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -1464,23 +1470,23 @@ function realPortfolioForm(){const d=portfolioUI.draft;if(!d)return '';
  const option=(values,value)=>values.map(x=>`<option ${x===value?'selected':''}>${esc(x)}</option>`).join('');
  const field=(label,name,val,type='text',extra='')=>`<label class="field-block">${label}<input name="${name}" type="${type}" value="${esc(val??'')}" ${extra}></label>`;
  return `<form class="real-portfolio-form" id="realPortfolioForm"><div class="section-heading">${portfolioUI.editingId?'Edit physical copy':'Add physical card'} <small>DOES NOT AFFECT GAME INVENTORY</small></div>
- <div class="real-portfolio-fields">${field('Card name','name',d.name,'text','maxlength="130" required')}${field('Set / expansion','setName',d.setName,'text','maxlength="100" required')}${field('Card number','number',d.number,'text','maxlength="60"')}${field('Language','language',d.language,'text','maxlength="40"')}
+ <div class="real-portfolio-fields">${field('Card name','name',d.name,'text','maxlength="130" required')}${field('Set / expansion','setName',d.setName,'text','maxlength="100" required')}${field('Collector # / total (for matching)','number',d.number,'text','maxlength="60" placeholder="e.g. 025/131"')}${field('Language','language',d.language,'text','maxlength="40"')}
  <label class="field-block">Foil / printing<select name="finish">${option(['Normal','Holo Foil','Reverse Holo','Poké Ball Foil','Master Ball Foil','Special Foil','Other'],d.finish)}</select></label>
  <label class="field-block">Physical condition<select name="condition">${option(['Mint','Near Mint','Lightly Played','Moderately Played','Heavily Played','Damaged'],d.condition)}</select></label>
  <label class="field-block">Grading status<select name="grader">${option(['Raw','PSA','CGC','BGS','TAG','Other'],d.grader)}</select></label>
  ${field('Grade (if slabbed)','grade',d.grade,'text','maxlength="25" placeholder="e.g. 9.5"')}${field('Copies owned','quantity',d.quantity,'number','min="1" max="9999" step="1" required')}
- <label class="field-block">Valuation source<select name="pricingMode">${option(['market','manual'],d.pricingMode)}</select><span class="portfolio-input-hint">Market = matching raw English NM quote when available. Manual = your sold-price estimate; required for graded slabs.</span></label>
+ <label class="field-block">Valuation source<select name="pricingMode">${option(['market','manual'],d.pricingMode)}</select><span class="portfolio-input-hint">Market = automatic verified English raw card quote when available, not guaranteed. Enter the exact card name, expansion and number. Manual = your own estimate for unavailable, graded or played copies.</span></label>
  ${field('Manual value EACH, USD','manualPrice',d.manualPrice,'number','min="0" step="0.01" placeholder="Optional, leave blank if unknown"')}${field('Paid EACH, USD','purchasePrice',d.purchasePrice,'number','min="0" step="0.01" placeholder="Optional"')}
  ${field('Card picture URL (HTTPS)','image',d.image,'url','maxlength="1000" placeholder="Optional"')}
  <label class="field-block real-portfolio-wide">Notes<textarea name="notes" rows="2" maxlength="900" placeholder="Binder page, certification number, purchase notes…">${esc(d.notes)}</textarea></label></div>
- <p class="tool-disclaimer">The portfolio tracks your real cards. Automatic prices are not guaranteed and are not suitable for graded or heavily played copies. No login or cloud sync: export a backup.</p>
- <div class="portfolio-actions"><button type="submit" class="primary-action">✓ ${portfolioUI.editingId?'Save changes':'Add to real portfolio'}</button><button type="button" class="secondary-action" data-action="portfolio-cancel">Cancel</button></div></form>`;
+ <p class="tool-disclaimer">The real-card portfolio is separate from game rewards. Matching English raw Mint/Near Mint cards use available TCGplayer USD quotes via TCGdex after verifying set, number and finish. Other prints or missing prices remain unpriced until you enter an estimate. Signed-in users can sync this portfolio once its account save slot is linked; export backups too.</p>
+ <div class="portfolio-actions"><button type="submit" class="primary-action">✓ ${portfolioUI.editingId?'Save / find price':'Add card / find price'}</button><button type="button" class="secondary-action" data-action="portfolio-cancel">Cancel</button></div></form>`;
 }
 function renderPortfolioEntry(entry){
  const est=portfolioUnitValue(entry),source=est?.method||'No verified price',stale=est?.at&&(Date.now()-est.at)>24*3600*1000;
  const card={name:entry.name,number:entry.number,image:entry.image,imageLarge:entry.image};
- return `<article class="real-portfolio-entry"><div class="real-portfolio-art">${imgTag(card)}</div><div class="real-portfolio-description"><strong>${esc(entry.name)}</strong><small>${esc(entry.setName)} · #${esc(entry.number||'—')}</small><span class="real-portfolio-tags"><span>${esc(entry.finish)}</span><span>${esc(entry.grader==='Raw'?entry.condition:entry.grader+' '+entry.grade)}</span><span>×${entry.quantity}</span></span><span class="real-portfolio-value">${est?realMoney(est.amount*entry.quantity):'Unpriced'} <small>${est?realMoney(est.amount)+' / card':'Set a manual estimate or refresh price'}</small></span><span class="real-portfolio-source">${esc(source)}${stale?' · previous quote':''}</span>
- <div class="real-portfolio-row-actions"><button type="button" class="secondary-action small-button" data-action="portfolio-edit" data-id="${esc(entry.id)}">Edit</button><button type="button" class="tertiary-action small-button" data-action="portfolio-refresh" data-id="${esc(entry.id)}" ${!portfolioHasAutomaticPrice(entry)||portfolioFetches.has(entry.id)?'disabled':''}>${portfolioFetches.has(entry.id)?'Checking…':'↻ Price'}</button><button type="button" class="danger-action small-button" data-action="portfolio-delete" data-id="${esc(entry.id)}">Remove</button></div></div></article>`;
+ return `<article class="real-portfolio-entry"><div class="real-portfolio-art">${imgTag(card)}</div><div class="real-portfolio-description"><strong>${esc(entry.name)}</strong><small>${esc(entry.setName)} · #${esc(entry.number||'—')}</small><span class="real-portfolio-tags"><span>${esc(entry.finish)}</span><span>${esc(entry.grader==='Raw'?entry.condition:entry.grader+' '+entry.grade)}</span><span>×${entry.quantity}</span></span><span class="real-portfolio-value">${est?realMoney(est.amount*entry.quantity):'Unpriced'} <small>${est?realMoney(est.amount)+' / card':'Set a manual estimate or refresh price'}</small></span><span class="real-portfolio-source">${esc(source)}${est?.at?' · '+esc(priceTime(est.at)):'' }${stale?' · old quote':''}</span>${!est&&entry.priceError?`<span class="real-portfolio-error">Price lookup: ${esc(entry.priceError)}</span>`:''}
+ <div class="real-portfolio-row-actions"><button type="button" class="secondary-action small-button" data-action="portfolio-edit" data-id="${esc(entry.id)}">Edit</button><button type="button" class="tertiary-action small-button" data-action="portfolio-refresh" data-id="${esc(entry.id)}" ${!portfolioHasAutomaticPrice(entry)||portfolioFetches.has(entry.id)?'disabled':''}>${portfolioFetches.has(entry.id)?'Matching…':'↻ Find price'}</button><button type="button" class="danger-action small-button" data-action="portfolio-delete" data-id="${esc(entry.id)}">Remove</button></div>${marketSiteLinks(entry)}</div></article>`;
 }
 function renderToolPortfolio(){
  const t=portfolioTotals(),items=portfolioFilteredRows(),visible=items.slice(0,portfolioUI.limit);
@@ -1979,14 +1985,15 @@ function cardMarketQuery(card=null,term='',setId=ui.priceSet){
  const set=SETS[card?.setId||setId];
  const name=card?.name||String(term||'').trim();
  const number=card?.number?` ${card.number}`:'';
- return [name,number.trim(),set?.name||'', 'Pokemon'].filter(Boolean).join(' ').replace(/\s+/g,' ').trim();
+ return [name,number.trim(),card?.setName||set?.name||'', 'Pokemon'].filter(Boolean).join(' ').replace(/\s+/g,' ').trim();
 }
 function marketSiteLinks(card=null,term='',setId=ui.priceSet){
  const q=cardMarketQuery(card,term,setId);
  const safe=encodeURIComponent(q || 'Pokemon cards');
  const a=`https://www.tcgplayer.com/search/pokemon/product?q=${safe}&productLineName=pokemon`;
  const b=`https://www.pricecharting.com/search-products?q=${safe}&type=prices`;
- return `<div class="market-links"><a href="${esc(a)}" target="_blank" rel="noopener noreferrer">Check TCGplayer ↗</a><a href="${esc(b)}" target="_blank" rel="noopener noreferrer">Check PriceCharting ↗</a></div>`;
+ const c=`https://app.getcollectr.com/?query=${safe}`;
+ return `<div class="market-links"><a href="${esc(a)}" target="_blank" rel="noopener noreferrer">Compare TCGplayer ↗</a><a href="${esc(b)}" target="_blank" rel="noopener noreferrer">Open PriceCharting ↗</a><a href="${esc(c)}" target="_blank" rel="noopener noreferrer">Open Collectr ↗</a></div>`;
 }
 function priceCandidates(){
  const pool=catalogMemory.get(ui.priceSet)||[];
@@ -2016,7 +2023,7 @@ function quoteRows(tcg){
    .filter(v=>[v.market,v.low,v.mid,v.high].some(x=>Number.isFinite(x)&&x>0));
 }
 function realPriceTable(payload){
- const tcg=payload?.pricing?.tcgplayer||payload?.prices?.tcgplayer||null;
+ const tcg=payload?.pricing?.tcgplayer||payload?.prices?.tcgplayer||payload?.tcgplayer||null;
  const rows=quoteRows(tcg);
  if(!rows.length)return '<div class="price-unavailable">No USD TCGplayer market quote was supplied for this print. Use the marketplace searches below to compare active listings and sold prices.</div>';
  const val=x=>Number.isFinite(x)&&x>0?cash(x):'—';
@@ -2042,7 +2049,7 @@ function renderToolPrices(){
  <div class="tool-fields"><label class="field-block">Card set<select id="priceSet">${opts}</select></label><label class="field-block price-search-field">Card name or number<input id="priceSearch" type="search" value="${esc(ui.priceQuery)}" placeholder="Umbreon ex, Charizard, 161…" autocomplete="off"></label></div>
  <div class="market-hint"><strong>Looking for a different Pokémon set?</strong> Use the TCGplayer and PriceCharting links below to search beyond the four current PACKLAB checklists. Market prices vary by language, printing, finish and condition.</div>${marketSiteLinks(null,ui.priceQuery,ui.priceSet)}
  ${priceSelectedPanel()}<div class="section-heading" style="margin-top:18px">Choose the exact card <small>ACTUAL CARD ART / NUMBER</small></div><div id="priceLookupResults">${priceLookupList()}</div>
- <p class="tool-disclaimer">No pricing data is fabricated. Automatic USD quotes depend on third-party data availability; PriceCharting values are opened on its own website, not scraped into PACKLAB. The game inventory, coin values and simulated grades are unaffected.</p></section>`;
+ <p class="tool-disclaimer">No pricing data is fabricated. Automatic USD quotes use public TCGplayer data via TCGdex when available. PriceCharting requires a paid API plan; Collectr requires approved API credentials, so those links are comparisons only, not imported live quotes. The game inventory, coin values and simulated grades are unaffected.</p></section>`;
 }
 async function loadPriceForSelectedCard(force=false){
  const c=selectedPriceCard();if(!c)return;
