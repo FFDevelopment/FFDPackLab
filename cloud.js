@@ -279,5 +279,5 @@ async function init(){updateBadge();if(!layer||!badge)return;
  updateBadge();
 }
 window.PackLabCloud={changed,showAccount,hasAccount:()=>!!currentUser,status:()=>({signedIn:!!currentUser,username,slots:Object.fromEntries(Object.entries(slots).map(([slot,x])=>[slot,{revision:x.rev,linked:x.enabled,conflict:x.conflict,error:x.error}]))})};
-void init();
+void init().finally(()=>{if(window.location.hash.toLowerCase()==='#account')showAccount();});
 })();
