@@ -44,9 +44,9 @@ function timeLabel(d){if(!d)return 'Not saved';const a=new Date(d);return Number
 function textStatus(text,isError=false){message=text||'';messageError=!!isError;updateBadge();if(!layer.hidden)renderAccount();}
 function updateBadge(){if(!badge)return;const saving=Object.values(slots).some(s=>s.busy||s.dirty&&s.enabled);
  const error=Object.values(slots).some(s=>s.conflict||s.error);
- const name=currentUser?(username||currentUser.email?.split('@')[0]||'Account'):'Guest';
- badge.textContent=currentUser?(error?'⚠ Sync issue':saving?'◷ Syncing':`☁ ${name}`):'☁ Guest';
- badge.title=currentUser?`${currentUser.email} · ${error?'Cloud needs attention':saving?'Saving changes':'Open cloud account'}`:'Optional account — save across devices';
+ const name=currentUser?(username||currentUser.email?.split('@')[0]||'Account'):'Account';
+ badge.textContent=currentUser?(error?'⚠ Sync issue':saving?'◷ Syncing':`☁ ${name}`):'☁ Account';
+ badge.title=currentUser?`${currentUser.email} · ${error?'Cloud needs attention':saving?'Saving changes':'Open cloud account / edit Trainer Name'}`:'Account: sign in, register, and sync game + physical collection';
  badge.classList.toggle('cloud-problem',error);
 }
 function showAccount(){if(!layer)return;layer.hidden=false;renderAccount();}
@@ -56,7 +56,7 @@ function renderAccount(){if(layer.hidden)return;
  if(!client){inner=`<div class="cloud-notice danger">Account service could not load. The game still works as a guest. Check your connection and reload.</div>`;}
  else if(!currentUser){const signup=authScreen==='signup';const recover=authScreen==='reset';
  inner=`<div class="cloud-auth-switch"><button type="button" data-cloud="tab-signin" class="${!signup&&!recover?'current':''}">Sign in</button><button type="button" data-cloud="tab-signup" class="${signup?'current':''}">Create account</button></div>
- <p class="cloud-subtext">${recover?'Request a password-reset link.':'Sign in on phone and PC to use the same game binder and physical-card portfolio. Guest play stays available.'}</p>
+ <p class="cloud-subtext">${recover?'Request a password-reset link.':'Sign in on phone and PC to use the same game binder and physical-card portfolio. Guest play stays available. <strong>Your Trainer Name can be edited under My Account after signing in.</strong>'}</p>
  <form id="packlabAccountForm" autocomplete="on"><input type="hidden" name="mode" value="${recover?'reset':signup?'signup':'signin'}"/>
  ${signup?'<label>Trainer Name<input name="username" autocomplete="username" required minlength="3" maxlength="20" pattern="[A-Za-z0-9_]{3,20}" placeholder="TrainerName"></label>':''}
  <label>Email address<input name="email" type="email" autocomplete="email" required placeholder="you@example.com"></label>
@@ -80,11 +80,12 @@ function renderAccount(){if(layer.hidden)return;
  </div>`;
  }).join('');
  inner=`<div class="cloud-user-summary"><div><strong>${esc(username||currentUser.user_metadata?.username||'PACKLAB Collector')}</strong><span>${esc(currentUser.email||'')}</span></div><button type="button" class="secondary-action small-button" data-cloud="logout">Sign out</button></div>
- <form id="packlabTrainerNameForm" class="cloud-trainer-form"><label for="cloudTrainerName">Trainer Name</label><div class="cloud-trainer-fields"><input id="cloudTrainerName" name="trainerName" autocomplete="nickname" minlength="3" maxlength="20" pattern="[A-Za-z0-9_]{3,20}" value="${esc(username||'')}" required><button type="submit" class="secondary-action" ${busy?'disabled':''}>Update</button></div><small>3–20 letters, numbers or underscores. Names are unique regardless of capitalization.</small></form>
+ <form id="packlabTrainerNameForm" class="cloud-trainer-form"><label for="cloudTrainerName">Trainer Name</label><div class="cloud-trainer-fields"><input id="cloudTrainerName" name="trainerName" autocomplete="nickname" minlength="3" maxlength="20" pattern="[A-Za-z0-9_]{3,20}" value="${esc(username||'')}" required><button type="submit" class="secondary-action" ${busy?'disabled':''}>Save Trainer Name</button></div><small>3–20 letters, numbers or underscores. Names are unique regardless of capitalization.</small></form>
+ ${username.startsWith("Player_")?`<p class="cloud-small">This account still has an automatically generated Player_ name. Enter the Trainer Name you want above, then press Save Trainer Name.</p>`:""}
  <p class="cloud-subtext">For each collection, choose the save to keep on this device. If both have progress, nothing is overwritten until you choose. Changes sync automatically after linking.</p>${parts}
  <p class="cloud-small">A different signed-in device will load the account copy. Simultaneous edits use revision checks; conflicts require your choice. Use Export Save and Portfolio Export for extra backups.</p>`;
  }
- layer.innerHTML=`<div class="cloud-modal" role="dialog" aria-modal="true" aria-label="PACKLAB account" tabindex="-1"><div class="cloud-modal-head"><div><small>PACKLAB CLOUD</small><h2>${currentUser?'Your synced account':'Sign in or create an account'}</h2></div><button type="button" class="cloud-close" data-cloud="close" aria-label="Close account window">×</button></div>
+ layer.innerHTML=`<div class="cloud-modal" role="dialog" aria-modal="true" aria-label="FFDPackLabs account and Trainer Name" tabindex="-1"><div class="cloud-modal-head"><div><small>FFDPACKLABS ACCOUNT</small><h2>${currentUser?'Your synced account':'Sign in or create an account'}</h2></div><button type="button" class="cloud-close" data-cloud="close" aria-label="Close account window">×</button></div>
  ${message?`<div class="cloud-notice ${messageError?'danger':''}">${esc(message)}</div>`:''}${inner}</div>`;
 }
 function validateLocal(slot){const payload=JSON.parse(JSON.stringify(slotValue(slot)));if(!isValidSave(slot,payload))throw Error(`This device's ${SLOT_NAMES[slot]} save is not valid. Export it before continuing.`);const size=new TextEncoder().encode(JSON.stringify(payload)).length;if(size>8*1024*1024)throw Error('Save is larger than the 8 MB cloud limit. Export your collection and reduce its size.');return payload;}
@@ -279,5 +280,5 @@ async function init(){updateBadge();if(!layer||!badge)return;
  updateBadge();
 }
 window.PackLabCloud={changed,showAccount,hasAccount:()=>!!currentUser,status:()=>({signedIn:!!currentUser,username,slots:Object.fromEntries(Object.entries(slots).map(([slot,x])=>[slot,{revision:x.rev,linked:x.enabled,conflict:x.conflict,error:x.error}]))})};
-void init();
+void init().finally(()=>{if(window.location.hash.toLowerCase()==='#account')showAccount();});
 })();
