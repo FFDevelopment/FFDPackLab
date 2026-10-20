@@ -58,7 +58,7 @@ function renderAccount(){if(layer.hidden)return;
  inner=`<div class="cloud-auth-switch"><button type="button" data-cloud="tab-signin" class="${!signup&&!recover?'current':''}">Sign in</button><button type="button" data-cloud="tab-signup" class="${signup?'current':''}">Create account</button></div>
  <p class="cloud-subtext">${recover?'Request a password-reset link.':'Sign in on phone and PC to use the same game binder and physical-card portfolio. Guest play stays available.'}</p>
  <form id="packlabAccountForm" autocomplete="on"><input type="hidden" name="mode" value="${recover?'reset':signup?'signup':'signin'}"/>
- ${signup?'<label>Username<input name="username" autocomplete="username" required minlength="3" maxlength="20" pattern="[A-Za-z0-9_]{3,20}" placeholder="TrainerName"></label>':''}
+ ${signup?'<label>Trainer Name<input name="username" autocomplete="username" required minlength="3" maxlength="20" pattern="[A-Za-z0-9_]{3,20}" placeholder="TrainerName"></label>':''}
  <label>Email address<input name="email" type="email" autocomplete="email" required placeholder="you@example.com"></label>
  ${!recover?`<label>Password<input name="password" type="password" autocomplete="${signup?'new-password':'current-password'}" required minlength="8" placeholder="At least 8 characters"></label>`:''}
  <button class="primary-action full" type="submit" ${busy?'disabled':''}>${busy?'Working…':recover?'Send reset link':signup?'Create account':'Sign in'}</button></form>
@@ -80,6 +80,7 @@ function renderAccount(){if(layer.hidden)return;
  </div>`;
  }).join('');
  inner=`<div class="cloud-user-summary"><div><strong>${esc(username||currentUser.user_metadata?.username||'PACKLAB Collector')}</strong><span>${esc(currentUser.email||'')}</span></div><button type="button" class="secondary-action small-button" data-cloud="logout">Sign out</button></div>
+ <form id="packlabTrainerNameForm" class="cloud-trainer-form"><label for="cloudTrainerName">Trainer Name</label><div class="cloud-trainer-fields"><input id="cloudTrainerName" name="trainerName" autocomplete="nickname" minlength="3" maxlength="20" pattern="[A-Za-z0-9_]{3,20}" value="${esc(username||'')}" required><button type="submit" class="secondary-action" ${busy?'disabled':''}>Update</button></div><small>3–20 letters, numbers or underscores. Names are unique regardless of capitalization.</small></form>
  <p class="cloud-subtext">For each collection, choose the save to keep on this device. If both have progress, nothing is overwritten until you choose. Changes sync automatically after linking.</p>${parts}
  <p class="cloud-small">A different signed-in device will load the account copy. Simultaneous edits use revision checks; conflicts require your choice. Use Export Save and Portfolio Export for extra backups.</p>`;
  }
@@ -109,8 +110,18 @@ async function readServerRows(){if(!client||!currentUser)return[];
  const {data,error}=await client.from(CLOUD_TABLE).select('slot,payload,revision,updated_at').eq('user_id',currentUser.id);
  if(error)throw error;return data||[];}
 async function readProfile(){const {data,error}=await client.from(PROFILE_TABLE).select('username').eq('user_id',currentUser.id).maybeSingle();if(error)throw error;
- if(data?.username){username=data.username;return;}
- let desired=String(currentUser.user_metadata?.username||'').replace(/[^A-Za-z0-9_]/g,'').slice(0,20);
+ const saved=String(data?.username||'');
+ const signupName=String(currentUser.user_metadata?.username||'').replace(/[^A-Za-z0-9_]/g,'').slice(0,20);
+ if(saved){
+  // Only repair known auto-generated placeholders. Never overwrite a player-chosen name.
+  const placeholders=['Player_'+currentUser.id.slice(0,7),'Player_'+currentUser.id.replaceAll('-','').slice(0,12)];
+  if(placeholders.includes(saved)&&signupName.length>=3&&signupName.toLowerCase()!==saved.toLowerCase()){
+   const {data:repaired,error:repairError}=await client.from(PROFILE_TABLE).update({username:signupName}).eq('user_id',currentUser.id).select('username').maybeSingle();
+   if(!repairError&&repaired?.username){username=repaired.username;return;}
+  }
+  username=saved;return;
+ }
+ let desired=signupName;
  if(desired.length<3)desired='Player_'+currentUser.id.slice(0,7);
  let {error:putError}=await client.from(PROFILE_TABLE).insert({user_id:currentUser.id,username:desired});
  if(putError){const fallback='Player_'+currentUser.id.replaceAll('-','').slice(0,12);
@@ -208,9 +219,28 @@ async function signOut(){if(!client||!currentUser)return;const activeDirty=Objec
  for(const slot of Object.keys(slots))Object.assign(slots[slot],makeSlot());message='Signed out. Guest progress is available on this device.';messageError=false;
  }catch(e){message=e.message||'Sign out failed.';messageError=true;}finally{busy=false;updateBadge();renderAccount();}
 }
+async function processTrainerNameSubmit(e){
+ e.preventDefault();if(!client||!currentUser||busy)return;
+ const next=String(new FormData(e.target).get('trainerName')||'').trim();
+ if(!/^[A-Za-z0-9_]{3,20}$/.test(next)){textStatus('Trainer Name must use 3–20 letters, numbers, or underscores.',true);return;}
+ if(next===username){textStatus('This is already your Trainer Name.');return;}
+ busy=true;message='';renderAccount();
+ try{
+  const {data,error}=await client.from(PROFILE_TABLE).update({username:next}).eq('user_id',currentUser.id).select('username').single();
+  if(error)throw error;
+  username=data.username;
+  // The RLS-protected profile row is authoritative. Metadata is only a recovery hint.
+  const metadataResult=await client.auth.updateUser({data:{username}});
+  if(metadataResult.error)console.warn('Could not update Trainer Name metadata hint',metadataResult.error.message);
+  message='Trainer Name saved to your account.';messageError=false;
+ }catch(err){
+  message=err?.code==='23505'?'This Trainer Name is already taken. Try a different name.':(err?.message||'Unable to update Trainer Name.');
+  messageError=true;
+ }finally{busy=false;renderAccount();updateBadge();}
+}
 async function processAccountSubmit(e){e.preventDefault();if(busy||!client)return;const d=new FormData(e.target),mode=d.get('mode'),email=String(d.get('email')||'').trim(),password=String(d.get('password')||'');
  if((mode!=='change-password'&&(!email||!email.includes('@')))||(mode!=='reset'&&password.length<8)){textStatus('Use a valid email and a password with at least 8 characters.',true);return;}
- const name=String(d.get('username')||'').trim();if(mode==='signup'&&!/^[A-Za-z0-9_]{3,20}$/.test(name)){textStatus('Username must be 3–20 letters, numbers or underscores.',true);return;}
+ const name=String(d.get('username')||'').trim();if(mode==='signup'&&!/^[A-Za-z0-9_]{3,20}$/.test(name)){textStatus('Trainer Name must be 3–20 letters, numbers or underscores.',true);return;}
  busy=true;message='';renderAccount();try{
  if(mode==='change-password'){const {error}=await client.auth.updateUser({password});if(error)throw error;authScreen='signin';message='Password changed.';}
  else if(mode==='signin'){const {data,error}=await client.auth.signInWithPassword({email,password});if(error)throw error;if(data?.session){message='Signed in. Loading account saves…';if(data.user)await connectAccount(data.user);}else message='Check your email to finish signing in.';}
@@ -232,7 +262,7 @@ function accountEvent(e){const target=e.target.closest('[data-cloud]');if(!targe
 async function init(){updateBadge();if(!layer||!badge)return;
  badge.addEventListener('click',showAccount);
  layer.addEventListener('click',e=>{if(e.target===layer)hideAccount();else accountEvent(e)});
- layer.addEventListener('submit',e=>{if(e.target?.id==='packlabAccountForm')void processAccountSubmit(e)});
+ layer.addEventListener('submit',e=>{if(e.target?.id==='packlabAccountForm')void processAccountSubmit(e);else if(e.target?.id==='packlabTrainerNameForm')void processTrainerNameSubmit(e);});
  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!layer.hidden)hideAccount();});
  document.addEventListener('visibilitychange',()=>{if(!document.hidden)void pollRemote();});
  window.addEventListener('focus',()=>void pollRemote());
