@@ -3,9 +3,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#090e1c" />
+  <meta name="theme-color" content="#080d20" />
+  <link rel="icon" type="image/svg+xml" href="assets/ffdp-logo.svg" />
   <meta name="description" content="PackLab: a mobile-friendly collector simulator prototype. Rip real-art 30th Celebration, Prismatic Evolutions, 151 and Surging Sparks boosters. Earn packs, grade pulls and battle." />
-  <title>PACKLAB — Collector v0.9 • Cloud Accounts</title>
+  <title>FFDPackLabs — Collector v0.9.1</title>
   
   <link rel="preload" as="image" href="https://upload.wikimedia.org/wikipedia/en/3/36/Pokemon_Trading_Card_Game_cardback.png" />
   <style>
@@ -478,6 +479,31 @@ body.camera-open{overflow:hidden}
 @media(max-width:700px){.cloud-modal{padding:16px}.cloud-account-button{min-width:65px;max-width:76px;font-size:10px;padding:5px 6px}.top-stats{gap:5px}.header-shell{gap:6px}.brand-copy small{display:none}.cloud-slot-summary{grid-template-columns:1fr}.cloud-slot-summary span{margin-top:5px}.cloud-save-slot{padding:11px}}
 @media(max-width:360px){.cloud-account-button{max-width:64px;min-width:58px}.brand-copy strong{font-size:15px}.stat-chip{min-width:50px}}
 
+
+/* FFDPackLabs v0.9.1 blue-purple identity */
+:root{--bg:#080d20;--panel:#10192e;--panel2:#142342;--panel3:#1a2850;--line:#25395b;--purple:#9b43f7;--purple2:#6e24e5;--mint:#43c7ff;--muted:#9aa9c7;--muted2:#8091b5}
+body{background:radial-gradient(circle at 85% 4%,#10307188,transparent 37%),radial-gradient(circle at 0% 100%,#3a12564f,transparent 40%),var(--bg)}
+.app-header{background:#080d20f2;border-color:#27375c}
+.ffdp-brand-icon{width:45px;height:45px;object-fit:contain;border-radius:11px;box-shadow:0 0 18px #1150eb44}
+.brand-copy strong{font-size:clamp(16px,1.6vw,23px);letter-spacing:-.5px;color:#f8faff;white-space:nowrap}
+.ffdp-gradient{background:linear-gradient(95deg,#0dbdff 0%,#225bff 41%,#a233ff 100%);background-clip:text;-webkit-background-clip:text;color:transparent}
+.brand-copy small{color:#9caed0;letter-spacing:1.6px;font-size:8px}
+.primary-action{background:linear-gradient(120deg,#0277f7,#5e38fa 58%,#9834e9);color:#fff;box-shadow:0 8px 22px #1e54ec44}
+.primary-action:hover:not(:disabled){filter:brightness(1.18)}
+.nav-link.active{border-color:#285ab7;background:linear-gradient(90deg,#063f86bb,#361b758c);box-shadow:inset 3px 0 0 #21b8ff}
+.nav-link.active .nav-ico,.eyebrow,.nav-suffix{color:#6dd6ff}
+.pill.mint{color:#94deff;background:#10355f;border-color:#256faf}
+.level-card{background:linear-gradient(130deg,#102b61,#281646)}
+.xp-fill,.hp-fill{background:linear-gradient(90deg,#0277fe,#9b24fa)}
+.camera-detected-overlay polygon{stroke:#e6ad42}
+.camera-detected-overlay[data-locked="true"] polygon{stroke:#4aeea7}
+.cloud-trainer-form{display:grid;gap:7px;margin:13px 0;border:1px solid #304c80;background:#111e39;padding:12px;border-radius:12px}
+.cloud-trainer-form label{font-size:12px;font-weight:800;color:#dce8ff}
+.cloud-trainer-form small{font-size:10px;color:#a4b7d6}
+.cloud-trainer-fields{display:flex;gap:9px;min-width:0}
+.cloud-trainer-fields input{min-width:0;width:100%;flex:1;border:1px solid #36598a;border-radius:9px;background:#0c1830;color:#fff;padding:9px}
+@media(max-width:700px){.brand-copy small{display:none}.brand-copy strong{font-size:16px;letter-spacing:-.6px}.ffdp-brand-icon{width:33px;height:33px}.header-shell{gap:5px}.cloud-trainer-fields{flex-wrap:wrap}.cloud-trainer-fields button{flex:1}}
+
 </style>
 </head>
 <body>
@@ -485,10 +511,10 @@ body.camera-open{overflow:hidden}
     <header class="app-header">
       <div class="header-shell">
         <button class="brand" type="button" data-nav="open" aria-label="Go to pack opening">
-          <span class="brand-mark">P<span class="brand-diamond">◆</span></span>
-          <span class="brand-copy"><strong>PACKLAB</strong><small>COLLECTOR SIMULATOR</small></span>
+          <img class="ffdp-brand-icon" src="assets/ffdp-logo.svg" alt="" width="45" height="45" />
+          <span class="brand-copy"><strong>FFD<span class="ffdp-gradient">PackLabs</span></strong><small>ANALYZE / BUILD / OPTIMIZE</small></span>
         </button>
-        <div class="version-tag"><span class="live-indicator"></span> COLLECTOR v0.9</div>
+        <div class="version-tag"><span class="live-indicator"></span> COLLECTOR v0.9.1</div>
         <div class="top-stats">
           <div class="stat-chip coins"><span class="chip-icon">◈</span><span id="coinCount">—</span><small>COINS</small></div>
           <div class="stat-chip level"><span class="chip-icon">✦</span><span id="levelCount">1</span><small>LEVEL</small></div>
@@ -552,7 +578,7 @@ function drawSource(source,maxSide=680){
  const scale=Math.min(1,maxSide/Math.max(w,h)),c=blankCanvas(Math.max(1,Math.round(w*scale)),Math.max(1,Math.round(h*scale)));
  c.getContext('2d',{willReadFrequently:true}).drawImage(source,0,0,c.width,c.height);return c;
 }
-function guideForSize(w,h){let height=Math.min(h*.83,w*.84*88/63);let width=height*63/88;return {l:(w-width)/2,r:(w+width)/2,t:(h-height)/2,b:(h+height)/2};}
+function guideForSize(w,h){let height=Math.min(h*.83,w*.84*88.9/63.5);let width=height*63.5/88.9;return {l:(w-width)/2,r:(w+width)/2,t:(h-height)/2,b:(h+height)/2};}
 function point(x,y){return {x,y};}
 function bboxToQuad(b){return [point(b.l,b.t),point(b.r,b.t),point(b.r,b.b),point(b.l,b.b)];}
 function gradPixel(d,w,h,x,y,direction){x=Math.round(x);y=Math.round(y);
@@ -634,7 +660,7 @@ function detectOuter(canvas,hint=null,fast=false){
  const height1=Math.hypot(quad[3].x-quad[0].x,quad[3].y-quad[0].y),height2=Math.hypot(quad[2].x-quad[1].x,quad[2].y-quad[1].y);
  const ratio=(width1+width2)/(height1+height2);
  const inbounds=quad.every(p=>p.x>=1&&p.x<w-1&&p.y>=1&&p.y<h-1);
- const geometry=ratio>.55&&ratio<.94&&width1>w*.28&&height1>h*.32&&Math.abs(width1-width2)/Math.max(width1,width2)<.23&&Math.abs(height1-height2)/Math.max(height1,height2)<.23;
+ const geometry=ratio>.59&&ratio<.84&&width1>w*.28&&height1>h*.32&&Math.abs(width1-width2)/Math.max(width1,width2)<.23&&Math.abs(height1-height2)/Math.max(height1,height2)<.23;
  const strongest=Math.min(...candidates.map(p=>p.mean));
  const coverage=Math.min(...candidates.map(p=>p.coverage));
  const allTrusted=candidates.every(p=>p.trusted);
@@ -644,7 +670,7 @@ function detectOuter(canvas,hint=null,fast=false){
 }
 function cornersFromFrac(points,w,h){return points.map(p=>({x:clamp(p.x/w*100,0,100),y:clamp(p.y/h*100,0,100)}));}
 function cornersToPixels(points,w,h){return points.map(p=>({x:p.x/100*w,y:p.y/100*h}));}
-function warpCard(canvas,points,ow=504,oh=704){
+function warpCard(canvas,points,ow=750,oh=1050){
  const sw=canvas.width,sh=canvas.height,out=blankCanvas(ow,oh),inCtx=canvas.getContext('2d',{willReadFrequently:true}),src=inCtx.getImageData(0,0,sw,sh).data,ctx=out.getContext('2d',{willReadFrequently:true});
  const d=ctx.createImageData(ow,oh),dst=d.data;
  const [p0,p1,p2,p3]=points;
@@ -754,7 +780,7 @@ function segmentCardBounds(canvas){
 
 function detectOuterFlexible(canvas,hint=null,fast=false){
  const w=canvas.width,h=canvas.height;
- const width=Math.min(w*.78,h*.8*63/88),height=width*88/63;
+ const width=Math.min(w*.78,h*.8*63.5/88.9),height=width*88.9/63.5;
  const guesses=[];
  const segmented=segmentCardBounds(canvas);
  // The segmented extent is an excellent detector seed for off-center cards.
@@ -769,7 +795,7 @@ function detectOuterFlexible(canvas,hint=null,fast=false){
  // may be visible, but measurements are only accepted after all four OUTER edges are checked.
  const ratios=fast?[.32,.5,.68]:[.27,.42,.58,.73];
  const midY=fast?[.36,.5,.64]:[.30,.45,.60,.73];
- const wGuess=fast?width*.91:width*.80,hGuess=wGuess*88/63;
+ const wGuess=fast?width*.91:width*.80,hGuess=wGuess*88.9/63.5;
  for(const cy of midY)for(const cx of ratios){
   guesses.push({l:Math.max(0,cx-wGuess/w/2),r:Math.min(1,cx+wGuess/w/2),t:Math.max(0,cy-hGuess/h/2),b:Math.min(1,cy+hGuess/h/2)});
  }
@@ -1571,9 +1597,9 @@ function computeScanWarp(scan,override=false){
  const src=scan.rawCanvas;
  if(!src||!scan.quadPct)throw Error('No image data available.');
  const pts=cv.cornersToPixels(scan.quadPct,src.width,src.height);
- const warped=cv.warpCard(src,pts),frame=cv.findInnerFrame(warped);
+ const warped=cv.warpCard(src,pts,750,1050),analysis=cv.drawSource(warped,650),frame=cv.findInnerFrame(analysis);
  scan.image=warped.toDataURL('image/jpeg',.92);
- scan.quality=cv.photoQuality(warped);scan.wear=cv.blueWear(warped);
+ scan.quality=cv.photoQuality(analysis);scan.wear=cv.blueWear(analysis);
  scan.innerReliability=frame.reliability;scan.innerDetails=frame.edgeDetails;
  const regular=realScanStyle()==='standard'||realScanStyle()==='unknown';
  scan.centering=regular&&frame.ok?Object.fromEntries(Object.entries(frame.guides).map(([k,v])=>[k,Math.round(v*10)/10])):{left:8,right:8,top:7,bottom:7};
@@ -1598,8 +1624,17 @@ function analyzeCenterPhoto(url,hint=null,side=ui.scanSide){
   if(token!==centerAnalysisToken||rec!==ui.scanScans[side]||rec.rawUrl!==url)return;
   try{
    const cv=window.PackLabVision;
-   const source=cv.drawSource(img,680);
-   const scan=cv.detectOuterFlexible(source,hint,false);
+   const source=cv.drawSource(img,1280);
+   let scan;
+    if(hint?.quadPct?.length===4){
+      const hinted=cv.cornersToPixels(hint.quadPct,source.width,source.height);
+      const edges=hinted.map((p,i)=>Math.hypot(p.x-hinted[(i+1)%4].x,p.y-hinted[(i+1)%4].y));
+      const ratio=(edges[0]+edges[2])/Math.max(1,edges[1]+edges[3]);
+      const area=Math.abs(hinted.reduce((n,p,i)=>{const q=hinted[(i+1)%4];return n+p.x*q.y-q.x*p.y;},0)/2);
+      if(hinted.every(p=>Number.isFinite(p.x+p.y)&&p.x>=0&&p.x<=source.width&&p.y>=0&&p.y<=source.height)&&ratio>.59&&ratio<.84&&area>source.width*source.height*.035)
+        scan={ok:true,confidence:'medium',quad:hinted,ratio,reason:'Live camera lock; review cardboard edges before measuring.'};
+    }
+    if(!scan)scan=cv.detectOuterFlexible(source,null,false);
    rec.rawCanvas=source;rec.rawPreview=source.toDataURL('image/jpeg',.94);
    rec.quadPct=cv.cornersFromFrac(scan.quad,source.width,source.height);
    rec.outerConfidence=scan.ok?scan.confidence:'none';
@@ -1721,7 +1756,7 @@ function showCameraDialog(){
  const layer=cameraLayer();if(!layer)return;layer.hidden=false;document.body.classList.add('camera-open');
  layer.innerHTML=`<div class="camera-dialog" role="dialog" aria-modal="true" aria-label="Scan a real card">
  <div class="camera-top"><div><span class="eyebrow">REAL CARD SCAN · ${ui.scanSide.toUpperCase()}</span><h2>Find the card</h2></div><button type="button" data-action="camera-close" class="camera-close" aria-label="Close camera">×</button></div>
- <p class="camera-instructions">Point at one card against a plain background. The outline turns green when locked.</p>
+ <p class="camera-instructions">Place one unsleeved card on a contrasting background. Gold = detected, green = stable lock. Review cardboard corners after capture.</p>
  <div class="camera-stage" id="centerCameraStage"><video id="centerCameraVideo" autoplay muted playsinline aria-label="Live physical card camera"></video><div class="camera-darken" aria-hidden="true"></div><svg class="camera-detected-overlay" viewBox="0 0 100 100" preserveAspectRatio="none" id="cameraDetectedOverlay" hidden aria-hidden="true"><polygon id="cameraDetectedPoly" /></svg><span class="camera-live-tag">● LOCAL CAMERA</span></div>
  <p class="camera-status" role="status" id="cameraStatus">Opening camera…</p>
  <div class="camera-controls camera-simple-controls"><div class="camera-scan-mode"><button id="cameraMode_auto" type="button" data-action="camera-mode" data-mode="auto" aria-pressed="${centerCameraMode==='auto'}">Auto</button><button id="cameraMode_manual" type="button" data-action="camera-mode" data-mode="manual" aria-pressed="${centerCameraMode==='manual'}">Manual</button></div><button class="primary-action camera-shutter" type="button" id="cameraCapture" data-action="camera-capture" disabled>◉ Capture</button><button class="secondary-action" type="button" data-action="camera-switch" aria-label="Switch camera">⇄</button></div>
