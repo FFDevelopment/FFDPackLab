@@ -533,6 +533,12 @@ body{background:radial-gradient(circle at 85% 4%,#10307188,transparent 37%),radi
  .virtual-game-notice strong{font-size:11px}
 }
 
+
+/* v0.9.3: stable blue target while the camera searches, amber when tracking, green only after lock */
+.camera-search-guide{position:absolute;z-index:2;pointer-events:none;width:min(56%,34vh);aspect-ratio:63.5/88.9;max-height:84%;top:50%;left:50%;transform:translate(-50%,-50%);border:2px dashed #45bfffaa;border-radius:3%/2.2%;box-shadow:0 0 32px #087aff22;opacity:.77;transition:opacity .18s}
+.camera-stage.has-outline .camera-search-guide{opacity:.09}
+.camera-detected-overlay polygon{transition:stroke .3s,fill .3s;stroke:#ffc36b;fill:#ffc36b0d;stroke-width:2.5;filter:drop-shadow(0 0 4px #090b20)}
+.camera-detected-overlay[data-locked="true"] polygon{stroke:#3ff5af;fill:#28ffc314;stroke-width:3;filter:drop-shadow(0 0 6px #11bb89)}
 </style>
 </head>
 <body>
@@ -1735,13 +1741,31 @@ function applyOuterCorrection(){const s=activeScan();if(!s?.rawCanvas){toast('Ta
 // Live camera stays outside #app so UI redraws never detach video.
 let centerCameraStream=null,centerCameraRequest=0,centerCameraFacing='environment',cameraDetectTimer=null;
 let centerCameraMode='auto',cameraStableFrames=0,cameraLastQuad=null,cameraLockedQuad=null,cameraCaptureBusy=false;
+let cameraTrack={quad:null,pending:null,pendingCount:0,stableCount:0,lastSeen:0,startedAt:0,misses:0};
+function resetCameraTrack(){
+ cameraTrack={quad:null,pending:null,pendingCount:0,stableCount:0,lastSeen:0,startedAt:Date.now(),misses:0};
+ cameraLockedQuad=null;cameraLastQuad=null;cameraStableFrames=0;updateCameraDetectedOutline([],false);
+}
+function cameraValidQuad(points){
+ if(!Array.isArray(points)||points.length!==4||!points.every(p=>Number.isFinite(p.x)&&Number.isFinite(p.y)&&p.x>=1&&p.x<=99&&p.y>=1&&p.y<=99))return false;
+ const length=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
+ const h=(length(points[0],points[1])+length(points[2],points[3]))/2;
+ const v=(length(points[1],points[2])+length(points[3],points[0]))/2;
+ const ratio=h/Math.max(.1,v);
+ const area=Math.abs(points.reduce((n,p,i)=>{const q=points[(i+1)%4];return n+p.x*q.y-q.x*p.y;},0))/2;
+ // 63.5 × 88.9 mm => ratio ~0.714; allow perspective/normal camera distortion.
+ return ratio>.59&&ratio<.84&&area>320&&area<7600&&h>=14&&v>=22;
+}
+function cameraBlendQuad(previous,next,alpha=.27){
+ return previous.map((p,i)=>({x:p.x*(1-alpha)+next[i].x*alpha,y:p.y*(1-alpha)+next[i].y*alpha}));
+}
 function cameraQuadDistance(a,b){if(!a||!b)return Infinity;return Math.max(...a.map((p,i)=>Math.hypot(p.x-b[i].x,p.y-b[i].y)));}
 function updateCameraModeLabel(){for(const value of ['auto','manual']){const button=document.getElementById(`cameraMode_${value}`);if(button)button.setAttribute('aria-pressed',String(value===centerCameraMode));}}
 
 
 function cameraLayer(){return document.getElementById('cameraLayer');}
 function cameraStatus(message,kind=''){const el=document.getElementById('cameraStatus');if(el){el.textContent=message;el.dataset.kind=kind;}}
-function closeCenterCamera(){centerCameraRequest++;cameraLockedQuad=null;cameraLastQuad=null;cameraStableFrames=0;cameraCaptureBusy=false;if(cameraDetectTimer){clearTimeout(cameraDetectTimer);cameraDetectTimer=null;}
+function closeCenterCamera(){centerCameraRequest++;cameraCaptureBusy=false;resetCameraTrack();if(cameraDetectTimer){clearTimeout(cameraDetectTimer);cameraDetectTimer=null;}
  if(centerCameraStream){centerCameraStream.getTracks().forEach(t=>t.stop());centerCameraStream=null;}
  const video=document.getElementById('centerCameraVideo');if(video){video.pause();video.srcObject=null;}
  const layer=cameraLayer();if(layer){layer.hidden=true;layer.innerHTML='';}document.body.classList.remove('camera-open');}
@@ -1763,37 +1787,79 @@ function cameraImageRect(){
  return {l:(box.width-w)/2/box.width,t:(box.height-h)/2/box.height,w:w/box.width,h:h/box.height};
 }
 function updateCameraDetectedOutline(quad,visible,locked=false){
- const overlay=document.getElementById('cameraDetectedOverlay'),poly=document.getElementById('cameraDetectedPoly');
+ const overlay=document.getElementById('cameraDetectedOverlay'),poly=document.getElementById('cameraDetectedPoly'),stage=document.getElementById('centerCameraStage');
  if(!overlay||!poly)return;
- if(visible)overlay.removeAttribute('hidden');else overlay.setAttribute('hidden','');overlay.dataset.locked=String(locked);
+ if(visible)overlay.removeAttribute('hidden');else overlay.setAttribute('hidden','');
+ overlay.dataset.locked=String(locked);
+ if(stage)stage.classList.toggle('has-outline',!!visible);
  if(visible){const r=cameraImageRect();if(r)poly.setAttribute('points',quad.map(p=>`${(100*r.l+p.x*r.w).toFixed(2)},${(100*r.t+p.y*r.h).toFixed(2)}`).join(' '));}
 }
 
 function scanLiveCamera(request){
  if(request!==centerCameraRequest||cameraLayer()?.hidden||!centerCameraStream||cameraCaptureBusy)return;
+ const now=Date.now();
  try{
-  const cv=window.PackLabVision,source=captureCameraStage(360);
-  // Search all image locations; the cursor is never a hard-coded central rectangle.
-  const scan=cv.detectOuterFlexible(source,null,true);
-  const good=!!scan.ok&&['high','medium'].includes(scan.confidence);
+  const cv=window.PackLabVision,source=captureCameraStage(380);
+  const detected=cv.detectOuterFlexible(source,null,true);
+  const measured=detected?.ok&&['high','medium'].includes(detected.confidence)
+   ?cv.cornersFromFrac(detected.quad,source.width,source.height):null;
+  const good=measured&&cameraValidQuad(measured);
   if(good){
-   const quad=cv.cornersFromFrac(scan.quad,source.width,source.height);
-   const spread=cameraQuadDistance(cameraLastQuad,quad);
-   cameraStableFrames=spread<3.4?cameraStableFrames+1:1;
-   cameraLastQuad=quad;
-   const minx=Math.min(...quad.map(p=>p.x)),maxx=Math.max(...quad.map(p=>p.x));
-   const miny=Math.min(...quad.map(p=>p.y)),maxy=Math.max(...quad.map(p=>p.y));
-   const sizeOK=maxx-minx>=20&&maxy-miny>=30&&maxx-minx<94&&maxy-miny<96;
-   const pictureOK=!cv.photoQuality(source).blurry;
-   const locked=cameraStableFrames>=3&&sizeOK&&pictureOK&&scan.confidence==='high'&&!ui.scanHolder;
-   cameraLockedQuad=locked?quad:null;
-   updateCameraDetectedOutline(quad,true,locked);
-   cameraStatus(ui.scanHolder?'Card-like outline found — sleeve may be mistaken for cardboard. Capture manually.':locked?'Card locked ✓':`Card detected · hold steady (${Math.min(3,cameraStableFrames)}/3)`,locked?'locked':'ready');
-   if(locked&&centerCameraMode==='auto'&&!ui.scanHolder){cameraCaptureBusy=true;cameraStatus('Card locked ✓ Capturing…','locked');
-    requestAnimationFrame(()=>{if(request===centerCameraRequest&&centerCameraStream)captureCenterPhoto('auto');});return;}
-  }else{cameraLockedQuad=null;cameraLastQuad=null;cameraStableFrames=0;updateCameraDetectedOutline([],false);cameraStatus('Point at a single card on a plain, contrasting surface','searching');}
- }catch(e){cameraLockedQuad=null;cameraLastQuad=null;cameraStableFrames=0;updateCameraDetectedOutline([],false);cameraStatus('Keep the entire card visible, or tap Capture','searching');}
- cameraDetectTimer=setTimeout(()=>scanLiveCamera(request),330);
+   // Demand repeated consistent candidates before moving the polygon.
+   const near=cameraTrack.quad&&cameraQuadDistance(cameraTrack.quad,measured)<4.0;
+   if(near){
+    cameraTrack.quad=cameraBlendQuad(cameraTrack.quad,measured);
+    cameraTrack.pending=null;cameraTrack.pendingCount=0;
+    cameraTrack.stableCount++;
+    cameraTrack.lastSeen=now;cameraTrack.misses=0;
+   }else {
+    if(cameraTrack.pending&&cameraQuadDistance(cameraTrack.pending,measured)<3.6){
+     cameraTrack.pending=cameraBlendQuad(cameraTrack.pending,measured,.4);
+     cameraTrack.pendingCount++;
+    }else{cameraTrack.pending=measured;cameraTrack.pendingCount=1;}
+    if(cameraTrack.pendingCount>=3){
+     cameraTrack.quad=cameraTrack.pending;cameraTrack.pending=null;
+     cameraTrack.pendingCount=0;cameraTrack.stableCount=3;
+     cameraTrack.lastSeen=now;cameraTrack.misses=0;
+    }
+   }
+   if(cameraTrack.quad&&cameraTrack.lastSeen===now){
+    const minx=Math.min(...cameraTrack.quad.map(p=>p.x)),maxx=Math.max(...cameraTrack.quad.map(p=>p.x));
+    const miny=Math.min(...cameraTrack.quad.map(p=>p.y)),maxy=Math.max(...cameraTrack.quad.map(p=>p.y));
+    const sizeOK=maxx-minx>=20&&maxy-miny>=30&&maxx-minx<94&&maxy-miny<96;
+    const stableTarget=detected.confidence==='high'?4:6;
+    let lock=cameraTrack.stableCount>=stableTarget&&sizeOK&&!ui.scanHolder;
+    if(lock){const quality=cv.photoQuality(source);lock=!quality.blurry&&!quality.glareRisk;}
+    cameraLockedQuad=lock?cameraTrack.quad.map(p=>({...p})):null;
+    updateCameraDetectedOutline(cameraTrack.quad,true,lock);
+    cameraStatus(ui.scanHolder?'Possible sleeve outline — remove holder or capture manually.':lock?'Card locked ✓ · ready':`Card outline found · hold steady (${Math.min(cameraTrack.stableCount,stableTarget)}/${stableTarget})`,lock?'locked':'ready');
+    if(lock&&centerCameraMode==='auto'){
+     cameraCaptureBusy=true;
+     cameraStatus('Card locked ✓ · capturing…','locked');
+     requestAnimationFrame(()=>{if(request===centerCameraRequest&&centerCameraStream)captureCenterPhoto('auto');});
+     return;
+    }
+   }
+  }else{cameraTrack.pending=null;cameraTrack.pendingCount=0;cameraTrack.misses++;}
+  // Hold tracked edges for a brief dropped frame rather than flickering.
+  if(!cameraTrack.quad||now-cameraTrack.lastSeen>1100){
+   cameraTrack.quad=null;cameraTrack.stableCount=0;cameraLockedQuad=null;
+   updateCameraDetectedOutline([],false);
+   if(cameraTrack.misses>=8||now-cameraTrack.startedAt>3000)
+    cameraStatus('Card not found. Lay it FLAT on a plain contrasting surface; show all 4 corners, avoid glare, and hold the camera straight above.','searching');
+   else cameraStatus('Looking for one card with 63.5 × 88.9 mm proportions…','searching');
+  }else if(!good||cameraTrack.lastSeen!==now){
+   cameraLockedQuad=null;
+   updateCameraDetectedOutline(cameraTrack.quad,true,false);
+   cameraStatus('Checking the card edges — hold still…','ready');
+  }
+ }catch(err){
+  console.warn('Camera detection frame skipped',err);
+  cameraTrack.misses++;
+  if(now-cameraTrack.lastSeen>1100){cameraTrack.quad=null;cameraTrack.stableCount=0;cameraLockedQuad=null;updateCameraDetectedOutline([],false);}
+  cameraStatus('Unable to find clear card edges. Try a flat surface and even light, or capture manually.','searching');
+ }
+ cameraDetectTimer=setTimeout(()=>scanLiveCamera(request),320);
 }
 
 function showCameraDialog(){
@@ -1801,7 +1867,7 @@ function showCameraDialog(){
  layer.innerHTML=`<div class="camera-dialog" role="dialog" aria-modal="true" aria-label="Scan a real card">
  <div class="camera-top"><div><span class="eyebrow">REAL CARD SCAN · ${ui.scanSide.toUpperCase()}</span><h2>Find the card</h2></div><button type="button" data-action="camera-close" class="camera-close" aria-label="Close camera">×</button></div>
  <p class="camera-instructions">Place one unsleeved card on a contrasting background. Gold = detected, green = stable lock. Review cardboard corners after capture.</p>
- <div class="camera-stage" id="centerCameraStage"><video id="centerCameraVideo" autoplay muted playsinline aria-label="Live physical card camera"></video><div class="camera-darken" aria-hidden="true"></div><svg class="camera-detected-overlay" viewBox="0 0 100 100" preserveAspectRatio="none" id="cameraDetectedOverlay" hidden aria-hidden="true"><polygon id="cameraDetectedPoly" /></svg><span class="camera-live-tag">● LOCAL CAMERA</span></div>
+ <div class="camera-stage" id="centerCameraStage"><div class="camera-search-guide" aria-hidden="true"></div><video id="centerCameraVideo" autoplay muted playsinline aria-label="Live physical card camera"></video><div class="camera-darken" aria-hidden="true"></div><svg class="camera-detected-overlay" viewBox="0 0 100 100" preserveAspectRatio="none" id="cameraDetectedOverlay" hidden aria-hidden="true"><polygon id="cameraDetectedPoly" /></svg><span class="camera-live-tag">● LOCAL CAMERA</span></div>
  <p class="camera-status" role="status" id="cameraStatus">Opening camera…</p>
  <div class="camera-controls camera-simple-controls"><div class="camera-scan-mode"><button id="cameraMode_auto" type="button" data-action="camera-mode" data-mode="auto" aria-pressed="${centerCameraMode==='auto'}">Auto</button><button id="cameraMode_manual" type="button" data-action="camera-mode" data-mode="manual" aria-pressed="${centerCameraMode==='manual'}">Manual</button></div><button class="primary-action camera-shutter" type="button" id="cameraCapture" data-action="camera-capture" disabled>◉ Capture</button><button class="secondary-action" type="button" data-action="camera-switch" aria-label="Switch camera">⇄</button></div>
  <label class="camera-plain-toggle"><input type="checkbox" id="cameraHolderLive" ${ui.scanHolder?'checked':''}> Card is in a sleeve/toploader (manual capture only)</label>
@@ -1819,7 +1885,7 @@ async function openCenterCamera(facing=centerCameraFacing){
   video.srcObject=stream;await video.play();if(request!==centerCameraRequest)return;
   if(video.videoWidth<1||video.videoHeight<1){cameraStatus('Waiting for a camera frame. Try again if it stays black.','error');return;}
   if(capture)capture.disabled=false;
-  cameraStatus('Camera ready. You may position the card anywhere in the full frame.','searching');
+  resetCameraTrack();cameraStatus('Scanning for one 2.5 × 3.5 inch card. Keep all four corners visible.','searching');
   cameraDetectTimer=setTimeout(()=>scanLiveCamera(request),350);
   const track=stream.getVideoTracks()[0];if(track)track.addEventListener('ended',()=>{if(centerCameraStream===stream){if(capture)capture.disabled=true;cameraStatus('Camera stopped. Close and reopen it.','error');}});
  }catch(err){if(request!==centerCameraRequest)return;console.warn('Camera error',err);if(centerCameraStream){centerCameraStream.getTracks().forEach(t=>t.stop());centerCameraStream=null;}const failedVideo=document.getElementById('centerCameraVideo');if(failedVideo)failedVideo.srcObject=null;
@@ -2001,7 +2067,7 @@ function processAction(el){const action=el.dataset.action;if(!action)return;swit
  case 'camera-open':openCenterCamera();break;
  case 'camera-close':closeCenterCamera();break;
  case 'camera-switch':openCenterCamera(centerCameraFacing==='environment'?'user':'environment');break;
- case 'camera-mode':centerCameraMode=el.dataset.mode==='manual'?'manual':'auto';updateCameraModeLabel();cameraStatus(centerCameraMode==='auto'?'Auto: capture after the green lock appears':'Manual: tap Capture when the outline looks right','ready');break;
+ case 'camera-mode':centerCameraMode=el.dataset.mode==='manual'?'manual':'auto';resetCameraTrack();updateCameraModeLabel();cameraStatus(centerCameraMode==='auto'?'Auto: scanning for a card on a flat surface…':'Manual: capture, then adjust the four cardboard corners.','ready');break;
  case 'camera-capture':captureCenterPhoto('manual');break;
  case 'scan-accept':acceptScanSuggestion();break;
  case 'scan-adjust':ui.scanAdvanced=true;render();document.getElementById('scanDetails')?.scrollIntoView({block:'nearest',behavior:'smooth'});break;
@@ -2064,7 +2130,7 @@ document.addEventListener('toggle',event=>{if(event.target?.id==='scanDetails')u
   if(e.id==='portfolioSet'){portfolioUI.set=e.value;portfolioUI.limit=48;render();return;}
   if(e.id==='portfolioSort'){portfolioUI.sort=e.value;render();return;}
   if(e.id==='priceSet'){ui.priceSet=SETS[e.value]?e.value:'sv8pt5';ui.priceCardId='';ui.priceQuery='';ui.priceBusy=false;ui.priceError='';requireCatalog(ui.priceSet);render();return;}
- if(e.id==='cameraHolderLive'){ui.scanHolder=!!e.checked;cameraStableFrames=0;cameraLockedQuad=null;cameraStatus(ui.scanHolder?'Holder mode: manual capture only · outline may detect the plastic':'Detecting card…','searching');return;}
+ if(e.id==='cameraHolderLive'){ui.scanHolder=!!e.checked;resetCameraTrack();cameraStatus(ui.scanHolder?'Holder mode: manual capture only · may detect plastic instead of cardboard':'Looking for the card outline…','searching');return;}
  if(e.id==='scanDesign'){
   ui.scanDesign=['standard','thin','borderless','unknown'].includes(e.value)?e.value:'unknown';
   for(const sc of [ui.scanScans.front])if(sc?.rawCanvas){sc.measured=false;sc.centerMethod='';computeScanWarp(sc);}
