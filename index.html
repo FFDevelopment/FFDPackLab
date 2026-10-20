@@ -1279,7 +1279,7 @@ function cleanPortfolioEntry(row){
  const finish=['Normal','Holo Foil','Reverse Holo','Poké Ball Foil','Master Ball Foil','Special Foil','Other'].includes(row.finish)?row.finish:'Normal';
  const condition=['Mint','Near Mint','Lightly Played','Moderately Played','Heavily Played','Damaged'].includes(row.condition)?row.condition:'Near Mint';
  const image=trim(row.image,1000),setId=SETS[row.setId]?row.setId:'other',id=trim(row.id,100)||uuid();
- return {id,setId,cardId:trim(row.cardId,120),name,number,setName,rarity:trim(row.rarity,100),image:/^https:\/\//i.test(image)?image:'',language:trim(row.language,40)||'English',finish,condition,grader:gradeCompany,grade:gradeCompany==='Raw'?'':trim(row.grade,25),quantity:Math.min(9999,Math.max(1,Math.floor(Number(row.quantity)||1))),pricingMode:row.pricingMode==='manual'?'manual':'market',manualPrice:safeNumber(row.manualPrice),purchasePrice:safeNumber(row.purchasePrice),marketPrice:safeNumber(row.marketPrice),marketSource:trim(row.marketSource,100),marketAt:Number.isFinite(Number(row.marketAt))?Number(row.marketAt):null,notes:trim(row.notes,900),createdAt:Number(row.createdAt)||Date.now(),updatedAt:Number(row.updatedAt)||Date.now()};
+ return {id,setId,cardId:trim(row.cardId,120),name,number,setName,rarity:trim(row.rarity,100),image:/^https:\/\//i.test(image)?image:'',language:trim(row.language,40)||'English',finish,condition,grader:gradeCompany,grade:gradeCompany==='Raw'?'':trim(row.grade,25),quantity:Math.min(9999,Math.max(1,Math.floor(Number(row.quantity)||1))),pricingMode:row.pricingMode==='manual'?'manual':'market',tcgdexId:trim(row.tcgdexId,100),priceError:trim(row.priceError,240),manualPrice:safeNumber(row.manualPrice),purchasePrice:safeNumber(row.purchasePrice),marketPrice:safeNumber(row.marketPrice),marketSource:trim(row.marketSource,100),marketAt:Number.isFinite(Number(row.marketAt))?Number(row.marketAt):null,notes:trim(row.notes,900),createdAt:Number(row.createdAt)||Date.now(),updatedAt:Number(row.updatedAt)||Date.now()};
 }
 function loadRealPortfolio(){
  try{const data=JSON.parse(localStorage.getItem(REAL_PORTFOLIO_KEY)||'null');if(data?.schema!==1||!Array.isArray(data.entries))return {schema:1,entries:[],updatedAt:Date.now()};
@@ -1292,7 +1292,7 @@ function commitRealPortfolio(entries){
  try{localStorage.setItem(REAL_PORTFOLIO_KEY,JSON.stringify(next));realPortfolio=next;window.PackLabCloud?.changed?.('portfolio');return true;}
  catch(e){toast('Real portfolio could not be saved. Check browser storage, and export a backup.','error');console.warn('Real portfolio save failed',e);return false;}
 }
-function portfolioHasAutomaticPrice(row){return row.pricingMode==='market'&&row.grader==='Raw'&&['Mint','Near Mint'].includes(row.condition)&&SETS[row.setId]&&!!row.cardId;}
+function portfolioHasAutomaticPrice(row){return row.pricingMode==='market'&&row.grader==='Raw'&&['Mint','Near Mint'].includes(row.condition)&&String(row.language||'').toLowerCase()==='english'&&!!row.name&&!!row.setName&&!!row.number;}
 function portfolioUnitValue(row){
  if(row.pricingMode==='manual'){return Number.isFinite(row.manualPrice)?{amount:row.manualPrice,method:'Your estimate'}:null;}
  if(portfolioHasAutomaticPrice(row)&&Number.isFinite(row.marketPrice))return {amount:row.marketPrice,method:row.marketSource||'TCGplayer reference',at:row.marketAt};
@@ -1303,7 +1303,8 @@ function portfolioTotals(){let qty=0,known=0,unpriced=0,cost=0,pricedUnits=0;
  return {qty,known,unpriced,cost,pricedUnits};
 }
 function portfolioTemplate(card){
- return {id:uuid(),setId:card?.setId||'other',cardId:card?.id||'',name:card?.name||'',number:card?.number||'',setName:SETS[card?.setId]?.fullName||'',rarity:card?.rarity||'',image:card?.imageLarge||card?.image||'',language:'English',finish:card?.setId==='sv30'?'Holo Foil':'Normal',condition:'Near Mint',grader:'Raw',grade:'',quantity:1,pricingMode:'market',manualPrice:null,purchasePrice:null,marketPrice:null,marketSource:'',marketAt:null,notes:'',createdAt:Date.now(),updatedAt:Date.now()};
+ const likelyHolo=['Rare','Double Rare','Ultra Rare','Illustration Rare','Special Illustration Rare','Hyper Rare','ACE SPEC Rare','Classic Collection','Futuristic Rare','RGB Rare','Pikachu Rare'].includes(card?.rarity);
+ return {id:uuid(),setId:card?.setId||'other',cardId:card?.id||'',tcgdexId:'',priceError:'',name:card?.name||'',number:card?.number||'',setName:SETS[card?.setId]?.fullName||'',rarity:card?.rarity||'',image:card?.imageLarge||card?.image||'',language:'English',finish:card?.setId==='sv30'||likelyHolo?'Holo Foil':'Normal',condition:'Near Mint',grader:'Raw',grade:'',quantity:1,pricingMode:'market',manualPrice:null,purchasePrice:null,marketPrice:null,marketSource:'',marketAt:null,notes:'',createdAt:Date.now(),updatedAt:Date.now()};
 }
 function beginPortfolioEdit(id=null,card=null){
  if(id){const existing=realPortfolio.entries.find(x=>x.id===id);if(!existing)return;portfolioUI.editingId=id;portfolioUI.draft={...existing};}
@@ -1325,15 +1326,58 @@ function savePortfolioForm(){
  if(!Number.isInteger(row.quantity)||row.quantity<1||row.quantity>9999){toast('Quantity must be between 1 and 9,999.','error');return;}
  if(row.grader!=='Raw'&&!/^((10(\.0)?|[1-9](\.\d)?))$/.test(row.grade)){toast('For graded cards, enter a grade between 1 and 10.','error');return;}
  const clean=cleanPortfolioEntry(row);if(!clean)return;
- if(previous&&(previous.finish!==clean.finish||previous.condition!==clean.condition||previous.grader!==clean.grader||previous.cardId!==clean.cardId||previous.language!==clean.language)){clean.marketPrice=null;clean.marketAt=null;clean.marketSource='';}
- if(!previous){clean.marketPrice=null;clean.marketAt=null;clean.marketSource='';}
+ const changed=!!previous&&['finish','condition','grader','cardId','language','name','setName','number'].some(k=>previous[k]!==clean[k]);
+ if(changed||!previous){clean.marketPrice=null;clean.marketAt=null;clean.marketSource='';clean.priceError='';}
+ if(changed&&['name','setName','number','cardId'].some(k=>previous[k]!==clean[k]))clean.tcgdexId='';
  if(!commitRealPortfolio(previous?realPortfolio.entries.map(x=>x.id===previous.id?clean:x):[clean,...realPortfolio.entries]))return;
  portfolioUI.draft=null;portfolioUI.editingId=null;render();toast(previous?'Physical card entry updated.':'Physical card added to your real portfolio!','success');
- if(!previous&&portfolioHasAutomaticPrice(clean))void refreshPortfolioPrice(clean.id);
+ if(portfolioHasAutomaticPrice(clean)&&(!previous||!clean.marketPrice))void refreshPortfolioPrice(clean.id);
 }
 function deletePortfolioEntry(id){const row=realPortfolio.entries.find(x=>x.id===id);if(!row)return;
  if(!confirm(`Remove ${row.quantity} × ${row.name} #${row.number} from your REAL portfolio? No game cards are affected.`))return;
  if(commitRealPortfolio(realPortfolio.entries.filter(x=>x.id!==id))){render();toast('Physical card entry removed.','success');}
+}
+// Match a physical card against the public TCGdex catalogue, independent of game-set limits.
+const physicalSetCache={promise:null};
+function matchToken(value){return String(value??'').normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]/g,'');}
+function physicalSetLabel(value){
+ let v=matchToken(value);
+ for(const term of ['pokemontradingcardgame','pokemontcg','pokemon','scarletandviolet','scarletviolet','swordandshield','swordshield','sunandmoon','megaevolution'])v=v.replace(new RegExp(term,'g'),'');
+ return v;
+}
+function physicalCardNumber(value){const n=String(value||'').trim().split('/')[0].trim().toLowerCase();return /^0*[0-9]+$/.test(n)?String(Number(n)):n;}
+async function tcgdexJSON(url,signal){const r=await fetch(url,{signal,cache:'no-store'});if(!r.ok)throw Error('Card-data service returned HTTP '+r.status);return await r.json();}
+function physicalCardVerified(entry,card){
+ if(!card?.id||matchToken(card.name)!==matchToken(entry.name)||physicalCardNumber(card.localId)!==physicalCardNumber(entry.number))return false;
+ const set=SETS[entry.setId]?.tcgdex;
+ return !set||card.id.startsWith(set+'-')||physicalSetLabel(card.set?.name)===physicalSetLabel(entry.setName);
+}
+async function physicalSetDirectory(signal){
+ if(!physicalSetCache.promise)physicalSetCache.promise=tcgdexJSON('https://api.tcgdex.net/v2/en/sets',signal).catch(e=>{physicalSetCache.promise=null;throw e;});
+ return physicalSetCache.promise;
+}
+async function resolvePhysicalCard(entry,signal){
+ const root='https://api.tcgdex.net/v2/en/cards/';
+ const known=entry.tcgdexId&&/^[a-z0-9.]+-[a-z0-9-]+$/i.test(entry.tcgdexId)?entry.tcgdexId:tcgdexCardKey(entry);
+ if(known){
+  try{const direct=await tcgdexJSON(root+encodeURIComponent(known),signal);if(physicalCardVerified(entry,direct))return direct;}catch(e){if(signal?.aborted)throw e;}
+ }
+ if(!entry.number)throw Error('Printed collector number is required for an exact match.');
+ const q=new URLSearchParams({name:'eq:'+entry.name,localId:'eq:'+String(entry.number).trim().split('/')[0]});
+ const briefs=await tcgdexJSON('https://api.tcgdex.net/v2/en/cards?'+q.toString(),signal);
+ if(!Array.isArray(briefs))throw Error('Card lookup returned no valid results.');
+ const matching=briefs.filter(x=>matchToken(x.name)===matchToken(entry.name)&&physicalCardNumber(x.localId)===physicalCardNumber(entry.number)).slice(0,100);
+ if(!matching.length)throw Error('No matching English name and collector number; check both fields.');
+ const sets=await physicalSetDirectory(signal);
+ if(!Array.isArray(sets))throw Error('Could not verify the expansion name.');
+ const choices=matching.filter(x=>{
+  const set=sets.find(z=>z.id===x.id.slice(0,x.id.lastIndexOf('-')));
+  return set&&physicalSetLabel(set.name)===physicalSetLabel(entry.setName);
+ });
+ if(choices.length!==1)throw Error(choices.length?'More than one printing matches; specify the exact expansion.':'The set name does not match this numbered print. Enter the official expansion name.');
+ const found=await tcgdexJSON(root+encodeURIComponent(choices[0].id),signal);
+ if(!physicalCardVerified(entry,found)||physicalSetLabel(found.set?.name)!==physicalSetLabel(entry.setName))throw Error('Card and expansion could not be verified together.');
+ return found;
 }
 function portfolioMarketQuote(entry,data){
  if(!portfolioHasAutomaticPrice(entry)||entry.language.toLowerCase()!=='english')return null;
