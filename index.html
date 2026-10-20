@@ -1380,41 +1380,65 @@ async function resolvePhysicalCard(entry,signal){
  return found;
 }
 function portfolioMarketQuote(entry,data){
- if(!portfolioHasAutomaticPrice(entry)||entry.language.toLowerCase()!=='english')return null;
- const tcg=data?.pricing?.tcgplayer||data?.prices?.tcgplayer;
- const rows=quoteRows(tcg);if(!rows.length)return null;
- let match;
- const by=(test)=>rows.find(r=>test(r.key.toLowerCase())&&Number.isFinite(r.market)&&r.market>0);
- switch(entry.finish){
-  case 'Normal':match=by(k=>/normal/.test(k)&&!/reverse/.test(k));break;
-  case 'Holo Foil':match=by(k=>/holofoil|holo/.test(k)&&!/reverse/.test(k));break;
-  case 'Reverse Holo':match=by(k=>/reverse/.test(k));break;
-  case 'Poké Ball Foil':match=by(k=>/pok[eé]?\s?ball|pokeball/.test(k)&&!/master/.test(k));break;
-  case 'Master Ball Foil':match=by(k=>/master\s?ball|masterball/.test(k));break;
-  default:return null;
+ if(!portfolioHasAutomaticPrice(entry))return null;
+ const tcg=data?.pricing?.tcgplayer||data?.prices?.tcgplayer||data?.tcgplayer;
+ if(!tcg||String(tcg.unit||'USD').toUpperCase()!=='USD')return null;
+ const rows=quoteRows(tcg);
+ const exact=(key)=>rows.find(r=>r.key.toLowerCase()===key&&Number.isFinite(r.market)&&r.market>0);
+ let match=null,detectedFinish=null;
+ if(entry.finish==='Normal')match=exact('normal')||exact('unlimited');
+ else if(entry.finish==='Holo Foil')match=exact('holofoil')||exact('unlimited-holofoil');
+ else if(entry.finish==='Reverse Holo')match=exact('reverse-holofoil')||exact('reverse');
+ else if(entry.finish==='Poké Ball Foil')match=rows.find(r=>/pok[eé]?-?ball/i.test(r.key)&&!/master/i.test(r.key)&&r.market>0);
+ else if(entry.finish==='Master Ball Foil')match=rows.find(r=>/master-?ball/i.test(r.key)&&r.market>0);
+ // The default Normal setting is wrong for many holo-only cards.
+ // Only correct it when the catalogue explicitly marks Normal impossible.
+ if(!match&&entry.finish==='Normal'&&data?.variants?.normal===false&&data?.variants?.holo===true){
+  const foil=rows.filter(r=>r.market>0&&r.key.toLowerCase()==='holofoil');
+  if(foil.length===1){match=foil[0];detectedFinish='Holo Foil';}
  }
- // Different foil finishes command very different values; never substitute a mismatched market row.
- if(!match)return null;
- return {value:match.market,source:'TCGplayer via TCGdex · '+match.key,at:tcg?.updated?Date.parse(tcg.updated)||Date.now():Date.now()};
+ if(!match||!Number.isFinite(match.market)||match.market<=0)return null;
+ const date=Date.parse(tcg.updated||'');
+ return {value:match.market,source:'TCGplayer via TCGdex · '+match.key,at:Number.isFinite(date)?date:null,detectedFinish};
 }
 const portfolioFetches=new Set();
 async function refreshPortfolioPrice(id,force=false){
  const entry=realPortfolio.entries.find(x=>x.id===id);if(!entry||portfolioFetches.has(id))return false;
- if(!portfolioHasAutomaticPrice(entry)||entry.language.toLowerCase()!=='english'){toast('Automatic quotes are for supported English raw Mint/Near Mint cards. Enter a manual sold-price estimate for graded or other conditions.');return false;}
+ if(!portfolioHasAutomaticPrice(entry)){
+  if(force)toast('Automatic pricing requires the exact English card name, set, number and raw Mint/Near Mint condition.','error');
+  return false;
+ }
  if(!force&&entry.marketAt&&Date.now()-entry.marketAt<10*60*1000)return true;
- const key=tcgdexCardKey(entry);if(!key){toast('No exact automated card mapping for this print. Enter a manual value instead.');return false;}
- portfolioFetches.add(id);if(ui.page==='tools'&&ui.toolTab==='portfolio')render();
- const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),10500);
- try{const res=await fetch(`https://api.tcgdex.net/v2/en/cards/${encodeURIComponent(key)}`,{signal:controller.signal});if(!res.ok)throw Error(`HTTP ${res.status}`);
-  const data=await res.json();const clean=x=>String(x||'').toLowerCase().replace(/[^a-z0-9]/g,'');
-  if(data.id!==key||!clean(data.name)||!(clean(data.name)===clean(entry.name)||clean(data.name).includes(clean(entry.name))||clean(entry.name).includes(clean(data.name))))throw Error('Card identity mismatch');
+ portfolioFetches.add(id);
+ if(ui.page==='tools'&&ui.toolTab==='portfolio')render();
+ const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),14000);
+ try{
+  const data=await resolvePhysicalCard(entry,controller.signal);
   const quote=portfolioMarketQuote(entry,data);
-  if(!quote){toast('No verified matching finish/market quote. Use a manual estimate or marketplace links.');return false;}
+  if(!quote){
+   const available=quoteRows(data?.pricing?.tcgplayer||data?.prices?.tcgplayer||data?.tcgplayer)
+    .filter(x=>x.market>0).map(x=>x.key.replace(/[-_]/g,' ')).join(', ');
+   throw Error(available?'No '+entry.finish+' market quote. Available: '+available+'. Edit your foil variant.':'No USD market quote for this exact printing; check external marketplaces.');
+  }
   const fresh=realPortfolio.entries.find(x=>x.id===id);if(!fresh)return false;
-  const updated={...fresh,marketPrice:quote.value,marketAt:quote.at,marketSource:quote.source,updatedAt:Date.now()};
-  const ok=commitRealPortfolio(realPortfolio.entries.map(x=>x.id===id?updated:x));if(ok&&ui.page==='tools'&&ui.toolTab==='portfolio')render();return ok;
- }catch(err){console.warn('Physical-card portfolio price unavailable',entry.name,err);toast('Live market price unavailable for this exact card/finish. A manual price is available.');return false;}
- finally{clearTimeout(timer);portfolioFetches.delete(id);if(ui.page==='tools'&&ui.toolTab==='portfolio')render();}
+  if(['name','number','setName','finish','grader','condition','language'].some(k=>fresh[k]!==entry[k]))return false;
+  const updated={...fresh,tcgdexId:data.id,finish:quote.detectedFinish||fresh.finish,marketPrice:quote.value,marketAt:quote.at,marketSource:quote.source,priceError:'',updatedAt:Date.now()};
+  const ok=commitRealPortfolio(realPortfolio.entries.map(x=>x.id===id?updated:x));
+  if(ok)toast(updated.name+' · '+updated.finish+': '+realMoney(quote.value)+' / card.','success');
+  return ok;
+ }catch(err){
+  const failure=controller.signal.aborted?'Card pricing timed out; try again.':String(err?.message||'Price lookup unavailable.');
+  console.warn('Physical card price unavailable',entry.name,failure);
+  const fresh=realPortfolio.entries.find(x=>x.id===id);
+  if(fresh&&['name','number','setName','finish'].every(k=>fresh[k]===entry[k])){
+   commitRealPortfolio(realPortfolio.entries.map(x=>x.id===id?{...x,priceError:failure,updatedAt:Date.now()}:x));
+  }
+  if(force)toast(failure,'error');
+  return false;
+ }finally{
+  clearTimeout(timer);portfolioFetches.delete(id);
+  if(ui.page==='tools'&&ui.toolTab==='portfolio')render();
+ }
 }
 async function refreshPortfolioBatch(){if(portfolioUI.busy)return;
  const eligible=realPortfolio.entries.filter(x=>portfolioHasAutomaticPrice(x)&&x.language.toLowerCase()==='english'&&(!x.marketAt||Date.now()-x.marketAt>10*60*1000)).slice(0,20);
