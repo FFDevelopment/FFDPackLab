@@ -1857,7 +1857,8 @@ function captureCameraStage(maxDim=980){
 function cameraImageRect(){
  const stage=document.getElementById('centerCameraStage'),video=document.getElementById('centerCameraVideo');
  if(!stage||!video?.videoWidth||!video?.videoHeight)return null;
- const box=stage.getBoundingClientRect();const scale=Math.max(box.width/video.videoWidth,box.height/video.videoHeight);
+ const box=stage.getBoundingClientRect();const fit=window.getComputedStyle(video).objectFit;
+ const scale=fit==='cover'?Math.max(box.width/video.videoWidth,box.height/video.videoHeight):Math.min(box.width/video.videoWidth,box.height/video.videoHeight);
  const w=video.videoWidth*scale,h=video.videoHeight*scale;
  return {l:(box.width-w)/2/box.width,t:(box.height-h)/2/box.height,w:w/box.width,h:h/box.height};
 }
