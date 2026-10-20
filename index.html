@@ -533,6 +533,18 @@ body{background:radial-gradient(circle at 85% 4%,#10307188,transparent 37%),radi
  .virtual-game-notice strong{font-size:11px}
 }
 
+
+/* v0.9.3: stable blue target while the camera searches, amber when tracking, green only after lock */
+.camera-search-guide{position:absolute;z-index:2;pointer-events:none;width:min(56%,34vh);aspect-ratio:63.5/88.9;max-height:84%;top:50%;left:50%;transform:translate(-50%,-50%);border:2px dashed #45bfffaa;border-radius:3%/2.2%;box-shadow:0 0 32px #087aff22;opacity:.77;transition:opacity .18s}
+.camera-stage.has-outline .camera-search-guide{opacity:.09}
+.camera-detected-overlay polygon{transition:stroke .3s,fill .3s;stroke:#ffc36b;fill:#ffc36b0d;stroke-width:2.5;filter:drop-shadow(0 0 4px #090b20)}
+.camera-detected-overlay[data-locked="true"] polygon{stroke:#3ff5af;fill:#28ffc314;stroke-width:3;filter:drop-shadow(0 0 6px #11bb89)}
+
+/* v0.9.3 real binder matching feedback */
+.real-portfolio-error{font-size:11px;line-height:1.5;color:#ffc99d;background:#53321e3d;border:1px solid #8b674b;padding:7px 10px;border-radius:9px}
+.real-portfolio-row-actions .market-links{font-size:10px}
+.real-portfolio-entry .market-links{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}
+.real-portfolio-entry .market-links a{font-size:10px;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -1273,7 +1285,7 @@ function cleanPortfolioEntry(row){
  const finish=['Normal','Holo Foil','Reverse Holo','Poké Ball Foil','Master Ball Foil','Special Foil','Other'].includes(row.finish)?row.finish:'Normal';
  const condition=['Mint','Near Mint','Lightly Played','Moderately Played','Heavily Played','Damaged'].includes(row.condition)?row.condition:'Near Mint';
  const image=trim(row.image,1000),setId=SETS[row.setId]?row.setId:'other',id=trim(row.id,100)||uuid();
- return {id,setId,cardId:trim(row.cardId,120),name,number,setName,rarity:trim(row.rarity,100),image:/^https:\/\//i.test(image)?image:'',language:trim(row.language,40)||'English',finish,condition,grader:gradeCompany,grade:gradeCompany==='Raw'?'':trim(row.grade,25),quantity:Math.min(9999,Math.max(1,Math.floor(Number(row.quantity)||1))),pricingMode:row.pricingMode==='manual'?'manual':'market',manualPrice:safeNumber(row.manualPrice),purchasePrice:safeNumber(row.purchasePrice),marketPrice:safeNumber(row.marketPrice),marketSource:trim(row.marketSource,100),marketAt:Number.isFinite(Number(row.marketAt))?Number(row.marketAt):null,notes:trim(row.notes,900),createdAt:Number(row.createdAt)||Date.now(),updatedAt:Number(row.updatedAt)||Date.now()};
+ return {id,setId,cardId:trim(row.cardId,120),name,number,setName,rarity:trim(row.rarity,100),image:/^https:\/\//i.test(image)?image:'',language:trim(row.language,40)||'English',finish,condition,grader:gradeCompany,grade:gradeCompany==='Raw'?'':trim(row.grade,25),quantity:Math.min(9999,Math.max(1,Math.floor(Number(row.quantity)||1))),pricingMode:row.pricingMode==='manual'?'manual':'market',tcgdexId:trim(row.tcgdexId,100),priceError:trim(row.priceError,240),manualPrice:safeNumber(row.manualPrice),purchasePrice:safeNumber(row.purchasePrice),marketPrice:safeNumber(row.marketPrice),marketSource:trim(row.marketSource,100),marketAt:row.marketAt===null||row.marketAt===undefined?null:(Number.isFinite(Number(row.marketAt))?Number(row.marketAt):null),notes:trim(row.notes,900),createdAt:Number(row.createdAt)||Date.now(),updatedAt:Number(row.updatedAt)||Date.now()};
 }
 function loadRealPortfolio(){
  try{const data=JSON.parse(localStorage.getItem(REAL_PORTFOLIO_KEY)||'null');if(data?.schema!==1||!Array.isArray(data.entries))return {schema:1,entries:[],updatedAt:Date.now()};
@@ -1286,7 +1298,7 @@ function commitRealPortfolio(entries){
  try{localStorage.setItem(REAL_PORTFOLIO_KEY,JSON.stringify(next));realPortfolio=next;window.PackLabCloud?.changed?.('portfolio');return true;}
  catch(e){toast('Real portfolio could not be saved. Check browser storage, and export a backup.','error');console.warn('Real portfolio save failed',e);return false;}
 }
-function portfolioHasAutomaticPrice(row){return row.pricingMode==='market'&&row.grader==='Raw'&&['Mint','Near Mint'].includes(row.condition)&&SETS[row.setId]&&!!row.cardId;}
+function portfolioHasAutomaticPrice(row){return row.pricingMode==='market'&&row.grader==='Raw'&&['Mint','Near Mint'].includes(row.condition)&&String(row.language||'').toLowerCase()==='english'&&!!row.name&&!!row.setName&&!!row.number;}
 function portfolioUnitValue(row){
  if(row.pricingMode==='manual'){return Number.isFinite(row.manualPrice)?{amount:row.manualPrice,method:'Your estimate'}:null;}
  if(portfolioHasAutomaticPrice(row)&&Number.isFinite(row.marketPrice))return {amount:row.marketPrice,method:row.marketSource||'TCGplayer reference',at:row.marketAt};
@@ -1297,7 +1309,8 @@ function portfolioTotals(){let qty=0,known=0,unpriced=0,cost=0,pricedUnits=0;
  return {qty,known,unpriced,cost,pricedUnits};
 }
 function portfolioTemplate(card){
- return {id:uuid(),setId:card?.setId||'other',cardId:card?.id||'',name:card?.name||'',number:card?.number||'',setName:SETS[card?.setId]?.fullName||'',rarity:card?.rarity||'',image:card?.imageLarge||card?.image||'',language:'English',finish:card?.setId==='sv30'?'Holo Foil':'Normal',condition:'Near Mint',grader:'Raw',grade:'',quantity:1,pricingMode:'market',manualPrice:null,purchasePrice:null,marketPrice:null,marketSource:'',marketAt:null,notes:'',createdAt:Date.now(),updatedAt:Date.now()};
+ const likelyHolo=['Rare','Double Rare','Ultra Rare','Illustration Rare','Special Illustration Rare','Hyper Rare','ACE SPEC Rare','Classic Collection','Futuristic Rare','RGB Rare','Pikachu Rare'].includes(card?.rarity);
+ return {id:uuid(),setId:card?.setId||'other',cardId:card?.id||'',tcgdexId:'',priceError:'',name:card?.name||'',number:card?.number||'',setName:SETS[card?.setId]?.fullName||'',rarity:card?.rarity||'',image:card?.imageLarge||card?.image||'',language:'English',finish:card?.setId==='sv30'||likelyHolo?'Holo Foil':'Normal',condition:'Near Mint',grader:'Raw',grade:'',quantity:1,pricingMode:'market',manualPrice:null,purchasePrice:null,marketPrice:null,marketSource:'',marketAt:null,notes:'',createdAt:Date.now(),updatedAt:Date.now()};
 }
 function beginPortfolioEdit(id=null,card=null){
  if(id){const existing=realPortfolio.entries.find(x=>x.id===id);if(!existing)return;portfolioUI.editingId=id;portfolioUI.draft={...existing};}
@@ -1319,52 +1332,120 @@ function savePortfolioForm(){
  if(!Number.isInteger(row.quantity)||row.quantity<1||row.quantity>9999){toast('Quantity must be between 1 and 9,999.','error');return;}
  if(row.grader!=='Raw'&&!/^((10(\.0)?|[1-9](\.\d)?))$/.test(row.grade)){toast('For graded cards, enter a grade between 1 and 10.','error');return;}
  const clean=cleanPortfolioEntry(row);if(!clean)return;
- if(previous&&(previous.finish!==clean.finish||previous.condition!==clean.condition||previous.grader!==clean.grader||previous.cardId!==clean.cardId||previous.language!==clean.language)){clean.marketPrice=null;clean.marketAt=null;clean.marketSource='';}
- if(!previous){clean.marketPrice=null;clean.marketAt=null;clean.marketSource='';}
+ const changed=!!previous&&['finish','condition','grader','cardId','language','name','setName','number'].some(k=>previous[k]!==clean[k]);
+ if(changed||!previous){clean.marketPrice=null;clean.marketAt=null;clean.marketSource='';clean.priceError='';}
+ if(changed&&['name','setName','number','cardId'].some(k=>previous[k]!==clean[k]))clean.tcgdexId='';
  if(!commitRealPortfolio(previous?realPortfolio.entries.map(x=>x.id===previous.id?clean:x):[clean,...realPortfolio.entries]))return;
  portfolioUI.draft=null;portfolioUI.editingId=null;render();toast(previous?'Physical card entry updated.':'Physical card added to your real portfolio!','success');
- if(!previous&&portfolioHasAutomaticPrice(clean))void refreshPortfolioPrice(clean.id);
+ if(portfolioHasAutomaticPrice(clean)&&(!previous||!clean.marketPrice))void refreshPortfolioPrice(clean.id);
 }
 function deletePortfolioEntry(id){const row=realPortfolio.entries.find(x=>x.id===id);if(!row)return;
  if(!confirm(`Remove ${row.quantity} × ${row.name} #${row.number} from your REAL portfolio? No game cards are affected.`))return;
  if(commitRealPortfolio(realPortfolio.entries.filter(x=>x.id!==id))){render();toast('Physical card entry removed.','success');}
 }
-function portfolioMarketQuote(entry,data){
- if(!portfolioHasAutomaticPrice(entry)||entry.language.toLowerCase()!=='english')return null;
- const tcg=data?.pricing?.tcgplayer||data?.prices?.tcgplayer;
- const rows=quoteRows(tcg);if(!rows.length)return null;
- let match;
- const by=(test)=>rows.find(r=>test(r.key.toLowerCase())&&Number.isFinite(r.market)&&r.market>0);
- switch(entry.finish){
-  case 'Normal':match=by(k=>/normal/.test(k)&&!/reverse/.test(k));break;
-  case 'Holo Foil':match=by(k=>/holofoil|holo/.test(k)&&!/reverse/.test(k));break;
-  case 'Reverse Holo':match=by(k=>/reverse/.test(k));break;
-  case 'Poké Ball Foil':match=by(k=>/pok[eé]?\s?ball|pokeball/.test(k)&&!/master/.test(k));break;
-  case 'Master Ball Foil':match=by(k=>/master\s?ball|masterball/.test(k));break;
-  default:return null;
+// Match a physical card against the public TCGdex catalogue, independent of game-set limits.
+const physicalSetCache={promise:null};
+function matchToken(value){return String(value??'').normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]/g,'');}
+function physicalSetLabel(value){
+ let v=matchToken(value);
+ for(const term of ['pokemontradingcardgame','pokemontcg','pokemon','scarletandviolet','scarletviolet','swordandshield','swordshield','sunandmoon','megaevolution'])v=v.replace(new RegExp(term,'g'),'');
+ return v;
+}
+function physicalCardNumber(value){const n=String(value||'').trim().split('/')[0].trim().toLowerCase();return /^0*[0-9]+$/.test(n)?String(Number(n)):n;}
+async function tcgdexJSON(url,signal){const r=await fetch(url,{signal,cache:'no-store'});if(!r.ok)throw Error('Card-data service returned HTTP '+r.status);return await r.json();}
+function physicalCardVerified(entry,card){
+ if(!card?.id||matchToken(card.name)!==matchToken(entry.name)||physicalCardNumber(card.localId)!==physicalCardNumber(entry.number))return false;
+ const set=SETS[entry.setId]?.tcgdex;
+ return !set||card.id.startsWith(set+'-')||physicalSetLabel(card.set?.name)===physicalSetLabel(entry.setName);
+}
+async function physicalSetDirectory(signal){
+ if(!physicalSetCache.promise)physicalSetCache.promise=tcgdexJSON('https://api.tcgdex.net/v2/en/sets',signal).catch(e=>{physicalSetCache.promise=null;throw e;});
+ return physicalSetCache.promise;
+}
+async function resolvePhysicalCard(entry,signal){
+ const root='https://api.tcgdex.net/v2/en/cards/';
+ const known=entry.tcgdexId&&/^[a-z0-9.]+-[a-z0-9-]+$/i.test(entry.tcgdexId)?entry.tcgdexId:tcgdexCardKey(entry);
+ if(known){
+  try{const direct=await tcgdexJSON(root+encodeURIComponent(known),signal);if(physicalCardVerified(entry,direct))return direct;}catch(e){if(signal?.aborted)throw e;}
  }
- // Different foil finishes command very different values; never substitute a mismatched market row.
- if(!match)return null;
- return {value:match.market,source:'TCGplayer via TCGdex · '+match.key,at:tcg?.updated?Date.parse(tcg.updated)||Date.now():Date.now()};
+ if(!entry.number)throw Error('Printed collector number is required for an exact match.');
+ // Query by name, then verify exact number and set locally. TCGdex localId zero-padding varies by set.
+ const q=new URLSearchParams({name:entry.name});
+ const briefs=await tcgdexJSON('https://api.tcgdex.net/v2/en/cards?'+q.toString(),signal);
+ if(!Array.isArray(briefs))throw Error('Card lookup returned no valid results.');
+ const matching=briefs.filter(x=>matchToken(x.name)===matchToken(entry.name)&&physicalCardNumber(x.localId)===physicalCardNumber(entry.number)).slice(0,100);
+ if(!matching.length)throw Error('No matching English name and collector number; check both fields.');
+ const sets=await physicalSetDirectory(signal);
+ if(!Array.isArray(sets))throw Error('Could not verify the expansion name.');
+ const choices=matching.filter(x=>{
+  const set=sets.find(z=>z.id===x.id.slice(0,x.id.lastIndexOf('-')));
+  return set&&physicalSetLabel(set.name)===physicalSetLabel(entry.setName);
+ });
+ if(choices.length!==1)throw Error(choices.length?'More than one printing matches; specify the exact expansion.':'The set name does not match this numbered print. Enter the official expansion name.');
+ const found=await tcgdexJSON(root+encodeURIComponent(choices[0].id),signal);
+ if(!physicalCardVerified(entry,found)||physicalSetLabel(found.set?.name)!==physicalSetLabel(entry.setName))throw Error('Card and expansion could not be verified together.');
+ return found;
+}
+function portfolioMarketQuote(entry,data){
+ if(!portfolioHasAutomaticPrice(entry))return null;
+ const tcg=data?.pricing?.tcgplayer||data?.prices?.tcgplayer||data?.tcgplayer;
+ if(!tcg||String(tcg.unit||'USD').toUpperCase()!=='USD')return null;
+ const rows=quoteRows(tcg);
+ const exact=(key)=>rows.find(r=>r.key.toLowerCase()===key&&Number.isFinite(r.market)&&r.market>0);
+ let match=null,detectedFinish=null;
+ if(entry.finish==='Normal')match=exact('normal')||exact('unlimited');
+ else if(entry.finish==='Holo Foil')match=exact('holofoil')||exact('unlimited-holofoil');
+ else if(entry.finish==='Reverse Holo')match=exact('reverse-holofoil')||exact('reverse');
+ else if(entry.finish==='Poké Ball Foil')match=rows.find(r=>/pok[eé]?-?ball/i.test(r.key)&&!/master/i.test(r.key)&&r.market>0);
+ else if(entry.finish==='Master Ball Foil')match=rows.find(r=>/master-?ball/i.test(r.key)&&r.market>0);
+ // The default Normal setting is wrong for many holo-only cards.
+ // Only correct it when the catalogue explicitly marks Normal impossible.
+ if(!match&&entry.finish==='Normal'&&data?.variants?.normal===false&&data?.variants?.holo===true){
+  const foil=rows.filter(r=>r.market>0&&r.key.toLowerCase()==='holofoil');
+  if(foil.length===1){match=foil[0];detectedFinish='Holo Foil';}
+ }
+ if(!match||!Number.isFinite(match.market)||match.market<=0)return null;
+ const date=Date.parse(tcg.updated||'');
+ return {value:match.market,source:'TCGplayer via TCGdex · '+match.key,at:Number.isFinite(date)?date:null,detectedFinish};
 }
 const portfolioFetches=new Set();
 async function refreshPortfolioPrice(id,force=false){
  const entry=realPortfolio.entries.find(x=>x.id===id);if(!entry||portfolioFetches.has(id))return false;
- if(!portfolioHasAutomaticPrice(entry)||entry.language.toLowerCase()!=='english'){toast('Automatic quotes are for supported English raw Mint/Near Mint cards. Enter a manual sold-price estimate for graded or other conditions.');return false;}
+ if(!portfolioHasAutomaticPrice(entry)){
+  if(force)toast('Automatic pricing requires the exact English card name, set, number and raw Mint/Near Mint condition.','error');
+  return false;
+ }
  if(!force&&entry.marketAt&&Date.now()-entry.marketAt<10*60*1000)return true;
- const key=tcgdexCardKey(entry);if(!key){toast('No exact automated card mapping for this print. Enter a manual value instead.');return false;}
- portfolioFetches.add(id);if(ui.page==='tools'&&ui.toolTab==='portfolio')render();
- const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),10500);
- try{const res=await fetch(`https://api.tcgdex.net/v2/en/cards/${encodeURIComponent(key)}`,{signal:controller.signal});if(!res.ok)throw Error(`HTTP ${res.status}`);
-  const data=await res.json();const clean=x=>String(x||'').toLowerCase().replace(/[^a-z0-9]/g,'');
-  if(data.id!==key||!clean(data.name)||!(clean(data.name)===clean(entry.name)||clean(data.name).includes(clean(entry.name))||clean(entry.name).includes(clean(data.name))))throw Error('Card identity mismatch');
+ portfolioFetches.add(id);
+ if(ui.page==='tools'&&ui.toolTab==='portfolio')render();
+ const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),14000);
+ try{
+  const data=await resolvePhysicalCard(entry,controller.signal);
   const quote=portfolioMarketQuote(entry,data);
-  if(!quote){toast('No verified matching finish/market quote. Use a manual estimate or marketplace links.');return false;}
+  if(!quote){
+   const available=quoteRows(data?.pricing?.tcgplayer||data?.prices?.tcgplayer||data?.tcgplayer)
+    .filter(x=>x.market>0).map(x=>x.key.replace(/[-_]/g,' ')).join(', ');
+   throw Error(available?'No '+entry.finish+' market quote. Available: '+available+'. Edit your foil variant.':'No USD market quote for this exact printing; check external marketplaces.');
+  }
   const fresh=realPortfolio.entries.find(x=>x.id===id);if(!fresh)return false;
-  const updated={...fresh,marketPrice:quote.value,marketAt:quote.at,marketSource:quote.source,updatedAt:Date.now()};
-  const ok=commitRealPortfolio(realPortfolio.entries.map(x=>x.id===id?updated:x));if(ok&&ui.page==='tools'&&ui.toolTab==='portfolio')render();return ok;
- }catch(err){console.warn('Physical-card portfolio price unavailable',entry.name,err);toast('Live market price unavailable for this exact card/finish. A manual price is available.');return false;}
- finally{clearTimeout(timer);portfolioFetches.delete(id);if(ui.page==='tools'&&ui.toolTab==='portfolio')render();}
+  if(['name','number','setName','finish','grader','condition','language'].some(k=>fresh[k]!==entry[k]))return false;
+  const updated={...fresh,tcgdexId:data.id,finish:quote.detectedFinish||fresh.finish,marketPrice:quote.value,marketAt:quote.at,marketSource:quote.source,priceError:'',updatedAt:Date.now()};
+  const ok=commitRealPortfolio(realPortfolio.entries.map(x=>x.id===id?updated:x));
+  if(ok)toast(updated.name+' · '+updated.finish+': '+realMoney(quote.value)+' / card.','success');
+  return ok;
+ }catch(err){
+  const failure=controller.signal.aborted?'Card pricing timed out; try again.':String(err?.message||'Price lookup unavailable.');
+  console.warn('Physical card price unavailable',entry.name,failure);
+  const fresh=realPortfolio.entries.find(x=>x.id===id);
+  if(fresh&&['name','number','setName','finish'].every(k=>fresh[k]===entry[k])){
+   commitRealPortfolio(realPortfolio.entries.map(x=>x.id===id?{...x,priceError:failure,updatedAt:Date.now()}:x));
+  }
+  if(force)toast(failure,'error');
+  return false;
+ }finally{
+  clearTimeout(timer);portfolioFetches.delete(id);
+  if(ui.page==='tools'&&ui.toolTab==='portfolio')render();
+ }
 }
 async function refreshPortfolioBatch(){if(portfolioUI.busy)return;
  const eligible=realPortfolio.entries.filter(x=>portfolioHasAutomaticPrice(x)&&x.language.toLowerCase()==='english'&&(!x.marketAt||Date.now()-x.marketAt>10*60*1000)).slice(0,20);
@@ -1390,30 +1471,30 @@ function realPortfolioForm(){const d=portfolioUI.draft;if(!d)return '';
  const option=(values,value)=>values.map(x=>`<option ${x===value?'selected':''}>${esc(x)}</option>`).join('');
  const field=(label,name,val,type='text',extra='')=>`<label class="field-block">${label}<input name="${name}" type="${type}" value="${esc(val??'')}" ${extra}></label>`;
  return `<form class="real-portfolio-form" id="realPortfolioForm"><div class="section-heading">${portfolioUI.editingId?'Edit physical copy':'Add physical card'} <small>DOES NOT AFFECT GAME INVENTORY</small></div>
- <div class="real-portfolio-fields">${field('Card name','name',d.name,'text','maxlength="130" required')}${field('Set / expansion','setName',d.setName,'text','maxlength="100" required')}${field('Card number','number',d.number,'text','maxlength="60"')}${field('Language','language',d.language,'text','maxlength="40"')}
+ <div class="real-portfolio-fields">${field('Card name','name',d.name,'text','maxlength="130" required')}${field('Set / expansion','setName',d.setName,'text','maxlength="100" required')}${field('Collector # / total (for matching)','number',d.number,'text','maxlength="60" placeholder="e.g. 025/131"')}${field('Language','language',d.language,'text','maxlength="40"')}
  <label class="field-block">Foil / printing<select name="finish">${option(['Normal','Holo Foil','Reverse Holo','Poké Ball Foil','Master Ball Foil','Special Foil','Other'],d.finish)}</select></label>
  <label class="field-block">Physical condition<select name="condition">${option(['Mint','Near Mint','Lightly Played','Moderately Played','Heavily Played','Damaged'],d.condition)}</select></label>
  <label class="field-block">Grading status<select name="grader">${option(['Raw','PSA','CGC','BGS','TAG','Other'],d.grader)}</select></label>
  ${field('Grade (if slabbed)','grade',d.grade,'text','maxlength="25" placeholder="e.g. 9.5"')}${field('Copies owned','quantity',d.quantity,'number','min="1" max="9999" step="1" required')}
- <label class="field-block">Valuation source<select name="pricingMode">${option(['market','manual'],d.pricingMode)}</select><span class="portfolio-input-hint">Market = matching raw English NM quote when available. Manual = your sold-price estimate; required for graded slabs.</span></label>
+ <label class="field-block">Valuation source<select name="pricingMode">${option(['market','manual'],d.pricingMode)}</select><span class="portfolio-input-hint">Market = automatic verified English raw card quote when available, not guaranteed. Enter the exact card name, expansion and number. Manual = your own estimate for unavailable, graded or played copies.</span></label>
  ${field('Manual value EACH, USD','manualPrice',d.manualPrice,'number','min="0" step="0.01" placeholder="Optional, leave blank if unknown"')}${field('Paid EACH, USD','purchasePrice',d.purchasePrice,'number','min="0" step="0.01" placeholder="Optional"')}
  ${field('Card picture URL (HTTPS)','image',d.image,'url','maxlength="1000" placeholder="Optional"')}
  <label class="field-block real-portfolio-wide">Notes<textarea name="notes" rows="2" maxlength="900" placeholder="Binder page, certification number, purchase notes…">${esc(d.notes)}</textarea></label></div>
- <p class="tool-disclaimer">The portfolio tracks your real cards. Automatic prices are not guaranteed and are not suitable for graded or heavily played copies. No login or cloud sync: export a backup.</p>
- <div class="portfolio-actions"><button type="submit" class="primary-action">✓ ${portfolioUI.editingId?'Save changes':'Add to real portfolio'}</button><button type="button" class="secondary-action" data-action="portfolio-cancel">Cancel</button></div></form>`;
+ <p class="tool-disclaimer">The real-card portfolio is separate from game rewards. Matching English raw Mint/Near Mint cards use available TCGplayer USD quotes via TCGdex after verifying set, number and finish. Other prints or missing prices remain unpriced until you enter an estimate. Signed-in users can sync this portfolio once its account save slot is linked; export backups too.</p>
+ <div class="portfolio-actions"><button type="submit" class="primary-action">✓ ${portfolioUI.editingId?'Save / find price':'Add card / find price'}</button><button type="button" class="secondary-action" data-action="portfolio-cancel">Cancel</button></div></form>`;
 }
 function renderPortfolioEntry(entry){
  const est=portfolioUnitValue(entry),source=est?.method||'No verified price',stale=est?.at&&(Date.now()-est.at)>24*3600*1000;
  const card={name:entry.name,number:entry.number,image:entry.image,imageLarge:entry.image};
- return `<article class="real-portfolio-entry"><div class="real-portfolio-art">${imgTag(card)}</div><div class="real-portfolio-description"><strong>${esc(entry.name)}</strong><small>${esc(entry.setName)} · #${esc(entry.number||'—')}</small><span class="real-portfolio-tags"><span>${esc(entry.finish)}</span><span>${esc(entry.grader==='Raw'?entry.condition:entry.grader+' '+entry.grade)}</span><span>×${entry.quantity}</span></span><span class="real-portfolio-value">${est?realMoney(est.amount*entry.quantity):'Unpriced'} <small>${est?realMoney(est.amount)+' / card':'Set a manual estimate or refresh price'}</small></span><span class="real-portfolio-source">${esc(source)}${stale?' · previous quote':''}</span>
- <div class="real-portfolio-row-actions"><button type="button" class="secondary-action small-button" data-action="portfolio-edit" data-id="${esc(entry.id)}">Edit</button><button type="button" class="tertiary-action small-button" data-action="portfolio-refresh" data-id="${esc(entry.id)}" ${!portfolioHasAutomaticPrice(entry)||portfolioFetches.has(entry.id)?'disabled':''}>${portfolioFetches.has(entry.id)?'Checking…':'↻ Price'}</button><button type="button" class="danger-action small-button" data-action="portfolio-delete" data-id="${esc(entry.id)}">Remove</button></div></div></article>`;
+ return `<article class="real-portfolio-entry"><div class="real-portfolio-art">${imgTag(card)}</div><div class="real-portfolio-description"><strong>${esc(entry.name)}</strong><small>${esc(entry.setName)} · #${esc(entry.number||'—')}</small><span class="real-portfolio-tags"><span>${esc(entry.finish)}</span><span>${esc(entry.grader==='Raw'?entry.condition:entry.grader+' '+entry.grade)}</span><span>×${entry.quantity}</span></span><span class="real-portfolio-value">${est?realMoney(est.amount*entry.quantity):'Unpriced'} <small>${est?realMoney(est.amount)+' / card':'Set a manual estimate or refresh price'}</small></span><span class="real-portfolio-source">${esc(source)}${est?.at?' · '+esc(priceTime(est.at)):'' }${stale?' · old quote':''}</span>${!est&&entry.priceError?`<span class="real-portfolio-error">Price lookup: ${esc(entry.priceError)}</span>`:''}
+ <div class="real-portfolio-row-actions"><button type="button" class="secondary-action small-button" data-action="portfolio-edit" data-id="${esc(entry.id)}">Edit</button><button type="button" class="tertiary-action small-button" data-action="portfolio-refresh" data-id="${esc(entry.id)}" ${!portfolioHasAutomaticPrice(entry)||portfolioFetches.has(entry.id)?'disabled':''}>${portfolioFetches.has(entry.id)?'Matching…':'↻ Find price'}</button><button type="button" class="danger-action small-button" data-action="portfolio-delete" data-id="${esc(entry.id)}">Remove</button></div>${marketSiteLinks(entry)}</div></article>`;
 }
 function renderToolPortfolio(){
  const t=portfolioTotals(),items=portfolioFilteredRows(),visible=items.slice(0,portfolioUI.limit);
  const sets=[...new Set(realPortfolio.entries.map(x=>x.setId))];
  const setOptions=`<option value="all" ${portfolioUI.set==='all'?'selected':''}>All expansions</option>`+sets.map(k=>`<option value="${esc(k)}" ${portfolioUI.set===k?'selected':''}>${esc(SETS[k]?.name||'Other / custom sets')}</option>`).join('');
  const sortOptions=[['value','Highest value'],['recent','Recently added'],['name','Card name'],['set','Expansion'],['quantity','Most copies']].map(([k,v])=>`<option value="${k}" ${portfolioUI.sort===k?'selected':''}>${v}</option>`).join('');
- return `<section class="tool-surface portfolio-tool-surface"><div class="tool-intro"><div><span class="eyebrow">REAL CARD COLLECTION · USD</span><h2>My physical Pokémon portfolio</h2><p>Your real cards, raw and graded copies, and their estimated USD values—completely separate from the pack-opening game's binder.</p></div><span class="pill mint">ON-DEVICE LIBRARY</span></div>
+ return `<section class="tool-surface portfolio-tool-surface"><div class="tool-intro"><div><span class="eyebrow">REAL CARD COLLECTION · USD</span><h2>My physical Pokémon portfolio</h2><p>Your real cards, raw and graded copies, and their estimated USD values—completely separate from the pack-opening game's binder.</p></div><span class="pill mint">OPTIONAL ACCOUNT SYNC</span></div>
  <div class="real-portfolio-summary"><div><small>EST. PRICED COLLECTION</small><strong>${realMoney(t.known)}</strong><span>${t.unpriced?`${t.unpriced} card${t.unpriced===1?'':'s'} missing verified value`:'All cards have estimates'} · not guaranteed resale proceeds</span></div><div><small>PHYSICAL CARDS</small><strong>${fmt(t.qty)}</strong><span>${fmt(realPortfolio.entries.length)} inventory records</span></div><div><small>RECORDED ACQUISITION COST</small><strong>${realMoney(t.cost)}</strong><span>Only amounts you've entered</span></div></div>
  <div class="portfolio-actions"><button class="primary-action" type="button" data-action="portfolio-add-manual">＋ Add physical card</button><button class="secondary-action" type="button" data-action="portfolio-from-finder">Find a card ↗</button><button class="secondary-action" type="button" data-action="portfolio-refresh-all" ${portfolioUI.busy?'disabled':''}>${portfolioUI.busy?'Updating prices…':'↻ Refresh market quotes'}</button></div>
  <div class="portfolio-actions portfolio-backups"><button type="button" class="secondary-action small-button" data-action="portfolio-export-json">⇩ Backup portfolio</button><button type="button" class="secondary-action small-button" data-action="portfolio-export-csv">⇩ Export CSV</button><label class="secondary-action small-button" for="portfolioImport">⇧ Import portfolio backup</label><input id="portfolioImport" type="file" accept=".json,application/json" hidden></div>
@@ -1627,7 +1708,7 @@ function renderToolCentering(){
  ${!measured&&possible&&!scan?.hasHolder?`<button class="primary-action" type="button" data-action="scan-accept">✓ Use detected borders</button>`:''}
  ${!measured&&!possible?`<button class="secondary-action" type="button" data-action="scan-adjust">Adjust outline</button>`:''}
  ${measured?`<details class="scan-grade-details"><summary>Photo-based grade range (experimental)</summary><div id="scanGradePanel">${renderScanGrade()}</div></details>`:''}
- <button type="button" class="secondary-action" data-action="scan-side" data-side="${side==='front'?'back':'front'}">📷 ${side==='front'?'Scan card back':'Scan card front'} →</button>
+ <button type="button" class="secondary-action" data-action="scan-to-finder">🔍 Use this photo in Card Finder</button><button type="button" class="secondary-action" data-action="scan-side" data-side="${side==='front'?'back':'front'}">📷 ${side==='front'?'Scan card back':'Scan card front'} →</button>
  </div></div>`:`<div class="scan-intro-placeholder"><div class="scan-icon">▣</div><strong>Point your camera at the whole card</strong><span>We will outline the detected card in real time.<br>Auto capture when stable, or tap the shutter yourself.</span></div>`;
  return `<section class="tool-surface real-scanner scan-simple"><div class="scan-simple-head"><div><span class="eyebrow">REAL CARD SCANNER · NOT GAME GRADING</span><h2>Point. Scan. Check.</h2><p>Automatic card outline in the camera. We measure printed margins only if the border is readable. Your photo stays on this device.</p></div><span class="pill mint">PHYSICAL CARDS</span></div>${sideToggle}${controls}${result}${advanced}<p class="tool-disclaimer" style="margin-top:14px">Photo centering is an estimate, not a professional PSA/CGC/BGS grade. Sleeves, glare and full-art designs can make a printed-border measurement unreliable.</p></section>`;
 }
@@ -1735,13 +1816,31 @@ function applyOuterCorrection(){const s=activeScan();if(!s?.rawCanvas){toast('Ta
 // Live camera stays outside #app so UI redraws never detach video.
 let centerCameraStream=null,centerCameraRequest=0,centerCameraFacing='environment',cameraDetectTimer=null;
 let centerCameraMode='auto',cameraStableFrames=0,cameraLastQuad=null,cameraLockedQuad=null,cameraCaptureBusy=false;
+let cameraTrack={quad:null,pending:null,pendingCount:0,stableCount:0,lastSeen:0,startedAt:0,misses:0};
+function resetCameraTrack(){
+ cameraTrack={quad:null,pending:null,pendingCount:0,stableCount:0,lastSeen:0,startedAt:Date.now(),misses:0};
+ cameraLockedQuad=null;cameraLastQuad=null;cameraStableFrames=0;updateCameraDetectedOutline([],false);
+}
+function cameraValidQuad(points){
+ if(!Array.isArray(points)||points.length!==4||!points.every(p=>Number.isFinite(p.x)&&Number.isFinite(p.y)&&p.x>=1&&p.x<=99&&p.y>=1&&p.y<=99))return false;
+ const length=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
+ const h=(length(points[0],points[1])+length(points[2],points[3]))/2;
+ const v=(length(points[1],points[2])+length(points[3],points[0]))/2;
+ const ratio=h/Math.max(.1,v);
+ const area=Math.abs(points.reduce((n,p,i)=>{const q=points[(i+1)%4];return n+p.x*q.y-q.x*p.y;},0))/2;
+ // 63.5 × 88.9 mm => ratio ~0.714; allow perspective/normal camera distortion.
+ return ratio>.59&&ratio<.84&&area>320&&area<7600&&h>=14&&v>=22;
+}
+function cameraBlendQuad(previous,next,alpha=.27){
+ return previous.map((p,i)=>({x:p.x*(1-alpha)+next[i].x*alpha,y:p.y*(1-alpha)+next[i].y*alpha}));
+}
 function cameraQuadDistance(a,b){if(!a||!b)return Infinity;return Math.max(...a.map((p,i)=>Math.hypot(p.x-b[i].x,p.y-b[i].y)));}
 function updateCameraModeLabel(){for(const value of ['auto','manual']){const button=document.getElementById(`cameraMode_${value}`);if(button)button.setAttribute('aria-pressed',String(value===centerCameraMode));}}
 
 
 function cameraLayer(){return document.getElementById('cameraLayer');}
 function cameraStatus(message,kind=''){const el=document.getElementById('cameraStatus');if(el){el.textContent=message;el.dataset.kind=kind;}}
-function closeCenterCamera(){centerCameraRequest++;cameraLockedQuad=null;cameraLastQuad=null;cameraStableFrames=0;cameraCaptureBusy=false;if(cameraDetectTimer){clearTimeout(cameraDetectTimer);cameraDetectTimer=null;}
+function closeCenterCamera(){centerCameraRequest++;cameraCaptureBusy=false;resetCameraTrack();if(cameraDetectTimer){clearTimeout(cameraDetectTimer);cameraDetectTimer=null;}
  if(centerCameraStream){centerCameraStream.getTracks().forEach(t=>t.stop());centerCameraStream=null;}
  const video=document.getElementById('centerCameraVideo');if(video){video.pause();video.srcObject=null;}
  const layer=cameraLayer();if(layer){layer.hidden=true;layer.innerHTML='';}document.body.classList.remove('camera-open');}
@@ -1758,42 +1857,85 @@ function captureCameraStage(maxDim=980){
 function cameraImageRect(){
  const stage=document.getElementById('centerCameraStage'),video=document.getElementById('centerCameraVideo');
  if(!stage||!video?.videoWidth||!video?.videoHeight)return null;
- const box=stage.getBoundingClientRect();const scale=Math.max(box.width/video.videoWidth,box.height/video.videoHeight);
+ const box=stage.getBoundingClientRect();const fit=window.getComputedStyle(video).objectFit;
+ const scale=fit==='cover'?Math.max(box.width/video.videoWidth,box.height/video.videoHeight):Math.min(box.width/video.videoWidth,box.height/video.videoHeight);
  const w=video.videoWidth*scale,h=video.videoHeight*scale;
  return {l:(box.width-w)/2/box.width,t:(box.height-h)/2/box.height,w:w/box.width,h:h/box.height};
 }
 function updateCameraDetectedOutline(quad,visible,locked=false){
- const overlay=document.getElementById('cameraDetectedOverlay'),poly=document.getElementById('cameraDetectedPoly');
+ const overlay=document.getElementById('cameraDetectedOverlay'),poly=document.getElementById('cameraDetectedPoly'),stage=document.getElementById('centerCameraStage');
  if(!overlay||!poly)return;
- if(visible)overlay.removeAttribute('hidden');else overlay.setAttribute('hidden','');overlay.dataset.locked=String(locked);
+ if(visible)overlay.removeAttribute('hidden');else overlay.setAttribute('hidden','');
+ overlay.dataset.locked=String(locked);
+ if(stage)stage.classList.toggle('has-outline',!!visible);
  if(visible){const r=cameraImageRect();if(r)poly.setAttribute('points',quad.map(p=>`${(100*r.l+p.x*r.w).toFixed(2)},${(100*r.t+p.y*r.h).toFixed(2)}`).join(' '));}
 }
 
 function scanLiveCamera(request){
  if(request!==centerCameraRequest||cameraLayer()?.hidden||!centerCameraStream||cameraCaptureBusy)return;
+ const now=Date.now();
  try{
-  const cv=window.PackLabVision,source=captureCameraStage(360);
-  // Search all image locations; the cursor is never a hard-coded central rectangle.
-  const scan=cv.detectOuterFlexible(source,null,true);
-  const good=!!scan.ok&&['high','medium'].includes(scan.confidence);
+  const cv=window.PackLabVision,source=captureCameraStage(380);
+  const detected=cv.detectOuterFlexible(source,null,true);
+  const measured=detected?.ok&&['high','medium'].includes(detected.confidence)
+   ?cv.cornersFromFrac(detected.quad,source.width,source.height):null;
+  const good=measured&&cameraValidQuad(measured);
   if(good){
-   const quad=cv.cornersFromFrac(scan.quad,source.width,source.height);
-   const spread=cameraQuadDistance(cameraLastQuad,quad);
-   cameraStableFrames=spread<3.4?cameraStableFrames+1:1;
-   cameraLastQuad=quad;
-   const minx=Math.min(...quad.map(p=>p.x)),maxx=Math.max(...quad.map(p=>p.x));
-   const miny=Math.min(...quad.map(p=>p.y)),maxy=Math.max(...quad.map(p=>p.y));
-   const sizeOK=maxx-minx>=20&&maxy-miny>=30&&maxx-minx<94&&maxy-miny<96;
-   const pictureOK=!cv.photoQuality(source).blurry;
-   const locked=cameraStableFrames>=3&&sizeOK&&pictureOK&&scan.confidence==='high'&&!ui.scanHolder;
-   cameraLockedQuad=locked?quad:null;
-   updateCameraDetectedOutline(quad,true,locked);
-   cameraStatus(ui.scanHolder?'Card-like outline found — sleeve may be mistaken for cardboard. Capture manually.':locked?'Card locked ✓':`Card detected · hold steady (${Math.min(3,cameraStableFrames)}/3)`,locked?'locked':'ready');
-   if(locked&&centerCameraMode==='auto'&&!ui.scanHolder){cameraCaptureBusy=true;cameraStatus('Card locked ✓ Capturing…','locked');
-    requestAnimationFrame(()=>{if(request===centerCameraRequest&&centerCameraStream)captureCenterPhoto('auto');});return;}
-  }else{cameraLockedQuad=null;cameraLastQuad=null;cameraStableFrames=0;updateCameraDetectedOutline([],false);cameraStatus('Point at a single card on a plain, contrasting surface','searching');}
- }catch(e){cameraLockedQuad=null;cameraLastQuad=null;cameraStableFrames=0;updateCameraDetectedOutline([],false);cameraStatus('Keep the entire card visible, or tap Capture','searching');}
- cameraDetectTimer=setTimeout(()=>scanLiveCamera(request),330);
+   // Demand repeated consistent candidates before moving the polygon.
+   const near=cameraTrack.quad&&cameraQuadDistance(cameraTrack.quad,measured)<4.0;
+   if(near){
+    cameraTrack.quad=cameraBlendQuad(cameraTrack.quad,measured);
+    cameraTrack.pending=null;cameraTrack.pendingCount=0;
+    cameraTrack.stableCount++;
+    cameraTrack.lastSeen=now;cameraTrack.misses=0;
+   }else {
+    if(cameraTrack.pending&&cameraQuadDistance(cameraTrack.pending,measured)<3.6){
+     cameraTrack.pending=cameraBlendQuad(cameraTrack.pending,measured,.4);
+     cameraTrack.pendingCount++;
+    }else{cameraTrack.pending=measured;cameraTrack.pendingCount=1;}
+    if(cameraTrack.pendingCount>=3){
+     cameraTrack.quad=cameraTrack.pending;cameraTrack.pending=null;
+     cameraTrack.pendingCount=0;cameraTrack.stableCount=3;
+     cameraTrack.lastSeen=now;cameraTrack.misses=0;
+    }
+   }
+   if(cameraTrack.quad&&cameraTrack.lastSeen===now){
+    const minx=Math.min(...cameraTrack.quad.map(p=>p.x)),maxx=Math.max(...cameraTrack.quad.map(p=>p.x));
+    const miny=Math.min(...cameraTrack.quad.map(p=>p.y)),maxy=Math.max(...cameraTrack.quad.map(p=>p.y));
+    const sizeOK=maxx-minx>=20&&maxy-miny>=30&&maxx-minx<94&&maxy-miny<96;
+    const stableTarget=detected.confidence==='high'?4:6;
+    let lock=cameraTrack.stableCount>=stableTarget&&sizeOK&&!ui.scanHolder;
+    if(lock){const quality=cv.photoQuality(source);lock=!quality.blurry&&!quality.glareRisk;}
+    cameraLockedQuad=lock?cameraTrack.quad.map(p=>({...p})):null;
+    updateCameraDetectedOutline(cameraTrack.quad,true,lock);
+    cameraStatus(ui.scanHolder?'Possible sleeve outline — remove holder or capture manually.':lock?'Card locked ✓ · ready':`Card outline found · hold steady (${Math.min(cameraTrack.stableCount,stableTarget)}/${stableTarget})`,lock?'locked':'ready');
+    if(lock&&centerCameraMode==='auto'){
+     cameraCaptureBusy=true;
+     cameraStatus('Card locked ✓ · capturing…','locked');
+     requestAnimationFrame(()=>{if(request===centerCameraRequest&&centerCameraStream)captureCenterPhoto('auto');});
+     return;
+    }
+   }
+  }else{cameraTrack.pending=null;cameraTrack.pendingCount=0;cameraTrack.misses++;}
+  // Hold tracked edges for a brief dropped frame rather than flickering.
+  if(!cameraTrack.quad||now-cameraTrack.lastSeen>1100){
+   cameraTrack.quad=null;cameraTrack.stableCount=0;cameraLockedQuad=null;
+   updateCameraDetectedOutline([],false);
+   if(cameraTrack.misses>=8||now-cameraTrack.startedAt>3000)
+    cameraStatus('Card not found. Lay it FLAT on a plain contrasting surface; show all 4 corners, avoid glare, and hold the camera straight above.','searching');
+   else cameraStatus('Looking for one card with 63.5 × 88.9 mm proportions…','searching');
+  }else if(!good||cameraTrack.lastSeen!==now){
+   cameraLockedQuad=null;
+   updateCameraDetectedOutline(cameraTrack.quad,true,false);
+   cameraStatus('Checking the card edges — hold still…','ready');
+  }
+ }catch(err){
+  console.warn('Camera detection frame skipped',err);
+  cameraTrack.misses++;
+  if(now-cameraTrack.lastSeen>1100){cameraTrack.quad=null;cameraTrack.stableCount=0;cameraLockedQuad=null;updateCameraDetectedOutline([],false);}
+  cameraStatus('Unable to find clear card edges. Try a flat surface and even light, or capture manually.','searching');
+ }
+ cameraDetectTimer=setTimeout(()=>scanLiveCamera(request),320);
 }
 
 function showCameraDialog(){
@@ -1801,7 +1943,7 @@ function showCameraDialog(){
  layer.innerHTML=`<div class="camera-dialog" role="dialog" aria-modal="true" aria-label="Scan a real card">
  <div class="camera-top"><div><span class="eyebrow">REAL CARD SCAN · ${ui.scanSide.toUpperCase()}</span><h2>Find the card</h2></div><button type="button" data-action="camera-close" class="camera-close" aria-label="Close camera">×</button></div>
  <p class="camera-instructions">Place one unsleeved card on a contrasting background. Gold = detected, green = stable lock. Review cardboard corners after capture.</p>
- <div class="camera-stage" id="centerCameraStage"><video id="centerCameraVideo" autoplay muted playsinline aria-label="Live physical card camera"></video><div class="camera-darken" aria-hidden="true"></div><svg class="camera-detected-overlay" viewBox="0 0 100 100" preserveAspectRatio="none" id="cameraDetectedOverlay" hidden aria-hidden="true"><polygon id="cameraDetectedPoly" /></svg><span class="camera-live-tag">● LOCAL CAMERA</span></div>
+ <div class="camera-stage" id="centerCameraStage"><div class="camera-search-guide" aria-hidden="true"></div><video id="centerCameraVideo" autoplay muted playsinline aria-label="Live physical card camera"></video><div class="camera-darken" aria-hidden="true"></div><svg class="camera-detected-overlay" viewBox="0 0 100 100" preserveAspectRatio="none" id="cameraDetectedOverlay" hidden aria-hidden="true"><polygon id="cameraDetectedPoly" /></svg><span class="camera-live-tag">● LOCAL CAMERA</span></div>
  <p class="camera-status" role="status" id="cameraStatus">Opening camera…</p>
  <div class="camera-controls camera-simple-controls"><div class="camera-scan-mode"><button id="cameraMode_auto" type="button" data-action="camera-mode" data-mode="auto" aria-pressed="${centerCameraMode==='auto'}">Auto</button><button id="cameraMode_manual" type="button" data-action="camera-mode" data-mode="manual" aria-pressed="${centerCameraMode==='manual'}">Manual</button></div><button class="primary-action camera-shutter" type="button" id="cameraCapture" data-action="camera-capture" disabled>◉ Capture</button><button class="secondary-action" type="button" data-action="camera-switch" aria-label="Switch camera">⇄</button></div>
  <label class="camera-plain-toggle"><input type="checkbox" id="cameraHolderLive" ${ui.scanHolder?'checked':''}> Card is in a sleeve/toploader (manual capture only)</label>
@@ -1819,7 +1961,7 @@ async function openCenterCamera(facing=centerCameraFacing){
   video.srcObject=stream;await video.play();if(request!==centerCameraRequest)return;
   if(video.videoWidth<1||video.videoHeight<1){cameraStatus('Waiting for a camera frame. Try again if it stays black.','error');return;}
   if(capture)capture.disabled=false;
-  cameraStatus('Camera ready. You may position the card anywhere in the full frame.','searching');
+  resetCameraTrack();cameraStatus('Scanning for one 2.5 × 3.5 inch card. Keep all four corners visible.','searching');
   cameraDetectTimer=setTimeout(()=>scanLiveCamera(request),350);
   const track=stream.getVideoTracks()[0];if(track)track.addEventListener('ended',()=>{if(centerCameraStream===stream){if(capture)capture.disabled=true;cameraStatus('Camera stopped. Close and reopen it.','error');}});
  }catch(err){if(request!==centerCameraRequest)return;console.warn('Camera error',err);if(centerCameraStream){centerCameraStream.getTracks().forEach(t=>t.stop());centerCameraStream=null;}const failedVideo=document.getElementById('centerCameraVideo');if(failedVideo)failedVideo.srcObject=null;
@@ -1845,14 +1987,15 @@ function cardMarketQuery(card=null,term='',setId=ui.priceSet){
  const set=SETS[card?.setId||setId];
  const name=card?.name||String(term||'').trim();
  const number=card?.number?` ${card.number}`:'';
- return [name,number.trim(),set?.name||'', 'Pokemon'].filter(Boolean).join(' ').replace(/\s+/g,' ').trim();
+ return [name,number.trim(),card?.setName||set?.name||'', 'Pokemon'].filter(Boolean).join(' ').replace(/\s+/g,' ').trim();
 }
 function marketSiteLinks(card=null,term='',setId=ui.priceSet){
  const q=cardMarketQuery(card,term,setId);
  const safe=encodeURIComponent(q || 'Pokemon cards');
  const a=`https://www.tcgplayer.com/search/pokemon/product?q=${safe}&productLineName=pokemon`;
  const b=`https://www.pricecharting.com/search-products?q=${safe}&type=prices`;
- return `<div class="market-links"><a href="${esc(a)}" target="_blank" rel="noopener noreferrer">Check TCGplayer ↗</a><a href="${esc(b)}" target="_blank" rel="noopener noreferrer">Check PriceCharting ↗</a></div>`;
+ const c=`https://app.getcollectr.com/?query=${safe}`;
+ return `<div class="market-links"><a href="${esc(a)}" target="_blank" rel="noopener noreferrer">Compare TCGplayer ↗</a><a href="${esc(b)}" target="_blank" rel="noopener noreferrer">Open PriceCharting ↗</a><a href="${esc(c)}" target="_blank" rel="noopener noreferrer">Open Collectr ↗</a></div>`;
 }
 function priceCandidates(){
  const pool=catalogMemory.get(ui.priceSet)||[];
@@ -1882,7 +2025,7 @@ function quoteRows(tcg){
    .filter(v=>[v.market,v.low,v.mid,v.high].some(x=>Number.isFinite(x)&&x>0));
 }
 function realPriceTable(payload){
- const tcg=payload?.pricing?.tcgplayer||payload?.prices?.tcgplayer||null;
+ const tcg=payload?.pricing?.tcgplayer||payload?.prices?.tcgplayer||payload?.tcgplayer||null;
  const rows=quoteRows(tcg);
  if(!rows.length)return '<div class="price-unavailable">No USD TCGplayer market quote was supplied for this print. Use the marketplace searches below to compare active listings and sold prices.</div>';
  const val=x=>Number.isFinite(x)&&x>0?cash(x):'—';
@@ -1908,7 +2051,7 @@ function renderToolPrices(){
  <div class="tool-fields"><label class="field-block">Card set<select id="priceSet">${opts}</select></label><label class="field-block price-search-field">Card name or number<input id="priceSearch" type="search" value="${esc(ui.priceQuery)}" placeholder="Umbreon ex, Charizard, 161…" autocomplete="off"></label></div>
  <div class="market-hint"><strong>Looking for a different Pokémon set?</strong> Use the TCGplayer and PriceCharting links below to search beyond the four current PACKLAB checklists. Market prices vary by language, printing, finish and condition.</div>${marketSiteLinks(null,ui.priceQuery,ui.priceSet)}
  ${priceSelectedPanel()}<div class="section-heading" style="margin-top:18px">Choose the exact card <small>ACTUAL CARD ART / NUMBER</small></div><div id="priceLookupResults">${priceLookupList()}</div>
- <p class="tool-disclaimer">No pricing data is fabricated. Automatic USD quotes depend on third-party data availability; PriceCharting values are opened on its own website, not scraped into PACKLAB. The game inventory, coin values and simulated grades are unaffected.</p></section>`;
+ <p class="tool-disclaimer">No pricing data is fabricated. Automatic USD quotes use public TCGplayer data via TCGdex when available. PriceCharting requires a paid API plan; Collectr requires approved API credentials, so those links are comparisons only, not imported live quotes. The game inventory, coin values and simulated grades are unaffected.</p></section>`;
 }
 async function loadPriceForSelectedCard(force=false){
  const c=selectedPriceCard();if(!c)return;
@@ -1938,11 +2081,11 @@ function selectPriceCard(id){
 
 function cardLookupResults(){const c=catalogMemory.get(ui.lookupSet),q=(ui.lookupSearch||'').trim().toLowerCase();if(!c)return [];if(!q)return c.filter(x=>['Special Illustration Rare','Futuristic Rare','RGB Rare'].includes(x.rarity)).slice(0,16);const qNumber=q.replace(/\s*\/\s*\d+\s*$/,'').replace(/^#/,'');return c.filter(x=>x.name.toLowerCase().includes(q)||x.number.toLowerCase()===qNumber||String(x.number).toLowerCase().includes(q)).slice(0,35);}
 function lookupList(){const results=cardLookupResults();if(!catalogMemory.has(ui.lookupSet))return statusCatalog(ui.lookupSet);return results.length?`<div class="lookup-grid">${results.map(c=>`<article class="lookup-card" aria-label="Physical card reference: ${esc(c.name)}"><div class="lookup-picture">${imgTag(c)}</div><strong>${esc(c.name)}</strong><small>#${esc(c.number)} · ${esc(c.rarity)}</small><div class="portfolio-actions"><button type="button" class="lookup-price-button" data-action="lookup-to-price" data-card="${esc(c.id)}">Price + info ↗</button><button type="button" class="lookup-price-button" data-action="portfolio-add-card" data-card="${esc(c.id)}">＋ My real binder</button></div></article>`).join('')}</div>`:`<div class="empty-note">No matching card in ${esc(SETS[ui.lookupSet].name)}. Check its name and number or choose the correct set.</div>`;}
-function renderToolLookup(){requireCatalog(ui.lookupSet);return `<section class="tool-surface"><div class="tool-intro"><div><span class="eyebrow">PHOTO + CHECKLIST LOOKUP</span><h2>Identify a card.</h2><p>Upload a card photo, optionally read printed text on-device, and match its name and collector number against known set checklists. These are real-card REFERENCE results, not cards added to your game binder.</p></div><span class="pill gold">SCAN BETA</span></div>
- <div class="photo-upload-row"><label class="secondary-action photo-button" for="lookupPhoto">↑ Add photo</label><input type="file" hidden id="lookupPhoto" accept="image/*"><button type="button" class="primary-action small-button" data-action="lookup-ocr" ${!ui.lookupImage||ui.ocrBusy?'disabled':''}>${ui.ocrBusy?'Reading photo…':'Scan text in browser'}</button></div>
+function renderToolLookup(){requireCatalog(ui.lookupSet);return `<section class="tool-surface"><div class="tool-intro"><div><span class="eyebrow">PHOTO + CHECKLIST LOOKUP</span><h2>Identify a card.</h2><p>Use a camera photo from the centering scanner or upload one. On-device OCR helps read card names and numbers, but must be verified. The quick Card Finder checks the four in-game expansions; to add physical cards from other sets, choose Add a physical card from ANY set and enter the exact printed details.</p></div><span class="pill gold">SCAN BETA</span></div>
+ <div class="photo-upload-row"><button type="button" class="secondary-action small-button" data-action="portfolio-add-manual">＋ Add a physical card from ANY set</button><label class="secondary-action photo-button" for="lookupPhoto">↑ Add photo</label><input type="file" hidden id="lookupPhoto" accept="image/*"><button type="button" class="primary-action small-button" data-action="lookup-ocr" ${!ui.lookupImage||ui.ocrBusy?'disabled':''}>${ui.ocrBusy?'Reading photo…':'Scan text in browser'}</button></div>
  ${ui.lookupImage?`<div class="scan-preview"><img src="${esc(ui.lookupImage)}" alt="Your uploaded photo"><span>${ui.ocrText?esc(ui.ocrText):'Ready for name/number search'}</span></div>`:''}
  <div class="tool-fields"><label class="field-block">Card expansion<select id="lookupSet">${orderedSets().map(x=>`<option value="${x.id}" ${x.id===ui.lookupSet?'selected':''}>${esc(x.name)}</option>`).join('')}</select></label><label class="field-block">Name or collector number<input id="lookupSearch" type="search" placeholder="Umbreon ex, Pikachu, 161/131…" value="${esc(ui.lookupSearch)}" autocomplete="off"></label></div>
- <div id="lookupResults">${lookupList()}</div><p class="tool-disclaimer">Choose <strong>Price + info</strong> on a matched card for market information and PriceCharting links. Photo OCR is optional and can misread small numbers—always confirm the set and artwork. Search works without a photo once the set checklist loads.</p></section>`;}
+ <div id="lookupResults">${lookupList()}</div><p class="tool-disclaimer">Choose <strong>Price + info</strong> for reference prices. For other English sets, add the exact card name, set and printed number to your real binder to trigger a TCGdex market lookup. OCR is optional and may misread numbers; never assume a mismatched card or foil print is the same collectible.</p></section>`;}
 function updateLookupResults(){const dest=document.getElementById('lookupResults');if(dest)dest.innerHTML=lookupList();}
 async function runBrowserOCR(){if(!ui.lookupImage||ui.ocrBusy){if(!ui.lookupImage)toast('Add a photo first.');return;}ui.ocrBusy=true;render();let resultText='';try{
  if(!window.Tesseract){await new Promise((resolve,reject)=>{const script=document.createElement('script');script.src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';script.onload=resolve;script.onerror=()=>reject(Error('OCR library could not load.'));document.head.appendChild(script);});}
@@ -1962,7 +2105,7 @@ function renderToolGuide(){return `<section class="tool-surface"><div class="too
  <p class="tool-disclaimer">Before paying for grading, photograph both sides, compare recent sold examples, check the current official fee schedule, and consider lower-grade outcomes.</p></section>`;}
 function updateGuideEstimate(){const n=document.getElementById('guideEstimate');if(n)n.textContent=`~${guideEstimate()} / 10`;for(const key of Object.keys(ui.guideScores)){const s=document.getElementById('guideScore_'+key);if(s)s.textContent=ui.guideScores[key].toFixed(1);}}
 
-function renderInfo(){return pageHeading('YOUR PLAYTEST GUIDE','How to play PackLab.','All pack-opening, coin, game binder and battle content is purely virtual. No real booster packs or physical cards are purchased or shipped. Real Card Tools is separate and manages photos of physical cards you already own.')+`<div class="panel panel-pad"><h3>1. Start opening packs</h3><p class="howto-copy">New players begin with two <strong>simulated 30th Celebration</strong> game boosters, two <strong>Prismatic Evolutions</strong> boosters, one <strong>151</strong> booster and one <strong>Surging Sparks</strong> booster. Open a pack at the desk, drag over the silver wrapper or tap Tear, then flip each card to inspect it. The 30th Celebration pack yields five collectible foil cards (including one Pikachu). Scarlet & Violet sets yield 10 game cards. Basic Energy and code cards are visual extras, not tradable or redeemable.</p><div class="divider"></div><h3>2. Earn more products</h3><p class="howto-copy">Claim a free daily booster, win prototype quick battles, and complete the missions. Buy additional packs using only virtual coins. Use binder rarity sorting and safe bulk sale to keep your strongest copy of each card and foil finish; virtual grading and battle copies are protected.</p><div class="divider"></div><h3>3. Grade, collect, battle</h3><p class="howto-copy">Inspect a card in your binder to see its condition and send an individual copy for a simulated 6- or 20-second grade. Open Real Card Tools → Centering for physical cards using the camera and editable guides. Permission is required; HTTPS/localhost works best, while the standalone file may vary by browser. Physical scans preserve the full photograph; move the outer card corners, then compare the straightened card against four adjustable printed-border guides. Scan both sides for a provisional grade range. Measurements and visible-wear checks are estimates and can be corrected manually. In the Battle tab, pick three owned Pokémon and challenge a quick-duel NPC. Full official-rules 60-card battling and PvP aren't implemented yet.</p><div class="divider"></div><h3>4. Data integrity & saving</h3><p class="howto-copy">Set lists come from the public Pokémon TCG dataset (including me55 and me55c for 30th Celebration), with a TCGdex fallback for Scarlet & Violet sets. Full set sizes, collector IDs and rarities are verified before pack generation. Never mixing cards between sets is an enforced rule. The first load requires internet; successful catalogs are cached locally. Card art and the official English Pokémon card-back image are streamed and may not display while offline.</p><p class="howto-copy"><strong>Art sources:</strong> Pack images are linked to external collector-shop images, and card scans are streamed from historical card-data providers. They may become unavailable or restrict hotlinking. <strong>Local only:</strong> Your coins, packs, collection, grade results and battles are saved in this browser. A different device/browser is a different save until a multiplayer account backend is added.</p><div class="open-tools" style="justify-content:flex-start"><button class="primary-action" data-action="export-save">⇩ Export your progress (.json)</button><label class="secondary-action" for="saveImport" style="cursor:pointer">⇧ Import saved progress</label><input hidden id="saveImport" type="file" accept=".json,application/json"><button class="danger-action" data-action="reset-save">Reset playtest</button></div><div class="store-note" style="margin-bottom:0">This is a noncommercial fan-made gameplay test, not an official or licensed Pokémon product. Pokémon imagery is owned by its respective rights holders. No virtual item is redeemable for physical goods, cash, grading, or real Pokémon TCG Live codes.</div></div>`;}
+function renderInfo(){return pageHeading('YOUR PLAYTEST GUIDE','How to play PackLab.','All pack-opening, coin, game binder and battle content is purely virtual. No real booster packs or physical cards are purchased or shipped. Real Card Tools is separate and manages photos of physical cards you already own.')+`<div class="panel panel-pad"><h3>1. Start opening packs</h3><p class="howto-copy">New players begin with two <strong>simulated 30th Celebration</strong> game boosters, two <strong>Prismatic Evolutions</strong> boosters, one <strong>151</strong> booster and one <strong>Surging Sparks</strong> booster. Open a pack at the desk, drag over the silver wrapper or tap Tear, then flip each card to inspect it. The 30th Celebration pack yields five collectible foil cards (including one Pikachu). Scarlet & Violet sets yield 10 game cards. Basic Energy and code cards are visual extras, not tradable or redeemable.</p><div class="divider"></div><h3>2. Earn more virtual packs</h3><p class="howto-copy">Claim a free daily booster, win prototype quick battles, and complete the missions. Buy additional packs using only virtual coins. Use binder rarity sorting and safe bulk sale to keep your strongest copy of each card and foil finish; virtual grading and battle copies are protected.</p><div class="divider"></div><h3>3. Grade, collect, battle</h3><p class="howto-copy">Inspect a card in your binder to see its condition and send an individual copy for a simulated 6- or 20-second grade. Open Real Card Tools → Centering for physical cards using the camera and editable guides. Permission is required; HTTPS/localhost works best, while the standalone file may vary by browser. Physical scans preserve the full photograph; move the outer card corners, then compare the straightened card against four adjustable printed-border guides. Scan both sides for a provisional grade range. Measurements and visible-wear checks are estimates and can be corrected manually. In the Battle tab, pick three owned Pokémon and challenge a quick-duel NPC. Full official-rules 60-card battling and PvP aren't implemented yet.</p><div class="divider"></div><h3>4. Data integrity & saving</h3><p class="howto-copy">Set lists come from the public Pokémon TCG dataset (including me55 and me55c for 30th Celebration), with a TCGdex fallback for Scarlet & Violet sets. Full set sizes, collector IDs and rarities are verified before pack generation. Never mixing cards between sets is an enforced rule. The first load requires internet; successful catalogs are cached locally. Card art and the official English Pokémon card-back image are streamed and may not display while offline.</p><p class="howto-copy"><strong>Art sources:</strong> Pack images are linked to external collector-shop images, and card scans are streamed from historical card-data providers. They may become unavailable or restrict hotlinking. <strong>Saving:</strong> Guest progress stays in this browser. Optional accounts can sync the game binder and physical portfolio across devices once each account save slot is linked. You can also export independent backups.</p><div class="open-tools" style="justify-content:flex-start"><button class="primary-action" data-action="export-save">⇩ Export your progress (.json)</button><label class="secondary-action" for="saveImport" style="cursor:pointer">⇧ Import saved progress</label><input hidden id="saveImport" type="file" accept=".json,application/json"><button class="danger-action" data-action="reset-save">Reset playtest</button></div><div class="store-note" style="margin-bottom:0">This is a noncommercial fan-made gameplay test, not an official or licensed Pokémon product. Pokémon imagery is owned by its respective rights holders. No virtual item is redeemable for physical goods, cash, grading, or real Pokémon TCG Live codes.</div></div>`;}
 function conditionBar(label,value){return `<div class="condition-bar">${esc(label)} <strong>${Number(value).toFixed(1)}</strong><div class="progress-rail"><div style="width:${pct(value,10)}%"></div></div></div>`;}
 function openInspector(cardId){const id=Object.keys(SETS).find(s=>cardId.startsWith(s+'-'));if(!id)return;ui.inspection=cardId;const catalog=requireCatalog(id),card=catalog?.find(c=>c.id===cardId),copies=allCopies(cardId);const layer=document.getElementById('modalLayer');layer.hidden=false;
  if(!card){layer.innerHTML=`<div class="modal-dialog"><button class="icon-button modal-close" data-action="close-modal" aria-label="Close">×</button>${statusCatalog(id)}</div>`;return;}
@@ -2001,11 +2144,12 @@ function processAction(el){const action=el.dataset.action;if(!action)return;swit
  case 'camera-open':openCenterCamera();break;
  case 'camera-close':closeCenterCamera();break;
  case 'camera-switch':openCenterCamera(centerCameraFacing==='environment'?'user':'environment');break;
- case 'camera-mode':centerCameraMode=el.dataset.mode==='manual'?'manual':'auto';updateCameraModeLabel();cameraStatus(centerCameraMode==='auto'?'Auto: capture after the green lock appears':'Manual: tap Capture when the outline looks right','ready');break;
+ case 'camera-mode':centerCameraMode=el.dataset.mode==='manual'?'manual':'auto';resetCameraTrack();updateCameraModeLabel();cameraStatus(centerCameraMode==='auto'?'Auto: scanning for a card on a flat surface…':'Manual: capture, then adjust the four cardboard corners.','ready');break;
  case 'camera-capture':captureCenterPhoto('manual');break;
  case 'scan-accept':acceptScanSuggestion();break;
  case 'scan-adjust':ui.scanAdvanced=true;render();document.getElementById('scanDetails')?.scrollIntoView({block:'nearest',behavior:'smooth'});break;
  case 'scan-side':chooseScanSide(el.dataset.side);break;
+ case 'scan-to-finder':{const scan=activeScan();if(scan?.image||scan?.rawPreview){ui.lookupImage=scan.image||scan.rawPreview;ui.ocrText='Captured photo ready. Scan its text or enter the card name/collector number. For any set not in the checklist, add manually in My Real Binder.';ui.toolTab='scanner';navigate('tools');}break;}
  case 'scan-new':resetPhysicalCard();break;
  case 'outer-edit':ui.scanEditOutline=true;render();break;
  case 'outer-apply':applyOuterCorrection();break;
@@ -2064,7 +2208,7 @@ document.addEventListener('toggle',event=>{if(event.target?.id==='scanDetails')u
   if(e.id==='portfolioSet'){portfolioUI.set=e.value;portfolioUI.limit=48;render();return;}
   if(e.id==='portfolioSort'){portfolioUI.sort=e.value;render();return;}
   if(e.id==='priceSet'){ui.priceSet=SETS[e.value]?e.value:'sv8pt5';ui.priceCardId='';ui.priceQuery='';ui.priceBusy=false;ui.priceError='';requireCatalog(ui.priceSet);render();return;}
- if(e.id==='cameraHolderLive'){ui.scanHolder=!!e.checked;cameraStableFrames=0;cameraLockedQuad=null;cameraStatus(ui.scanHolder?'Holder mode: manual capture only · outline may detect the plastic':'Detecting card…','searching');return;}
+ if(e.id==='cameraHolderLive'){ui.scanHolder=!!e.checked;resetCameraTrack();cameraStatus(ui.scanHolder?'Holder mode: manual capture only · may detect plastic instead of cardboard':'Looking for the card outline…','searching');return;}
  if(e.id==='scanDesign'){
   ui.scanDesign=['standard','thin','borderless','unknown'].includes(e.value)?e.value:'unknown';
   for(const sc of [ui.scanScans.front])if(sc?.rawCanvas){sc.measured=false;sc.centerMethod='';computeScanWarp(sc);}

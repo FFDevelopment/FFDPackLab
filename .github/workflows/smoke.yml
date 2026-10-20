@@ -15,3 +15,6 @@ jobs:
           node-version: '22'
       - name: Check scripts and entry paths
         run: node tests/smoke.mjs
+
+      - name: Verify card recognition and price matching
+        run: node tests/camera-price-v093.mjs
