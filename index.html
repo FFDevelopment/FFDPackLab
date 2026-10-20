@@ -1285,7 +1285,7 @@ function cleanPortfolioEntry(row){
  const finish=['Normal','Holo Foil','Reverse Holo','Poké Ball Foil','Master Ball Foil','Special Foil','Other'].includes(row.finish)?row.finish:'Normal';
  const condition=['Mint','Near Mint','Lightly Played','Moderately Played','Heavily Played','Damaged'].includes(row.condition)?row.condition:'Near Mint';
  const image=trim(row.image,1000),setId=SETS[row.setId]?row.setId:'other',id=trim(row.id,100)||uuid();
- return {id,setId,cardId:trim(row.cardId,120),name,number,setName,rarity:trim(row.rarity,100),image:/^https:\/\//i.test(image)?image:'',language:trim(row.language,40)||'English',finish,condition,grader:gradeCompany,grade:gradeCompany==='Raw'?'':trim(row.grade,25),quantity:Math.min(9999,Math.max(1,Math.floor(Number(row.quantity)||1))),pricingMode:row.pricingMode==='manual'?'manual':'market',tcgdexId:trim(row.tcgdexId,100),priceError:trim(row.priceError,240),manualPrice:safeNumber(row.manualPrice),purchasePrice:safeNumber(row.purchasePrice),marketPrice:safeNumber(row.marketPrice),marketSource:trim(row.marketSource,100),marketAt:Number.isFinite(Number(row.marketAt))?Number(row.marketAt):null,notes:trim(row.notes,900),createdAt:Number(row.createdAt)||Date.now(),updatedAt:Number(row.updatedAt)||Date.now()};
+ return {id,setId,cardId:trim(row.cardId,120),name,number,setName,rarity:trim(row.rarity,100),image:/^https:\/\//i.test(image)?image:'',language:trim(row.language,40)||'English',finish,condition,grader:gradeCompany,grade:gradeCompany==='Raw'?'':trim(row.grade,25),quantity:Math.min(9999,Math.max(1,Math.floor(Number(row.quantity)||1))),pricingMode:row.pricingMode==='manual'?'manual':'market',tcgdexId:trim(row.tcgdexId,100),priceError:trim(row.priceError,240),manualPrice:safeNumber(row.manualPrice),purchasePrice:safeNumber(row.purchasePrice),marketPrice:safeNumber(row.marketPrice),marketSource:trim(row.marketSource,100),marketAt:row.marketAt===null||row.marketAt===undefined?null:(Number.isFinite(Number(row.marketAt))?Number(row.marketAt):null),notes:trim(row.notes,900),createdAt:Number(row.createdAt)||Date.now(),updatedAt:Number(row.updatedAt)||Date.now()};
 }
 function loadRealPortfolio(){
  try{const data=JSON.parse(localStorage.getItem(REAL_PORTFOLIO_KEY)||'null');if(data?.schema!==1||!Array.isArray(data.entries))return {schema:1,entries:[],updatedAt:Date.now()};
@@ -1369,7 +1369,8 @@ async function resolvePhysicalCard(entry,signal){
   try{const direct=await tcgdexJSON(root+encodeURIComponent(known),signal);if(physicalCardVerified(entry,direct))return direct;}catch(e){if(signal?.aborted)throw e;}
  }
  if(!entry.number)throw Error('Printed collector number is required for an exact match.');
- const q=new URLSearchParams({name:'eq:'+entry.name,localId:'eq:'+String(entry.number).trim().split('/')[0]});
+ // Query by name, then verify exact number and set locally. TCGdex localId zero-padding varies by set.
+ const q=new URLSearchParams({name:entry.name});
  const briefs=await tcgdexJSON('https://api.tcgdex.net/v2/en/cards?'+q.toString(),signal);
  if(!Array.isArray(briefs))throw Error('Card lookup returned no valid results.');
  const matching=briefs.filter(x=>matchToken(x.name)===matchToken(entry.name)&&physicalCardNumber(x.localId)===physicalCardNumber(entry.number)).slice(0,100);
