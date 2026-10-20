@@ -67,7 +67,7 @@ runInContext(`let centerCameraRequest=1,centerCameraStream={},cameraDetectTimer=
  function captureCameraStage(){return {width:380,height:380};}
  function cameraStatus(s){statuses.push(s);}
  function updateCameraDetectedOutline(quad,visible,locked){frames.push({quad:quad?.map(p=>({...p}))||[],visible,locked});}
-`+camFunctions+'\nthis.drive=scanLiveCamera;this.state=()=>cameraTrack',cvm);
+`+camFunctions+'\ncenterCameraMode="manual";this.drive=scanLiveCamera;this.state=()=>cameraTrack',cvm);
 cvm.statuses=statuses;cvm.frames=frames;
 const a2=a.map(p=>({x:p.x+17,y:p.y}));
 function sample(quad){queue.push(quad?{ok:true,confidence:'high',quad}:{ok:false});cvm.drive(1);}
