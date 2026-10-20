@@ -51,4 +51,32 @@ const b=[{x:25,y:10},{x:75,y:10},{x:75,y:60},{x:25,y:60}];
 assert.equal(cam.geom.cameraValidQuad(a),true,'0.714 Pokémon card ratio');
 assert.equal(cam.geom.cameraValidQuad(b),false,'square is not Pokémon card geometry');
 assert.ok(cam.geom.cameraBlendQuad(a,a.map(p=>({x:p.x+10,y:p.y+10})))[0].x<35,'smooth new positions rather than jump');
+// Exercise the tracking loop with mocked detections to guard against frame-to-frame box jumps.
+const camFunctions=section("let centerCameraMode='auto'","function updateCameraModeLabel(){")
+ +'\n'+section("function scanLiveCamera(request){","function showCameraDialog(){");
+const frames=[],statuses=[],queue=[];
+const detector={
+ detectOuterFlexible:()=>queue.shift()||{ok:false},
+ cornersFromFrac:q=>q,
+ photoQuality:()=>({blurry:false,glareRisk:false})
+};
+const cvm=createContext({Date,Math,console,window:{PackLabVision:detector},setTimeout:()=>1,requestAnimationFrame:()=>{},captureCenterPhoto:()=>{}});
+runInContext(`let centerCameraRequest=1,centerCameraStream={},cameraDetectTimer=null;
+ const ui={scanHolder:false};
+ function cameraLayer(){return {hidden:false};}
+ function captureCameraStage(){return {width:380,height:380};}
+ function cameraStatus(s){statuses.push(s);}
+ function updateCameraDetectedOutline(quad,visible,locked){frames.push({quad:quad?.map(p=>({...p}))||[],visible,locked});}
+`+camFunctions+'\nthis.drive=scanLiveCamera;this.state=()=>cameraTrack',cvm);
+cvm.statuses=statuses;cvm.frames=frames;
+const a2=a.map(p=>({x:p.x+17,y:p.y}));
+function sample(quad){queue.push(quad?{ok:true,confidence:'high',quad}:{ok:false});cvm.drive(1);}
+sample(a);sample(a);assert.equal(cvm.state().quad,null,'no polygon before three consistent candidates');
+sample(a);assert.equal(cvm.state().quad[0].x,25);
+sample(a2);assert.equal(cvm.state().quad[0].x,25,'single outlier must not move box');
+sample(a);assert.equal(cvm.state().quad[0].x,25,'stable card stays in place after transient outlier');
+sample(a2);sample(a2);sample(a2);assert.equal(cvm.state().quad[0].x,42,'new stable position eventually accepted');
+runInContext('cameraTrack.lastSeen=Date.now()-1500;cameraTrack.startedAt=Date.now()-4500',cvm);
+sample(null);assert.ok(statuses.at(-1).includes('FLAT'),'unrecognized cards get flat-surface advice');
+
 console.log('PASS: verified ID + set + collector number, raw finish prices, rejected mismatches, camera geometry');
